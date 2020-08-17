@@ -12,7 +12,7 @@ Now autofires. Time between full charge and autofire is configurable -- defaults
 
 The Shocked status now wears off after a 100% health interval, up from 10% (so health-based 'stunbreak' is effectively disabled).
 
-The Shocked status now deals roughly 20% of the victim's maximum health per second as damage to its allies within 7 meters, targeting and firing randomly.
+The Shocked status now deals roughly 20% of the victim's maximum health per second as damage to its allies within 15 meters, targeting and firing randomly.
 
 ### Orbital Supply Beacon
 

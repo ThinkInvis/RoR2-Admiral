@@ -77,7 +77,7 @@ namespace ThinkInvisible.Admiral {
 			    if(isFF || teamFilter.teamIndex == TeamIndex.Monster) teamMembers.AddRange(TeamComponent.GetTeamMembers(TeamIndex.Monster));
 			    if(isFF || teamFilter.teamIndex == TeamIndex.Neutral) teamMembers.AddRange(TeamComponent.GetTeamMembers(TeamIndex.Neutral));
 			    if(isFF || teamFilter.teamIndex == TeamIndex.Player) teamMembers.AddRange(TeamComponent.GetTeamMembers(TeamIndex.Player));
-			    float sqrad = 7f * 7f;
+			    float sqrad = 15f * 15f;
                 var tpos = self.outer.commonComponents.characterBody.transform.position;
 			    teamMembers.Remove(teamFilter);
                 teamMembers.RemoveAll(x => (x.transform.position - tpos).sqrMagnitude > sqrad || !x.body || !x.body.mainHurtBox || !x.body.isActiveAndEnabled);
