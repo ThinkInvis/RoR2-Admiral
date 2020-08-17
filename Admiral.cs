@@ -24,8 +24,6 @@ namespace ThinkInvisible.Admiral {
         public static float fireDelayDynamic {get; private set;}
         public static float fireDelayFixed {get; private set;}
 
-        public static BuffIndex stimmedBuffIndex {get; private set;}
-
         internal static Xoroshiro128Plus shockRng;
 
         public void Awake() {
@@ -51,10 +49,6 @@ namespace ThinkInvisible.Admiral {
             if(fireDelayFixed > 0f || fireDelayDynamic > 0f)
                 On.EntityStates.Captain.Weapon.ChargeCaptainShotgun.FixedUpdate += On_CapChargeShotgunFixedUpdate;
             
-
-            //Register stimmed buff
-            stimmedBuffIndex = BuffAPI.Add(new CustomBuff("Stimmed", "textures/itemicons/texSyringeIcon", Color.red, false, false));
-            On.RoR2.Skills.SkillDef.OnFixedUpdate += On_SkillDefFixedUpdate;
 
 
             //Apply beacon patches
@@ -97,12 +91,6 @@ namespace ThinkInvisible.Admiral {
 					teamIndex = TeamIndex.None
 				});
             }
-        }
-
-        private void On_SkillDefFixedUpdate(On.RoR2.Skills.SkillDef.orig_OnFixedUpdate orig, RoR2.Skills.SkillDef self, GenericSkill skillSlot) {
-            if(skillSlot.characterBody.HasBuff(stimmedBuffIndex))
-                skillSlot.RunRecharge(Time.fixedDeltaTime * 0.5f);
-            orig(self, skillSlot);
         }
 
         private void On_CapChargeShotgunFixedUpdate(On.EntityStates.Captain.Weapon.ChargeCaptainShotgun.orig_FixedUpdate orig, EntityStates.Captain.Weapon.ChargeCaptainShotgun self) {
