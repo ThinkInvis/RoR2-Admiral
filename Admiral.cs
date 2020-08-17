@@ -19,23 +19,10 @@ namespace ThinkInvisible.Admiral {
         public const string ModName = "Admiral";
         public const string ModGuid = "com.ThinkInvisible.Admiral";
         
-        public static float fireDelayDynamic {get; private set;}
-        public static float fireDelayFixed {get; private set;}
-
+        internal static ConfigFile cfgFile;
 
         public void Awake() {
-            ConfigFile cfgFile = new ConfigFile(Paths.ConfigPath + "\\" + ModGuid + ".cfg", true);
-
-            var cfgFireDelayDynamic = cfgFile.Bind(new ConfigDefinition("Admiral", "FireDelayDynamic"), 0.2f, new ConfigDescription(
-                "Time, in fraction of total charge time, to wait before autofiring Vulcan Shotgun after reaching full charge. Set both this and FireDelayFixed to 0 to disable autofire.",
-                new AcceptableValueRange<float>(0f,float.MaxValue)));
-            fireDelayDynamic = 1f + cfgFireDelayDynamic.Value;
-
-            var cfgFireDelayFixed = cfgFile.Bind(new ConfigDefinition("Admiral", "FireDelayFixed"), 0f, new ConfigDescription(
-                "Absolute minimum time, in seconds, to wait before autofiring Vulcan Shotgun after reaching full charge. Set both this and FireDelayDynamic to 0 to disable autofire.",
-                new AcceptableValueRange<float>(0f,float.MaxValue)));
-            fireDelayFixed = cfgFireDelayFixed.Value;
-
+            cfgFile = new ConfigFile(Paths.ConfigPath + "\\" + ModGuid + ".cfg", true);
 
             //Override CanUseOrbitalSkills to only return false in bazaar, and not in other hidden realms
             var origCUOSGet = typeof(RoR2.CaptainSupplyDropController).GetMethodCached("get_canUseOrbitalSkills");
@@ -43,27 +30,18 @@ namespace ThinkInvisible.Admiral {
             var CUOSHook = new Hook(origCUOSGet, newCUOSGet);
 
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides += IL_CSDCUpdateSkillOverrides;
-            if(fireDelayFixed > 0f || fireDelayDynamic > 0f)
-                On.EntityStates.Captain.Weapon.ChargeCaptainShotgun.FixedUpdate += On_CapChargeShotgunFixedUpdate;
             
+
             LanguageAPI.Add("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>.");
 
             //TODO: make this untrue
             LanguageAPI.Add("CAPTAIN_SUPPLY_HACKING_DESCRIPTION", "<style=cIsUtility>Hack</style> all nearby purchasables to a cost of <style=cIsUtility>$0</style> over time. Only usable <style=cIsUtility>once per stage</style>.");
 
-            //Apply beacon patches
+            //Apply individual skill patches (separated for purposes of organization)
+            ShotgunOverride.Patch();
             HealOverride.Patch();
             EquipmentRestockOverride.Patch();
             ShockOverride.Patch();
-        }
-
-        private void On_CapChargeShotgunFixedUpdate(On.EntityStates.Captain.Weapon.ChargeCaptainShotgun.orig_FixedUpdate orig, EntityStates.Captain.Weapon.ChargeCaptainShotgun self) {
-            if(Util.HasEffectiveAuthority(self.outer.networkIdentity)) {
-                var fixedAge = (float)typeof(EntityStates.EntityState).GetPropertyCached("fixedAge").GetValue(self);
-                var chargeDuration = self.GetFieldValue<float>("chargeDuration");
-                if(fixedAge / chargeDuration > fireDelayDynamic && fixedAge - chargeDuration > fireDelayFixed) self.SetFieldValue<bool>("released", true);
-            }
-            orig(self);
         }
 
         private void IL_CSDCUpdateSkillOverrides(ILContext il) {
