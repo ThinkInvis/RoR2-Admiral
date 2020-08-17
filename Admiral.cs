@@ -49,12 +49,16 @@ namespace ThinkInvisible.Admiral {
             if(fireDelayFixed > 0f || fireDelayDynamic > 0f)
                 On.EntityStates.Captain.Weapon.ChargeCaptainShotgun.FixedUpdate += On_CapChargeShotgunFixedUpdate;
             
+            LanguageAPI.Add("CAPTAIN_SPECIAL_DESCRIPTION", "Request a <style=cIsUtility>temporary</style> Supply Beacon. Both beacons have <style=cIsUtility>independent cooldowns</style>.");
 
+            //TODO: make this untrue
+            LanguageAPI.Add("CAPTAIN_SUPPLY_HACKING_DESCRIPTION", "<style=cIsUtility>Hack</style> all nearby purchasables to a cost of <style=cIsUtility>$0</style> over time. Only usable <style=cIsUtility>once per stage</style>.");
 
             //Apply beacon patches
             HealOverride.Patch();
             EquipmentRestockOverride.Patch();
             ShockOverride.Patch();
+
 
             //Apply shock patch
             shockRng = new Xoroshiro128Plus(0u);
