@@ -19,7 +19,7 @@ namespace ThinkInvisible.Admiral {
                 new AcceptableValueRange<float>(0f,float.MaxValue)));
             fireDelayFixed = cfgFireDelayFixed.Value;
 
-            if(fireDelayFixed > 0f || fireDelayDynamic > 0f)
+            if(fireDelayFixed > 0f || fireDelayDynamic > 1f)
                 On.EntityStates.Captain.Weapon.ChargeCaptainShotgun.FixedUpdate += On_CapChargeShotgunFixedUpdate;
 
             On.EntityStates.Captain.Weapon.FireCaptainShotgun.ModifyBullet += On_FCSModifyBullet;
