@@ -40,9 +40,11 @@ namespace ThinkInvisible.Admiral {
             //CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
 
             //Apply individual skill patches (separated for purposes of organization)
+            ItemWard.Patch();
             ShotgunOverride.Patch();
             HealOverride.Patch();
             EquipmentRestockOverride.Patch();
+            HackOverride.Patch();
             ShockOverride.Patch();
         }
 
