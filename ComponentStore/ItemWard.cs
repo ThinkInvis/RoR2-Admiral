@@ -180,12 +180,15 @@ namespace ThinkInvisible.Admiral {
 				cachedRadSq = cachedRadius * cachedRadius;
 			}
 
-			var totalRotateAmount = 0.125f * (2f * Mathf.PI * Time.time);
+			var totalRotateAmount = -0.125f * (2f * Mathf.PI * Time.time);
 			var countAngle = 2f*Mathf.PI/displays.Count;
 			var displayRadius = cachedRadius/2f;
 			var displayHeight = Mathf.Max(cachedRadius/3f, 1f);
 			for(int i = 0; i < displays.Count; i++) {
-				displays[i].transform.localPosition = new Vector3(Mathf.Cos(countAngle*i+totalRotateAmount)*displayRadius, displayHeight, Mathf.Sin(countAngle*i+totalRotateAmount)*displayRadius);
+				var target = new Vector3(Mathf.Cos(countAngle*i+totalRotateAmount)*displayRadius, displayHeight, Mathf.Sin(countAngle*i+totalRotateAmount)*displayRadius);
+				var dspv = displayVelocities[i];
+				displays[i].transform.localPosition = Vector3.SmoothDamp(displays[i].transform.localPosition, target, ref dspv, 1f);
+				displayVelocities[i] = dspv;
 			}
 		}
 
@@ -233,14 +236,15 @@ namespace ThinkInvisible.Admiral {
 			}
 		}
 
-		//TODO: find a better way to do this that supports removals. for now, items don't ever need to be removed from one of these.
+		//TODO: figure out removal (not needed yet). probably needs a custom component or separate list.
 		public void AddItem(ItemIndex ind) {
 			if(!itemcounts.ContainsKey(ind)) itemcounts[ind] = 1;
 			else itemcounts[ind]++;
-			var display = UnityEngine.Object.Instantiate(displayPrefab);
+			var display = UnityEngine.Object.Instantiate(displayPrefab, transform.position, transform.rotation);
 			display.transform.Find("BillboardBase").Find("PickupSprite").GetComponent<SpriteRenderer>().sprite = ItemCatalog.GetItemDef(ind).pickupIconSprite;
 			display.transform.parent = transform;
 			displays.Add(display);
+			displayVelocities.Add(new Vector3(0, 0, 0));
 			foreach(var inv in trackedInventories) {
 				var fakeInv = inv.gameObject.GetComponent<FakeInventory>();
 				inv.GiveItem(ind);
@@ -265,6 +269,7 @@ namespace ThinkInvisible.Admiral {
 		private float rangeIndicatorScaleVelocity;
 
 		private List<GameObject> displays = new List<GameObject>();
+		private List<Vector3> displayVelocities = new List<Vector3>();
 		private List<Inventory> trackedInventories = new List<Inventory>();
     }
 }
