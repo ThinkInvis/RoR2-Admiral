@@ -26,7 +26,7 @@ Now usable in every Hidden Realm, except for Bazaar.
 
 Now usable in every Hidden Realm, except for Bazaar.
 
-All beacons (except Hacking, for now) are no longer limited to one use per stage. Instead, they have individual cooldowns and lifetimes.
+All beacons are no longer limited to one use per stage. Instead, they have individual cooldowns and lifetimes.
 
 #### Beacon: Healing
 
@@ -35,6 +35,8 @@ Lasts 20 seconds. Recharges in 40 seconds.
 #### Beacon: Shocking
 
 Lasts 8 seconds. Recharges in 30 seconds.
+
+Benefits from the same changes that Power Tazer does, due to sharing the Shocked status.
 
 #### Beacon: Resupply
 
@@ -46,17 +48,23 @@ Beacon: Rejuvenator gives all allies standing nearby the new Stimmed buff, which
 
 #### Beacon: Hacking
 
-Unchanged... for now.
+REPLACED with Beacon: Special Order.
+
+Lasts 20 seconds. Recharges in 40 seconds.
+
+Beacon: Special Order gives all allies standing nearby a set of temporary items rolled on the basic chest table, starting with 5 and increasing by 1 for every stage cleared. These items cannot be used in 3D Printers nor in Scrappers, and they're removed when the beacon breaks down or when you leave its range.
 
 ## Issues/TODO
 
-- Beacon: Rejuvenator doesn't have an area indicator.
-- Plans exist to replace Beacon: Hacking with some sort of extra item generation, likely at the cost of more money for each use in the same stage.
 - Plans exist for an alternate utility skill which creates temporary jump pads.
 - Trying to find a way to allow canceling beacon/probe by recasting the skill.
 - See the GitHub repo for more!
 
 ## Changelog
+
+**1.3.0**
+
+- Beacon: Hacking has been replaced with Beacon: Special Order! Provides 5 random, temporary items (+1 per stage cleared) from the Tier 1 chest drop list.
 
 **1.2.0**
 
