@@ -15,7 +15,7 @@ namespace ThinkInvisible.Admiral {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI))]
     public class AdmiralPlugin:BaseUnityPlugin {
-        public const string ModVer = "1.2.0";
+        public const string ModVer = "1.3.0";
         public const string ModName = "Admiral";
         public const string ModGuid = "com.ThinkInvisible.Admiral";
         
@@ -40,9 +40,11 @@ namespace ThinkInvisible.Admiral {
             //CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
 
             //Apply individual skill patches (separated for purposes of organization)
+            ItemWard.Patch();
             ShotgunOverride.Patch();
             HealOverride.Patch();
             EquipmentRestockOverride.Patch();
+            HackOverride.Patch();
             ShockOverride.Patch();
         }
 
