@@ -58,6 +58,13 @@ Unchanged... for now.
 
 ## Changelog
 
+**1.2.0**
+
+- Fixed inability to disable Vulcan Shotgun autofire.
+- Beacon: Rejuvenator now has a range indicator.
+- Slightly buffed Beacon: Rejuvenator range to bring it in line with existing beacons (7 m --> 10 m).
+- Beacon lifetime is now extended to account for the ~4 sec drop animation.
+
 **1.1.0**
 
 - Implemented language token overrides (R2API bug was patched).
