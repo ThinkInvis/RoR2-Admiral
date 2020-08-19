@@ -31,19 +31,19 @@ namespace ThinkInvisible.Admiral {
 
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides += IL_CSDCUpdateSkillOverrides;
             
-
             LanguageAPI.Add("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>.");
 
             //TODO: make this untrue
             LanguageAPI.Add("CAPTAIN_SUPPLY_HACKING_DESCRIPTION", "<style=cIsUtility>Hack</style> all nearby purchasables to a cost of <style=cIsUtility>$0</style> over time. Only usable <style=cIsUtility>once per stage</style>.");
+
+            //TODO: these seem to be set as needed or something?? find out where the hell these are actually defined. assuming 4 sec for now because it's close enough
+            //CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
 
             //Apply individual skill patches (separated for purposes of organization)
             ShotgunOverride.Patch();
             HealOverride.Patch();
             EquipmentRestockOverride.Patch();
             ShockOverride.Patch();
-
-            CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
         }
 
         private void IL_CSDCUpdateSkillOverrides(ILContext il) {
@@ -71,9 +71,10 @@ namespace ThinkInvisible.Admiral {
     }
 
     public class CaptainBeaconDecayer : MonoBehaviour {
+        public static float lifetimeDropAdjust {get; internal set;} = 4f;
+
         public float lifetime = 15f;
         public bool silent = false;
-        internal static float lifetimeDropAdjust = 0f;
         private float stopwatch = 0f;
 
         private void FixedUpdate() {
