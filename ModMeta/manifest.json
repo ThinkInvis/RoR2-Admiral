@@ -1,6 +1,6 @@
 {
     "name": "Admiral",
-    "version_number": "1.1.0",
+    "version_number": "1.2.0",
     "website_url": "https://github.com/ThinkInvis/RoR2-Admiral",
     "description": "A character overhaul, because the Captain's due for a promotion.",
     "dependencies": [

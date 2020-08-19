@@ -15,7 +15,7 @@ namespace ThinkInvisible.Admiral {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI))]
     public class AdmiralPlugin:BaseUnityPlugin {
-        public const string ModVer = "1.1.0";
+        public const string ModVer = "1.2.0";
         public const string ModName = "Admiral";
         public const string ModGuid = "com.ThinkInvisible.Admiral";
         
@@ -31,11 +31,13 @@ namespace ThinkInvisible.Admiral {
 
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides += IL_CSDCUpdateSkillOverrides;
             
-
             LanguageAPI.Add("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>.");
 
             //TODO: make this untrue
             LanguageAPI.Add("CAPTAIN_SUPPLY_HACKING_DESCRIPTION", "<style=cIsUtility>Hack</style> all nearby purchasables to a cost of <style=cIsUtility>$0</style> over time. Only usable <style=cIsUtility>once per stage</style>.");
+
+            //TODO: these seem to be set as needed or something?? find out where the hell these are actually defined. assuming 4 sec for now because it's close enough
+            //CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
 
             //Apply individual skill patches (separated for purposes of organization)
             ShotgunOverride.Patch();
@@ -69,17 +71,22 @@ namespace ThinkInvisible.Admiral {
     }
 
     public class CaptainBeaconDecayer : MonoBehaviour {
+        public static float lifetimeDropAdjust {get; internal set;} = 4f;
+
         public float lifetime = 15f;
+        public bool silent = false;
         private float stopwatch = 0f;
 
         private void FixedUpdate() {
             stopwatch += Time.fixedDeltaTime;
-            if(stopwatch >= lifetime) {
-                EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXEngiTurretDeath"),
-                    new EffectData {
-                        origin = this.transform.position,
-                        scale = 5f
-                    }, true);
+            if(stopwatch >= lifetime + lifetimeDropAdjust) {
+                if(!silent) {
+                    EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXEngiTurretDeath"),
+                        new EffectData {
+                            origin = this.transform.position,
+                            scale = 5f
+                        }, true);
+                }
 
                 UnityEngine.Object.Destroy(this.gameObject);
             }
