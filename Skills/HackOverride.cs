@@ -27,7 +27,7 @@ namespace ThinkInvisible.Admiral {
             On.EntityStates.CaptainSupplyDrop.HackingMainState.OnEnter += On_HMSOnEnter;
 
             LanguageAPI.Add("CAPTAIN_SUPPLY_HACKING_NAME","Beacon: Special Order");
-            LanguageAPI.Add("CAPTAIN_SUPPLY_HACKING_DESCRIPTION","Order a pack of <style=cIsUtility>random temporary items</style> from your trusty quartermaster. All allies standing near the beacon receive these items.");
+            LanguageAPI.Add("CAPTAIN_SUPPLY_HACKING_DESCRIPTION","Requisition a pack of <style=cIsUtility>random, temporary items</style> from your trusty quartermaster. All allies standing near the beacon receive these items.");
         }
 
         private static void On_HMSOnEnter(On.EntityStates.CaptainSupplyDrop.HackingMainState.orig_OnEnter orig, EntityStates.CaptainSupplyDrop.HackingMainState self) {
