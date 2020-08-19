@@ -150,8 +150,6 @@ namespace ThinkInvisible.Admiral {
 		private void OnEnable() {
 			if(rangeIndicator)
 				rangeIndicator.gameObject.SetActive(true);
-
-			//On.RoR2.Inventory.GetItemCount += On_InvGetItemCount;
 		}
 
 		private static int On_InvGetItemCount(On.RoR2.Inventory.orig_GetItemCount orig, Inventory self, ItemIndex itemIndex) {
@@ -160,21 +158,11 @@ namespace ThinkInvisible.Admiral {
 			var fakeinv = self.gameObject.GetComponent<FakeInventory>();
 			if(!fakeinv) return origVal;
 			return origVal - fakeinv.GetItemCount(itemIndex);
-			/*Debug.Log("GIC:" + ignoreFakes);
-			if(!ignoreFakes) return origVal;
-			Debug.Log("Hooking itemcount...");
-			if(!itemcounts.ContainsKey(itemIndex)) return origVal;
-			Debug.Log("Valid item");
-			if(!trackedInventories.Contains(self)) return origVal;
-			Debug.Log("Decrementing someone's itemindex " + itemIndex + " by " + itemcounts[itemIndex]);
-			return origVal - itemcounts[itemIndex];*/
 		}
 
 		private void OnDisable() {
 			if(this.rangeIndicator)
 				this.rangeIndicator.gameObject.SetActive(false);
-
-			//On.RoR2.Inventory.GetItemCount -= On_InvGetItemCount;
 
 			for(var i = trackedInventories.Count - 1; i >= 0; i--) {
 				DeregInv(trackedInventories[i]);
