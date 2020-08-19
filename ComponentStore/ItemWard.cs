@@ -180,14 +180,12 @@ namespace ThinkInvisible.Admiral {
 				cachedRadSq = cachedRadius * cachedRadius;
 			}
 
-			var inPlaceRotateAmount = -0.5f * (2f * Mathf.PI * Time.deltaTime);
 			var totalRotateAmount = 0.125f * (2f * Mathf.PI * Time.time);
 			var countAngle = 2f*Mathf.PI/displays.Count;
 			var displayRadius = cachedRadius/2f;
 			var displayHeight = Mathf.Max(cachedRadius/3f, 1f);
 			for(int i = 0; i < displays.Count; i++) {
 				displays[i].transform.localPosition = new Vector3(Mathf.Cos(countAngle*i+totalRotateAmount)*displayRadius, displayHeight, Mathf.Sin(countAngle*i+totalRotateAmount)*displayRadius);
-				displays[i].transform.Rotate(0, inPlaceRotateAmount, 0);
 			}
 		}
 
