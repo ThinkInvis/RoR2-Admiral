@@ -42,6 +42,8 @@ namespace ThinkInvisible.Admiral {
             HealOverride.Patch();
             EquipmentRestockOverride.Patch();
             ShockOverride.Patch();
+
+            CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
         }
 
         private void IL_CSDCUpdateSkillOverrides(ILContext il) {
@@ -70,16 +72,20 @@ namespace ThinkInvisible.Admiral {
 
     public class CaptainBeaconDecayer : MonoBehaviour {
         public float lifetime = 15f;
+        public bool silent = false;
+        internal static float lifetimeDropAdjust = 0f;
         private float stopwatch = 0f;
 
         private void FixedUpdate() {
             stopwatch += Time.fixedDeltaTime;
-            if(stopwatch >= lifetime) {
-                EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXEngiTurretDeath"),
-                    new EffectData {
-                        origin = this.transform.position,
-                        scale = 5f
-                    }, true);
+            if(stopwatch >= lifetime + lifetimeDropAdjust) {
+                if(!silent) {
+                    EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXEngiTurretDeath"),
+                        new EffectData {
+                            origin = this.transform.position,
+                            scale = 5f
+                        }, true);
+                }
 
                 UnityEngine.Object.Destroy(this.gameObject);
             }

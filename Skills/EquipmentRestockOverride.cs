@@ -35,7 +35,7 @@ namespace ThinkInvisible.Admiral {
             chwPrefab.GetComponent<HealingWard>().enabled = false;
             var indic = chwPrefab.transform.Find("Indicator");
             var wardDecayer = chwPrefab.AddComponent<CaptainBeaconDecayer>();
-            wardDecayer.lifetime = eqprestDecayer.lifetime;
+            wardDecayer.lifetime = eqprestDecayer.lifetime - CaptainBeaconDecayer.lifetimeDropAdjust; //ward appears after drop
             wardDecayer.silent = true;
             var eqprestWard = chwPrefab.AddComponent<BuffWard>();
             eqprestWard.buffType = stimmedBuffIndex;
