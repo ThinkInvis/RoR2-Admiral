@@ -67,7 +67,7 @@ namespace ThinkInvisible.Admiral {
             //Instantiate buff zone
             On.EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState.OnEnter += On_BaseSDS_OnEnter;
 
-            //broken until next R2API release
+            //Override lang tokens
             LanguageAPI.Add("CAPTAIN_SUPPLY_EQUIPMENT_RESTOCK_NAME","Beacon: Rejuvenator");
             LanguageAPI.Add("CAPTAIN_SUPPLY_EQUIPMENT_RESTOCK_DESCRIPTION","<style=cIsUtility>Buff</style> all nearby allies with <style=cIsUtility>+50% skill recharge rate</style>.");
         }
