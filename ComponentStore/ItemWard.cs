@@ -198,6 +198,7 @@ namespace ThinkInvisible.Admiral {
 				stopwatch = 0f;
 				var bodies = (CharacterBody[])UnityEngine.GameObject.FindObjectsOfType<CharacterBody>();
 				foreach(var body in bodies) {
+					if(body.teamComponent.teamIndex != currentTeam) continue;
 					if((body.transform.position - transform.position).sqrMagnitude <= cachedRadSq)
 						RegObject(body.gameObject);
 					else
