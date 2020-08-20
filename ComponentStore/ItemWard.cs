@@ -164,7 +164,7 @@ namespace ThinkInvisible.Admiral {
 			if(this.rangeIndicator)
 				this.rangeIndicator.gameObject.SetActive(false);
 			
-			trackedInventories.RemoveAll(x => !x.gameObject);
+			trackedInventories.RemoveAll(x => !x || !x.gameObject);
 			for(var i = trackedInventories.Count - 1; i >= 0; i--) {
 				DeregInv(trackedInventories[i]);
 			}
@@ -197,7 +197,7 @@ namespace ThinkInvisible.Admiral {
 			stopwatch += Time.fixedDeltaTime;
 			if(stopwatch > updateTickRate) {
 				stopwatch = 0f;
-				trackedInventories.RemoveAll(x => !x.gameObject);
+				trackedInventories.RemoveAll(x => !x || !x.gameObject);
 				var bodies = (CharacterBody[])UnityEngine.GameObject.FindObjectsOfType<CharacterBody>();
 				foreach(var body in bodies) {
 					if(body.teamComponent.teamIndex != currentTeam) continue;
@@ -248,7 +248,7 @@ namespace ThinkInvisible.Admiral {
 			display.transform.parent = transform;
 			displays.Add(display);
 			displayVelocities.Add(new Vector3(0, 0, 0));
-			trackedInventories.RemoveAll(x => !x.gameObject);
+			trackedInventories.RemoveAll(x => !x || !x.gameObject);
 			foreach(var inv in trackedInventories) {
 				var fakeInv = inv.gameObject.GetComponent<FakeInventory>();
 				inv.GiveItem(ind);
