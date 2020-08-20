@@ -59,11 +59,6 @@ namespace ThinkInvisible.Admiral {
             //Hide interact option
             On.EntityStates.CaptainSupplyDrop.EquipmentRestockMainState.GetInteractability += On_MainStateGetInteractibility;
 
-            //Hide energy indicator
-            var origCUOSGet = typeof(EntityStates.CaptainSupplyDrop.EquipmentRestockMainState).GetMethodCached("get_shouldShowEnergy");
-            var newCUOSGet = typeof(EquipmentRestockOverride).GetMethodCached(nameof(Hook_Get_ShouldShowEnergy));
-            var CUOSHook = new Hook(origCUOSGet, newCUOSGet);
-
             //Instantiate buff zone
             On.EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState.OnEnter += On_BaseSDS_OnEnter;
 
@@ -86,8 +81,6 @@ namespace ThinkInvisible.Admiral {
                 skillSlot.RunRecharge(Time.fixedDeltaTime * 0.5f);
             orig(self, skillSlot);
         }
-
-        private static bool Hook_Get_ShouldShowEnergy(EntityStates.CaptainSupplyDrop.EquipmentRestockMainState self) => false;
 
         private static Interactability On_MainStateGetInteractibility(On.EntityStates.CaptainSupplyDrop.EquipmentRestockMainState.orig_GetInteractability orig, EntityStates.CaptainSupplyDrop.EquipmentRestockMainState self, Interactor activator) {
             return Interactability.Disabled;
