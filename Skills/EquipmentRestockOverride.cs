@@ -70,7 +70,7 @@ namespace ThinkInvisible.Admiral {
             orig(self);
             if(self is EquipmentRestockMainState && NetworkServer.active) {
 				var buffZoneInstance = UnityEngine.Object.Instantiate<GameObject>(rejuvWardPrefab, self.outer.commonComponents.transform.position, self.outer.commonComponents.transform.rotation);
-				buffZoneInstance.GetComponent<TeamFilter>().teamIndex = self.GetFieldValue<TeamFilter>("teamFilter").teamIndex;
+				buffZoneInstance.GetComponent<TeamFilter>().teamIndex = self.teamFilter.teamIndex;
 				NetworkServer.Spawn(buffZoneInstance);
             }
         }

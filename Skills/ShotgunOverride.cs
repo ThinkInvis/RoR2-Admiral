@@ -40,9 +40,7 @@ namespace ThinkInvisible.Admiral {
 
         private static void On_CapChargeShotgunFixedUpdate(On.EntityStates.Captain.Weapon.ChargeCaptainShotgun.orig_FixedUpdate orig, EntityStates.Captain.Weapon.ChargeCaptainShotgun self) {
             if(Util.HasEffectiveAuthority(self.outer.networkIdentity)) {
-                var fixedAge = (float)typeof(EntityStates.EntityState).GetPropertyCached("fixedAge").GetValue(self);
-                var chargeDuration = self.GetFieldValue<float>("chargeDuration");
-                if(fixedAge / chargeDuration > fireDelayDynamic && fixedAge - chargeDuration > fireDelayFixed) self.SetFieldValue<bool>("released", true);
+                if(self.fixedAge / self.chargeDuration > fireDelayDynamic && self.fixedAge - self.chargeDuration > fireDelayFixed) self.SetFieldValue<bool>("released", true);
             }
             orig(self);
         }
