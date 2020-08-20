@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using RoR2.Skills;
+using RoR2;
 
 namespace ThinkInvisible.Admiral {
     public static class HealOverride {
@@ -11,6 +12,7 @@ namespace ThinkInvisible.Admiral {
             var healPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Healing");
             var healDecayer = healPrefab.AddComponent<CaptainBeaconDecayer>();
             healDecayer.lifetime = 20f;
+            healPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
         }
     }
 }

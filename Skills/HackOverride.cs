@@ -16,7 +16,7 @@ namespace ThinkInvisible.Admiral {
             var hackPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Hacking");
             var hackDecayer = hackPrefab.AddComponent<CaptainBeaconDecayer>();
             hackDecayer.lifetime = 20f;
-            hackPrefab.GetComponent<GenericEnergyComponent>().enabled = false;
+            hackPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
 
             var inv = hackPrefab.AddComponent<Inventory>();
 
