@@ -31,13 +31,13 @@ namespace ThinkInvisible.Admiral {
             float ePHCap = Mathf.Max(extraPeakHeight, 0f);
             var deltaPos = target - source;
             var yF = deltaPos.y;
-            var yPeak = ePHCap + yF;
+            var yPeak = Mathf.Max(ePHCap + yF, 0);
             //everything will be absolutely ruined if gravity goes in any direction other than -y. them's the breaks.
             var g = -UnityEngine.Physics.gravity.y;
             //calculate initial vertical velocity
             float vY0 = Mathf.Sqrt(2f * g * yPeak);
             //calculate total travel time from vertical velocity
-            float tF = Mathf.Sqrt(2)/g * (Mathf.Sqrt(g * ePHCap) + Mathf.Sqrt(g * yPeak));
+            float tF = Mathf.Sqrt(2)/g * (Mathf.Sqrt(g * (yPeak - yF)) + Mathf.Sqrt(g * yPeak));
             //use total travel time to calculate other velocity components
             var vX0 = deltaPos.x/tF;
             var vZ0 = deltaPos.z/tF;
@@ -48,7 +48,7 @@ namespace ThinkInvisible.Admiral {
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
 
             var jppBase = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
-            jppBase.transform.localScale = new Vector3(0.5f, 0.125f, 0.5f);
+            jppBase.transform.localScale = new Vector3(0.75f, 0.125f, 0.75f);
             jppBase.GetComponent<PurchaseInteraction>().enabled = false;
             jppBase.GetComponent<RoR2.Hologram.HologramProjector>().enabled = false;
             jppBase.GetComponent<OccupyNearbyNodes>().enabled = false;
@@ -81,7 +81,7 @@ namespace ThinkInvisible.Admiral {
             var desctoken = "ADMIRAL_JUMPPAD_DESC";
             var namestr = "Orbital Jump Pad";
             LanguageAPI.Add(nametoken, namestr);
-            LanguageAPI.Add(desctoken, "Request an Orbital Jump Pad from the <style=cIsUtility>UES Safe Travels</style>. Fire once to set the jump pad, then again to set its target.");
+            LanguageAPI.Add(desctoken, "Request an Orbital Jump Pad from the <style=cIsUtility>UES Safe Travels</style>. Fire once to set the jump pad, then again to set its target (both within <style=cIsUtility>100 m</style>).");
             
             setupSkillDef = ScriptableObject.CreateInstance<SkillDef>();
 
@@ -105,7 +105,7 @@ namespace ThinkInvisible.Admiral {
             setupSkillDef.skillName = namestr;
             setupSkillDef.skillNameToken = nametoken;
             setupSkillDef.skillDescriptionToken = desctoken;
-            setupSkillDef.icon = Resources.Load<SkillDef>("skilldefs/captainbody/PrepAirstrike").icon;
+            setupSkillDef.icon = Resources.Load<SkillDef>("skilldefs/captainbody/PrepSupplyDrop").icon;
 
             LoadoutAPI.AddSkillDef(setupSkillDef);
 
@@ -140,10 +140,9 @@ namespace ThinkInvisible.Admiral {
             callSkillDef.skillName = namestr;
             callSkillDef.skillNameToken = nametoken;
             callSkillDef.skillDescriptionToken = desctoken;
-            callSkillDef.icon = Resources.Load<SkillDef>("skilldefs/captainbody/CallAirstrike").icon;
+            callSkillDef.icon = Resources.Load<SkillDef>("skilldefs/captainbody/PrepSupplyDrop").icon;
 
             LoadoutAPI.AddSkillDef(callSkillDef);
-
         }
 
         private static void ProjectileImpactExplosion_Detonate(On.RoR2.Projectile.ProjectileImpactExplosion.orig_Detonate orig, ProjectileImpactExplosion self) {
@@ -163,9 +162,12 @@ namespace ThinkInvisible.Admiral {
                 var ojph = owner.GetComponent<OrbitalJumpPadHelper>();
                 if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadHelper>();
                 if(!ojph.lastPadBase) return;
-                var jtraj = CalculateJumpPadTrajectory(ojph.lastPadBase.transform.position, self.transform.position, self.transform.position.y > ojph.lastPadBase.transform.position.y ? 5f : 0f);
+                var jtraj = CalculateJumpPadTrajectory(ojph.lastPadBase.transform.position, self.transform.position, 5f);
                 ojph.lastPadBase.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject.GetComponent<JumpVolume>().jumpVelocity = jtraj;
-                ojph.lastPadBase.GetComponent<ChestBehavior>().Open();
+                if(!float.IsNaN(jtraj.y))
+                    ojph.lastPadBase.GetComponent<ChestBehavior>().Open();
+                else
+                    GameObject.Destroy(ojph.lastPadBase);
             }
         }
 
