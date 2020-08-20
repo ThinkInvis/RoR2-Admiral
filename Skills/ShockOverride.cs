@@ -23,6 +23,8 @@ namespace ThinkInvisible.Admiral {
             On.EntityStates.ShockState.OnEnter += On_ShockStateOnEnter;
             On.EntityStates.ShockState.FixedUpdate += On_ShockStateFixedUpdate;
 
+            EntityStates.CaptainSupplyDrop.ShockZoneMainState.shockFrequency = 1.5f;
+
             LanguageAPI.Add("KEYWORD_SHOCKING", "<style=cKeywordName>Shocking</style><style=cSub>Interrupts enemies and temporarily stuns them. A victim of Shocking will <style=cIsDamage>damage their nearby allies</style> for a fraction of their own maximum health per second.");
         }
 
