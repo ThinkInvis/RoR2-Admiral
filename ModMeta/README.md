@@ -14,7 +14,7 @@ Reduced pellet count from 8 to 6. The intent of this mod is to buff the rest of 
 
 ### Power Tazer (& Beacon: Shocking)
 
-The Shocked status now wears off after a 100% health interval, up from 10% (so health-based 'stunbreak' is effectively disabled).
+The Shocked status now wears off after a 10,000% health interval, up from 10% (so health-based 'stunbreak' is effectively disabled).
 
 The Shocked status now deals roughly 20% of the victim's maximum health per second as damage to its allies within 15 meters, targeting and firing randomly.
 
@@ -61,6 +61,12 @@ Beacon: Special Order gives all allies standing nearby a set of temporary items 
 - See the GitHub repo for more!
 
 ## Changelog
+
+**1.3.1**
+
+- Beacon: Special Order can no longer give items to enemies.
+- Beacon: Special Order can no longer give items to dead bodies caused by beacon impact (which doesn't work and could cause console errors + lower itemcount on the beacon).
+- Fixed shock health threshold override not being aggressive enough.
 
 **1.3.0**
 
