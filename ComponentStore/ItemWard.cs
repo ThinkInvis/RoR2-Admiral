@@ -239,7 +239,6 @@ namespace ThinkInvisible.Admiral {
 			}
 		}
 
-		//TODO: figure out removal (not needed yet). probably needs a custom component or separate list.
 		public void AddItem(ItemIndex ind) {
 			if(!itemcounts.ContainsKey(ind)) itemcounts[ind] = 1;
 			else itemcounts[ind]++;
@@ -248,11 +247,28 @@ namespace ThinkInvisible.Admiral {
 			display.transform.parent = transform;
 			displays.Add(display);
 			displayVelocities.Add(new Vector3(0, 0, 0));
+			displayItems.Add(ind);
 			trackedInventories.RemoveAll(x => !x || !x.gameObject);
 			foreach(var inv in trackedInventories) {
 				var fakeInv = inv.gameObject.GetComponent<FakeInventory>();
 				inv.GiveItem(ind);
 				fakeInv.GiveItem(ind);
+			}
+		}
+
+		public void RemoveItem(ItemIndex ind) {
+			if(!itemcounts.ContainsKey(ind)) return;
+			else itemcounts[ind]--;
+			if(itemcounts[ind] == 0) itemcounts.Remove(ind);
+			var listInd = displayItems.IndexOf(ind);
+			displays.RemoveAt(listInd);
+			displayVelocities.RemoveAt(listInd);
+			displayItems.RemoveAt(listInd);
+			trackedInventories.RemoveAll(x => !x || !x.gameObject);
+			foreach(var inv in trackedInventories) {
+				var fakeInv = inv.gameObject.GetComponent<FakeInventory>();
+				inv.RemoveItem(ind);
+				fakeInv.RemoveItem(ind);
 			}
 		}
 
@@ -274,6 +290,7 @@ namespace ThinkInvisible.Admiral {
 
 		private List<GameObject> displays = new List<GameObject>();
 		private List<Vector3> displayVelocities = new List<Vector3>();
+		private List<ItemIndex> displayItems = new List<ItemIndex>();
 		private List<Inventory> trackedInventories = new List<Inventory>();
     }
 }
