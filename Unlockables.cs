@@ -12,6 +12,9 @@ namespace ThinkInvisible.Admiral {
             UnlockablesAPI.AddUnlockable<AdmiralJumpPadAchievement>(false);
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Damn the Torpedoes");
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
+
+            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_NAME", "Well-Seasoned");
+            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, inflict 10 debuff stacks at once.");
         }
     }
 
@@ -60,9 +63,87 @@ namespace ThinkInvisible.Admiral {
             if(projInd != projTestInd1 && projInd != projTestInd2 && projInd != projTestInd3) return;
             var vel = obj.victimBody.GetComponent<AverageSpeedTracker>().QuerySpeed();
             var projdist = (obj.damageInfo.position - obj.damageInfo.inflictor.transform.position).magnitude;
-            Debug.Log("Hit with avg vel " + vel + " and dist " + projdist);
             if(vel > 20f && projdist < 3f)
                 base.Grant();
+        }
+    }
+    
+    public class AdmiralCatalyzerAchievement : ModdedUnlockableAndAchievement<VanillaSpriteProvider> {
+        public override string AchievementIdentifier => "ADMIRAL_CATALYZER_ACHIEVEMENT_ID";
+        public override string UnlockableIdentifier => "ADMIRAL_CATALYZER_UNLOCKABLE_ID";
+        public override string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
+        public override string AchievementNameToken => "ADMIRAL_CATALYZER_ACHIEVEMENT_NAME";
+        public override string AchievementDescToken => "ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION";
+        public override string UnlockableNameToken => "ADMIRAL_CATALYZER_SKILL_NAME";
+        protected override VanillaSpriteProvider SpriteProvider => new VanillaSpriteProvider("textures/bufficons/texBuffWeakIcon");
+
+        public override bool wantsBodyCallbacks => true;
+
+        public override int LookUpRequiredBodyIndex() {
+            return BodyCatalog.FindBodyIndex("CaptainBody");
+        }
+
+        public override void OnInstall() {
+            base.OnInstall();
+            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+            On.RoR2.CharacterBody.Awake += CharacterBody_Awake;
+        }
+
+        public override void OnUninstall() {
+            base.OnUninstall();
+            On.RoR2.HealthComponent.TakeDamage -= HealthComponent_TakeDamage;
+            On.RoR2.CharacterBody.Awake -= CharacterBody_Awake;
+        }
+
+        private void CharacterBody_Awake(On.RoR2.CharacterBody.orig_Awake orig, CharacterBody self) {
+            orig(self);
+            if(self.bodyIndex != this.requiredBodyIndex) return;
+            self.gameObject.AddComponent<DebuffsInflictedTracker>();
+        }
+
+        private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo) {
+            if(!meetsBodyRequirement) return;
+            if(!self.body || damageInfo.attacker != NetworkUser.readOnlyLocalPlayersList[0].GetCurrentBody().gameObject) return;
+
+            int debuffsPre = 0;
+            for(BuffIndex i = 0; i < (BuffIndex)BuffCatalog.buffCount; i++) {
+				var buffDef = BuffCatalog.GetBuffDef(i);
+				if(buffDef.isDebuff) {
+                    debuffsPre += self.body.GetBuffCount(i);
+				}
+            }
+
+            orig(self, damageInfo);
+            
+            int debuffsPost = 0;
+            for(BuffIndex i = 0; i < (BuffIndex)BuffCatalog.buffCount; i++) {
+				var buffDef = BuffCatalog.GetBuffDef(i);
+				if(buffDef.isDebuff) {
+                    debuffsPost += self.body.GetBuffCount(i);
+				}
+            }
+
+            var dit = damageInfo.attacker.GetComponent<DebuffsInflictedTracker>();
+            dit.debuffCount += Mathf.Max(debuffsPost - debuffsPre, 0);
+            Debug.Log("DebuffCount changed by " + (debuffsPost - debuffsPre) + " -- now " + dit.debuffCount);
+            if(dit.debuffCount > 10)
+                base.Grant();
+        }
+    }
+
+    public class DebuffsInflictedTracker : MonoBehaviour {
+        public int debuffCount = 0;
+        public float decayRate = 0.5f;
+
+        private float stopwatch = 0f;
+
+        private void FixedUpdate() {
+            if(debuffCount > 0)
+                stopwatch += Time.fixedDeltaTime;
+            if(stopwatch > decayRate) {
+                debuffCount = 0;
+                stopwatch = 0f;
+            }
         }
     }
 
