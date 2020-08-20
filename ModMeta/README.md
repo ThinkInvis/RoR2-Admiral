@@ -22,11 +22,15 @@ The Shocked status now deals roughly 20% of the victim's maximum health per seco
 
 Now usable in every Hidden Realm, except for Bazaar.
 
+### Orbital Jump Pad
+
+A new Utility skill variant (same slot as Orbital Probe). Summons a jump pad and its target within 100 m. Lasts 20 seconds, recharges in 30 seconds; anyone, friend or foe, can trigger the jump pad within this time.
+
 ### Orbital Supply Beacon
 
 Now usable in every Hidden Realm, except for Bazaar.
 
-All beacons are no longer limited to one use per stage. Instead, they have individual cooldowns and lifetimes.
+All beacons are no longer limited to one use per stage. Instead, they have individual cooldowns and lifetimes. The energy meter above some original beacons now exists on all of them as an indicator of time remaining.
 
 #### Beacon: Healing
 
@@ -56,11 +60,18 @@ Beacon: Special Order gives all allies standing nearby a set of temporary items 
 
 ## Issues/TODO
 
-- Plans exist for an alternate utility skill which creates temporary jump pads.
+- Orbital Jump Pad VFX is unfinished (particles are too big, reused vanilla skill icon).
+- Stepping on an Orbital Jump Pad can deal unavoidable falling damage; may attempt to make a 'landing pad' object to mitigate this.
 - Trying to find a way to allow canceling beacon/probe by recasting the skill.
 - See the GitHub repo for more!
 
 ## Changelog
+
+**1.4.0**
+
+- Added variant Utility skill: Orbital Jump Pad!
+- All beacons now use the original beacons' energy indicator as a lifetime indicator.
+- Added some extra zombie protection to Beacon: Special Order (original patch wasn't enough).
 
 **1.3.1**
 
