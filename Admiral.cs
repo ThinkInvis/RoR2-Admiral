@@ -38,6 +38,11 @@ namespace ThinkInvisible.Admiral {
 
             //TODO: these seem to be set as needed or something?? find out where the hell these are actually defined. assuming 4 sec for now because it's close enough
             //CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
+            
+            //Show energy indicator on all beacons
+            var origNrgGet = typeof(EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState).GetMethodCached("get_shouldShowEnergy");
+            var newNrgGet = typeof(AdmiralPlugin).GetMethodCached(nameof(Hook_Get_ShouldShowEnergy));
+            var NrgHook = new Hook(origCUOSGet, newCUOSGet);
 
             //Apply individual skill patches (separated for purposes of organization)
             ItemWard.Patch();
@@ -47,6 +52,8 @@ namespace ThinkInvisible.Admiral {
             HackOverride.Patch();
             ShockOverride.Patch();
         }
+
+        private static bool Hook_Get_ShouldShowEnergy(EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState self) => true;
 
         private void IL_CSDCUpdateSkillOverrides(ILContext il) {
             //prevent skills from being replaced with usedUpSkillDef once stock runs out -- we'll be using a cooldown instead
@@ -79,18 +86,28 @@ namespace ThinkInvisible.Admiral {
         public bool silent = false;
         private float stopwatch = 0f;
 
+        private GenericEnergyComponent energyCpt;
+
+        private void Awake() {
+            energyCpt = gameObject.GetComponent<GenericEnergyComponent>();
+        }
+
         private void FixedUpdate() {
             stopwatch += Time.fixedDeltaTime;
+            if(energyCpt) {
+                energyCpt.capacity = lifetime;
+                energyCpt.energy = lifetime - stopwatch + lifetimeDropAdjust;
+            }
             if(stopwatch >= lifetime + lifetimeDropAdjust) {
                 if(!silent) {
                     EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXEngiTurretDeath"),
                         new EffectData {
-                            origin = this.transform.position,
+                            origin = transform.position,
                             scale = 5f
                         }, true);
                 }
 
-                UnityEngine.Object.Destroy(this.gameObject);
+                UnityEngine.Object.Destroy(gameObject);
             }
         }
     }
