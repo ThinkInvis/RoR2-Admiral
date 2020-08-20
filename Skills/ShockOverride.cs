@@ -19,10 +19,15 @@ namespace ThinkInvisible.Admiral {
             shockDecayer.lifetime = 8f;
 
             shockRng = new Xoroshiro128Plus(0u);
-            EntityStates.ShockState.healthFractionToForceExit = 1f;
+            On.EntityStates.ShockState.OnEnter += On_ShockStateOnEnter;
             On.EntityStates.ShockState.FixedUpdate += On_ShockStateFixedUpdate;
 
             LanguageAPI.Add("KEYWORD_SHOCKING", "<style=cKeywordName>Shocking</style><style=cSub>Interrupts enemies and temporarily stuns them. A victim of Shocking will <style=cIsDamage>damage their nearby allies</style> for a fraction of their own maximum health per second.");
+        }
+
+        private static void On_ShockStateOnEnter(On.EntityStates.ShockState.orig_OnEnter orig, EntityStates.ShockState self) {
+            orig(self);
+            EntityStates.ShockState.healthFractionToForceExit = 100f;
         }
 
         private static void On_ShockStateFixedUpdate(On.EntityStates.ShockState.orig_FixedUpdate orig, EntityStates.ShockState self) {
