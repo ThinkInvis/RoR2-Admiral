@@ -7,6 +7,7 @@ using UnityEngine;
 using R2API.Utils;
 using EntityStates.Captain.Weapon;
 using EntityStates;
+using RoR2.Projectile;
 
 namespace ThinkInvisible.Admiral {
     public class EntStateCallJumpPad : BaseSkillState {
@@ -15,14 +16,19 @@ namespace ThinkInvisible.Admiral {
 			if(base.isAuthority) {
 				switch(this.activatorSkillSlot.stock) {
 				case 0:
-					this.outer.SetNextState(new EntStateJumpPad2());
+					var ns2 = new CallAirstrike2();
+					ns2.projectilePrefab = OrbitalJumpPadSkill.jumpPadPrefabProj2;
+					ns2.maxDistance = 80;
+					this.outer.SetNextState(ns2);
 					return;
 				case 1:
-					this.outer.SetNextState(new EntStateJumpPad1());
+					var ns1 = new CallAirstrike1();
+					ns1.projectilePrefab = OrbitalJumpPadSkill.jumpPadPrefabProj1;
+					ns1.maxDistance = 80;
+					this.outer.SetNextState(ns1);
 					return;
 				default:
 					Debug.LogError("Admiral: jump pad skill has invalid stock count!");
-					this.outer.SetNextState(new EntStateJumpPad1());
 					break;
 				}
 			}
@@ -32,7 +38,4 @@ namespace ThinkInvisible.Admiral {
 			return InterruptPriority.PrioritySkill;
 		}
 	}
-
-	public class EntStateJumpPad2 : CallAirstrike2 {}
-	public class EntStateJumpPad1 : CallAirstrike1 {}
 }

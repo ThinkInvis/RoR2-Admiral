@@ -46,6 +46,7 @@ namespace ThinkInvisible.Admiral {
             EquipmentRestockOverride.Patch();
             HackOverride.Patch();
             ShockOverride.Patch();
+            OrbitalJumpPadSkill.Patch();
         }
 
         private void IL_CSDCUpdateSkillOverrides(ILContext il) {
@@ -78,6 +79,7 @@ namespace ThinkInvisible.Admiral {
         public float lifetime = 15f;
         public bool silent = false;
         private float stopwatch = 0f;
+
 
         private void FixedUpdate() {
             stopwatch += Time.fixedDeltaTime;
