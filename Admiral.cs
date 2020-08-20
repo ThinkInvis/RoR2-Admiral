@@ -42,7 +42,7 @@ namespace ThinkInvisible.Admiral {
             //Show energy indicator on all beacons
             var origNrgGet = typeof(EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState).GetMethodCached("get_shouldShowEnergy");
             var newNrgGet = typeof(AdmiralPlugin).GetMethodCached(nameof(Hook_Get_ShouldShowEnergy));
-            var NrgHook = new Hook(origCUOSGet, newCUOSGet);
+            var NrgHook = new Hook(origNrgGet, newNrgGet);
 
             //Apply individual skill patches (separated for purposes of organization)
             ItemWard.Patch();

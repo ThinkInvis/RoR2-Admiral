@@ -17,6 +17,7 @@ namespace ThinkInvisible.Admiral {
             var shockPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Shocking");
             var shockDecayer = shockPrefab.AddComponent<CaptainBeaconDecayer>();
             shockDecayer.lifetime = 8f;
+            shockPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
 
             shockRng = new Xoroshiro128Plus(0u);
             On.EntityStates.ShockState.OnEnter += On_ShockStateOnEnter;

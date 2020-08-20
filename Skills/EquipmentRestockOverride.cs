@@ -27,9 +27,8 @@ namespace ThinkInvisible.Admiral {
             eqprestDecayer.lifetime = 20f;
 
             eqprestPrefab.GetComponent<ProxyInteraction>().enabled = false;
-            eqprestPrefab.GetComponent<GenericEnergyComponent>().enabled = false;
+            eqprestPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
             
-
             //Cobble together an indicator ring from the healing ward prefab
             var chwPrefab = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainHealingWard"));
             chwPrefab.GetComponent<HealingWard>().enabled = false;
