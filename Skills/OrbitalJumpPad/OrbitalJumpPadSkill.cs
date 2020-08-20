@@ -28,10 +28,9 @@ namespace ThinkInvisible.Admiral {
         internal static GameObject jumpPadPrefabProj2;
 
         public static Vector3 CalculateJumpPadTrajectory(Vector3 source, Vector3 target, float extraPeakHeight) {
-            float ePHCap = Mathf.Max(extraPeakHeight, 0f);
             var deltaPos = target - source;
             var yF = deltaPos.y;
-            var yPeak = Mathf.Max(ePHCap + yF, 0);
+            var yPeak = Mathf.Max(Mathf.Max(yF, 0) + extraPeakHeight, yF, 0);
             //everything will be absolutely ruined if gravity goes in any direction other than -y. them's the breaks.
             var g = -UnityEngine.Physics.gravity.y;
             //calculate initial vertical velocity
@@ -46,7 +45,6 @@ namespace ThinkInvisible.Admiral {
 
         internal static void Patch() {
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
-
             var jppBase = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
             jppBase.transform.localScale = new Vector3(0.75f, 0.125f, 0.75f);
             jppBase.GetComponent<PurchaseInteraction>().enabled = false;
