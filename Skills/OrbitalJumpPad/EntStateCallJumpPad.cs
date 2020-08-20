@@ -18,13 +18,13 @@ namespace ThinkInvisible.Admiral {
 				case 0:
 					var ns2 = new CallAirstrike2();
 					ns2.projectilePrefab = OrbitalJumpPadSkill.jumpPadPrefabProj2;
-					ns2.maxDistance = 80;
+					ns2.maxDistance = 150;
 					this.outer.SetNextState(ns2);
 					return;
 				case 1:
 					var ns1 = new CallAirstrike1();
 					ns1.projectilePrefab = OrbitalJumpPadSkill.jumpPadPrefabProj1;
-					ns1.maxDistance = 80;
+					ns1.maxDistance = 150;
 					this.outer.SetNextState(ns1);
 					return;
 				default:

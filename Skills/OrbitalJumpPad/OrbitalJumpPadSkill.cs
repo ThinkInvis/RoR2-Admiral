@@ -27,22 +27,40 @@ namespace ThinkInvisible.Admiral {
         internal static GameObject jumpPadPrefabProj1;
         internal static GameObject jumpPadPrefabProj2;
 
+        public static Vector3 CalculateJumpPadTrajectory(Vector3 source, Vector3 target, float extraPeakHeight) {
+            float ePHCap = Mathf.Max(extraPeakHeight, 0f);
+            var deltaPos = target - source;
+            var yF = deltaPos.y;
+            var yPeak = ePHCap + yF;
+            //everything will be absolutely ruined if gravity goes in any direction other than -y. them's the breaks.
+            var g = -UnityEngine.Physics.gravity.y;
+            //calculate initial vertical velocity
+            float vY0 = Mathf.Sqrt(2f * g * yPeak);
+            //calculate total travel time from vertical velocity
+            float tF = Mathf.Sqrt(2)/g * (Mathf.Sqrt(g * ePHCap) + Mathf.Sqrt(g * yPeak));
+            //use total travel time to calculate other velocity components
+            var vX0 = deltaPos.x/tF;
+            var vZ0 = deltaPos.z/tF;
+            return new Vector3(vX0, vY0, vZ0);
+        }
+
         internal static void Patch() {
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
 
             var jppBase = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
+            jppBase.transform.localScale = new Vector3(0.5f, 0.125f, 0.5f);
             jppBase.GetComponent<PurchaseInteraction>().enabled = false;
             jppBase.GetComponent<RoR2.Hologram.HologramProjector>().enabled = false;
             jppBase.GetComponent<OccupyNearbyNodes>().enabled = false;
             var jppDecayer = jppBase.AddComponent<CaptainBeaconDecayer>();
-            jppDecayer.lifetime = 30;
+            jppDecayer.lifetime = 20;
             /*var chl = jppBase.transform.Find("mdlHumanFan").GetComponent<ChildLocator>();
             chl.FindChild("JumpVolume").gameObject.SetActive(true);
             chl.FindChild("LightBack").gameObject.SetActive(true);
             chl.FindChild("LightFront").gameObject.SetActive(true);*/
             jumpPadPrefabBase = PrefabAPI.InstantiateClone(jppBase, "CaptainJumpPad");
 
-            On.RoR2.Projectile.ProjectileImpactExplosion.OnProjectileImpact += ProjectileImpactExplosion_OnProjectileImpact;
+            On.RoR2.Projectile.ProjectileImpactExplosion.Detonate += ProjectileImpactExplosion_Detonate;
 
             //On.EntityStates.Captain.Weapon.CallAirstrikeBase.ModifyProjectile += On_CABModifyProjectile;
             var jppProj1 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
@@ -128,45 +146,32 @@ namespace ThinkInvisible.Admiral {
 
         }
 
-        private static void ProjectileImpactExplosion_OnProjectileImpact(On.RoR2.Projectile.ProjectileImpactExplosion.orig_OnProjectileImpact orig, ProjectileImpactExplosion self, ProjectileImpactInfo pii) {
-            Debug.Log("Projectile prehit");
+        private static void ProjectileImpactExplosion_Detonate(On.RoR2.Projectile.ProjectileImpactExplosion.orig_Detonate orig, ProjectileImpactExplosion self) {
+            orig(self);
+            if(!NetworkServer.active) return;
             if(self.GetComponent<OrbitalJumpPad1ImpactEventFlag>()) {
-                Debug.Log("Proj1 impacted");
-                if(!NetworkServer.active) return;
                 var owner = self.GetComponent<ProjectileController>().owner;
                 if(!owner) return;
                 var ojph = owner.GetComponent<OrbitalJumpPadHelper>();
-                if(!ojph) owner.AddComponent<OrbitalJumpPadHelper>();
-                ojph.lastPadBase = GameObject.Instantiate(OrbitalJumpPadSkill.jumpPadPrefabBase, pii.estimatedPointOfImpact, Quaternion.FromToRotation(Vector3.up, pii.estimatedImpactNormal));
-                Debug.Log("Spawning fan at " + pii.estimatedPointOfImpact.ToString());
-                NetworkServer.Spawn(ojph.lastPadBase);
+                if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadHelper>();
+                var nobj = GameObject.Instantiate(OrbitalJumpPadSkill.jumpPadPrefabBase, self.transform.position, self.transform.rotation);
+                NetworkServer.Spawn(nobj);
+                ojph.lastPadBase = nobj;
             } else if(self.GetComponent<OrbitalJumpPad2ImpactEventFlag>()) {
-                Debug.Log("Proj2 impacted");
                 var owner = self.GetComponent<ProjectileController>().owner;
                 if(!owner) return;
                 var ojph = owner.GetComponent<OrbitalJumpPadHelper>();
-                if(!ojph) owner.AddComponent<OrbitalJumpPadHelper>();
+                if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadHelper>();
                 if(!ojph.lastPadBase) return;
-                ojph.lastPadBase.transform.Find("mdlHumanFan").Find("JumpVolume").Find("Target").position = pii.estimatedPointOfImpact;
-                Debug.Log("Moving fan target to " + pii.estimatedPointOfImpact.ToString());
+                var jtraj = CalculateJumpPadTrajectory(ojph.lastPadBase.transform.position, self.transform.position, self.transform.position.y > ojph.lastPadBase.transform.position.y ? 5f : 0f);
+                ojph.lastPadBase.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject.GetComponent<JumpVolume>().jumpVelocity = jtraj;
                 ojph.lastPadBase.GetComponent<ChestBehavior>().Open();
             }
-            orig(self, pii);
-            Debug.Log("Projectile posthit");
         }
 
         private static void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
             entries.Add(jumpPadPrefabProj1);
             entries.Add(jumpPadPrefabProj2);
         }
-
-        /*private static void On_CABModifyProjectile(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_ModifyProjectile orig, EntityStates.Captain.Weapon.CallAirstrikeBase self, ref RoR2.Projectile.FireProjectileInfo fireProjectileInfo) {
-            orig(self, ref fireProjectileInfo);
-            bool is1 = self is EntStateJumpPad1;
-            bool is2 = self is EntStateJumpPad2;
-            if(!(is1 || is2)) return;
-            //fireProjectileInfo.projectilePrefab = 
-            fireProjectileInfo.damage /= 6f;
-        }*/
     }
 }

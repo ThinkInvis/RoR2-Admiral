@@ -56,6 +56,9 @@
     <Reference Include="UnityEngine.ParticleSystemModule">
       <HintPath>lib\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>lib\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
