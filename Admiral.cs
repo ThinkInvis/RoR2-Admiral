@@ -13,7 +13,7 @@ namespace ThinkInvisible.Admiral {
     
     [BepInDependency("com.bepis.r2api")]
     [BepInPlugin(ModGuid, ModName, ModVer)]
-    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI))]
+    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(UnlockablesAPI))]
     public class AdmiralPlugin:BaseUnityPlugin {
         public const string ModVer = "1.4.0";
         public const string ModName = "Admiral";
@@ -52,6 +52,7 @@ namespace ThinkInvisible.Admiral {
             HackOverride.Patch();
             ShockOverride.Patch();
             OrbitalJumpPadSkill.Patch();
+            Unlockables.Patch();
         }
 
         private static bool Hook_Get_ShouldShowEnergy(EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState self) => true;

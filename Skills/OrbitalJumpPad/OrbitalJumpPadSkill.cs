@@ -75,8 +75,8 @@ namespace ThinkInvisible.Admiral {
             jppProj2.AddComponent<OrbitalJumpPad2ImpactEventFlag>();
             jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(jppProj2, "CaptainJumpPadProjectile2");
 
-            var nametoken = "ADMIRAL_JUMPPAD_NAME";
-            var desctoken = "ADMIRAL_JUMPPAD_DESC";
+            var nametoken = "ADMIRAL_JUMPPAD_SKILL_NAME";
+            var desctoken = "ADMIRAL_JUMPPAD_SKILL_DESC";
             var namestr = "Orbital Jump Pad";
             LanguageAPI.Add(nametoken, namestr);
             LanguageAPI.Add(desctoken, "Request an Orbital Jump Pad from the <style=cIsUtility>UES Safe Travels</style>. Fire once to set the jump pad, then again to set its target (both within <style=cIsUtility>100 m</style>).");
@@ -112,7 +112,7 @@ namespace ThinkInvisible.Admiral {
             csdf.variants[csdf.variants.Length - 1] = new SkillFamily.Variant {
                 skillDef = setupSkillDef,
                 viewableNode = new ViewablesCatalog.Node(nametoken, false, null),
-                unlockableName = ""
+                unlockableName = "ADMIRAL_JUMPPAD_UNLOCKABLE_ID"
             };
 
             callSkillDef = ScriptableObject.CreateInstance<SkillDef>();
