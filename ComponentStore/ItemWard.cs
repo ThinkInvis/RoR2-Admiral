@@ -163,7 +163,8 @@ namespace ThinkInvisible.Admiral {
 		private void OnDisable() {
 			if(this.rangeIndicator)
 				this.rangeIndicator.gameObject.SetActive(false);
-
+			
+			trackedInventories.RemoveAll(x => !x.gameObject);
 			for(var i = trackedInventories.Count - 1; i >= 0; i--) {
 				DeregInv(trackedInventories[i]);
 			}
