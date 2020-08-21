@@ -54,6 +54,8 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval += On_GSCalculateFinalRechargeInterval;
             On.RoR2.GenericSkill.RecalculateMaxStock += On_GSRecalculateMaxStock;
             On.RoR2.GenericSkill.AddOneStock += On_GSAddOneStock;
+            On.RoR2.GenericSkill.RunRecharge += On_GSRunRecharge;
+            On.RoR2.GenericSkill.FixedUpdate += On_GSFixedUpdate;
 
             //Apply individual skill patches (separated for purposes of organization)
             ItemWard.Patch();
@@ -65,12 +67,25 @@ namespace ThinkInvisible.Admiral {
             OrbitalJumpPadSkill.Patch();
             CatalyzerDartSkill.Patch();
         }
-        
+
         private bool SkillIsCaptainBeacon(GenericSkill skill) {
             var skfn = SkillCatalog.GetSkillFamilyName(skill.skillFamily.catalogIndex);
             return skfn == "CaptainSupplyDrop1SkillFamily" || skfn == "CaptainSupplyDrop2SkillFamily";
             //return skfn == "";
             //return skill.skillNameToken == "CAPTAIN_SUPPLY_HEAL_NAME" || skill.skillNameToken == "CAPTAIN_SUPPLY_SHOCKING_NAME" || skill.skillNameToken == "CAPTAIN_SUPPLY_HACKING_NAME" || skill.skillNameToken == "CAPTAIN_SUPPLY_EQUIPMENT_RESTOCK_NAME";
+        }
+
+        private void On_GSFixedUpdate(On.RoR2.GenericSkill.orig_FixedUpdate orig, GenericSkill self) {
+            if(SkillIsCaptainBeacon(self))
+                self.RunRecharge(Time.fixedDeltaTime*3);
+            orig(self);
+        }
+
+        private void On_GSRunRecharge(On.RoR2.GenericSkill.orig_RunRecharge orig, GenericSkill self, float dt) {
+            if(SkillIsCaptainBeacon(self))
+                orig(self,dt/4);
+            else
+                orig(self,dt);
         }
 
         private void On_GSAddOneStock(On.RoR2.GenericSkill.orig_AddOneStock orig, GenericSkill self) {
