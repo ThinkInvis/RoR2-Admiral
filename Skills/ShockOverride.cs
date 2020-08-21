@@ -6,6 +6,8 @@ using RoR2.Orbs;
 using R2API;
 
 namespace ThinkInvisible.Admiral {
+    public class ShockedOrb : LightningOrb {}
+
     public static class ShockOverride {
         internal static Xoroshiro128Plus shockRng;
 
@@ -48,7 +50,8 @@ namespace ThinkInvisible.Admiral {
                 teamMembers.RemoveAll(x => (x.transform.position - tpos).sqrMagnitude > sqrad || !x.body || !x.body.mainHurtBox || !x.body.isActiveAndEnabled);
                 if(teamMembers.Count == 0) return;
                 var victim = shockRng.NextElementUniform(teamMembers);
-				OrbManager.instance.AddOrb(new LightningOrb {
+				OrbManager.instance.AddOrb(new ShockedOrb {
+                    attacker = self.gameObject,
 					bouncesRemaining = 0,
 					damageColorIndex = DamageColorIndex.Default,
 					damageType = DamageType.AOE,

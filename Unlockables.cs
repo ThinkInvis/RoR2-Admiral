@@ -5,16 +5,18 @@ using R2API;
 using UnityEngine;
 using RoR2.Achievements;
 using System.Collections.Generic;
+using EntityStates;
 
 namespace ThinkInvisible.Admiral {
     public static class Unlockables {
         internal static void Patch() {
             UnlockablesAPI.AddUnlockable<AdmiralJumpPadAchievement>(false);
-            LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Damn the Torpedoes");
+            LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Captain: Damn The Torpedoes");
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
-
-            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_NAME", "Well-Seasoned");
-            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, inflict 10 debuff stacks at once.");
+            
+            UnlockablesAPI.AddUnlockable<AdmiralCatalyzerAchievement>(false);
+            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_NAME", "Captain: Hoist By Their Own Petard");
+            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, kill 10 other enemies by Shocking the same one.");
         }
     }
 
@@ -46,25 +48,26 @@ namespace ThinkInvisible.Admiral {
             projTestInd3 = ProjectileCatalog.FindProjectileIndex("CaptainAirstrikeProjectile3");
         }
 
-        private void CharacterBody_Awake(On.RoR2.CharacterBody.orig_Awake orig, CharacterBody self) {
-            orig(self);
-            self.gameObject.AddComponent<AverageSpeedTracker>();
-        }
-
         public override void OnUninstall() {
             base.OnUninstall();
             RoR2.GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
             On.RoR2.CharacterBody.Awake -= CharacterBody_Awake;
         }
+
+        private void CharacterBody_Awake(On.RoR2.CharacterBody.orig_Awake orig, CharacterBody self) {
+            orig(self);
+            self.gameObject.AddComponent<AverageSpeedTracker>();
+        }
+
         private void GlobalEventManager_onServerDamageDealt(DamageReport obj) {
             if(!meetsBodyRequirement) return;
-            if(!obj.victimBody || obj.damageInfo.attacker != NetworkUser.readOnlyLocalPlayersList[0].GetCurrentBody().gameObject) return;
+            if(!obj.victimBody || !obj.damageInfo.attacker || !obj.damageInfo.inflictor || NetworkUser.readOnlyLocalPlayersList.Count == 0 || obj.damageInfo.attacker != NetworkUser.readOnlyLocalPlayersList[0].GetCurrentBody().gameObject) return;
             var projInd = ProjectileCatalog.GetProjectileIndex(obj.damageInfo.inflictor);
             if(projInd != projTestInd1 && projInd != projTestInd2 && projInd != projTestInd3) return;
             var vel = obj.victimBody.GetComponent<AverageSpeedTracker>().QuerySpeed();
             var projdist = (obj.damageInfo.position - obj.damageInfo.inflictor.transform.position).magnitude;
             if(vel > 20f && projdist < 3f)
-                base.Grant();
+                Grant();
         }
     }
     
@@ -85,66 +88,37 @@ namespace ThinkInvisible.Admiral {
 
         public override void OnInstall() {
             base.OnInstall();
-            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+            On.RoR2.Orbs.LightningOrb.OnArrival += LightningOrb_OnArrival;
             On.RoR2.CharacterBody.Awake += CharacterBody_Awake;
         }
 
         public override void OnUninstall() {
             base.OnUninstall();
-            On.RoR2.HealthComponent.TakeDamage -= HealthComponent_TakeDamage;
+            On.RoR2.Orbs.LightningOrb.OnArrival -= LightningOrb_OnArrival;
             On.RoR2.CharacterBody.Awake -= CharacterBody_Awake;
         }
-
+        
         private void CharacterBody_Awake(On.RoR2.CharacterBody.orig_Awake orig, CharacterBody self) {
             orig(self);
-            if(self.bodyIndex != this.requiredBodyIndex) return;
-            self.gameObject.AddComponent<DebuffsInflictedTracker>();
+            self.gameObject.AddComponent<ShockedKillTracker>();
         }
 
-        private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo) {
-            if(!meetsBodyRequirement) return;
-            if(!self.body || damageInfo.attacker != NetworkUser.readOnlyLocalPlayersList[0].GetCurrentBody().gameObject) return;
-
-            int debuffsPre = 0;
-            for(BuffIndex i = 0; i < (BuffIndex)BuffCatalog.buffCount; i++) {
-				var buffDef = BuffCatalog.GetBuffDef(i);
-				if(buffDef.isDebuff) {
-                    debuffsPre += self.body.GetBuffCount(i);
-				}
+        private void LightningOrb_OnArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, RoR2.Orbs.LightningOrb self) {
+            orig(self);
+            if(self is ShockedOrb && !self.failedToKill) {
+                var skt = self.attacker?.GetComponent<ShockedKillTracker>();
+                if(skt) {
+                    skt.shockedKills++;
+                    Debug.Log(skt + " shock kills");
+                    if(skt.shockedKills >= 10)
+                        Grant();
+                }
             }
-
-            orig(self, damageInfo);
-            
-            int debuffsPost = 0;
-            for(BuffIndex i = 0; i < (BuffIndex)BuffCatalog.buffCount; i++) {
-				var buffDef = BuffCatalog.GetBuffDef(i);
-				if(buffDef.isDebuff) {
-                    debuffsPost += self.body.GetBuffCount(i);
-				}
-            }
-
-            var dit = damageInfo.attacker.GetComponent<DebuffsInflictedTracker>();
-            dit.debuffCount += Mathf.Max(debuffsPost - debuffsPre, 0);
-            Debug.Log("DebuffCount changed by " + (debuffsPost - debuffsPre) + " -- now " + dit.debuffCount);
-            if(dit.debuffCount > 10)
-                base.Grant();
         }
     }
 
-    public class DebuffsInflictedTracker : MonoBehaviour {
-        public int debuffCount = 0;
-        public float decayRate = 0.5f;
-
-        private float stopwatch = 0f;
-
-        private void FixedUpdate() {
-            if(debuffCount > 0)
-                stopwatch += Time.fixedDeltaTime;
-            if(stopwatch > decayRate) {
-                debuffCount = 0;
-                stopwatch = 0f;
-            }
-        }
+    public class ShockedKillTracker : MonoBehaviour {
+        public int shockedKills = 0;
     }
 
     public class AverageSpeedTracker : MonoBehaviour {

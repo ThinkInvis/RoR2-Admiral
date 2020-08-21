@@ -52,6 +52,7 @@ namespace ThinkInvisible.Admiral {
             HackOverride.Patch();
             ShockOverride.Patch();
             OrbitalJumpPadSkill.Patch();
+            CatalyzerDartSkill.Patch();
             Unlockables.Patch();
         }
 

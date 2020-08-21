@@ -9,12 +9,5 @@ using EntityStates.Captain.Weapon;
 using EntityStates;
 
 namespace ThinkInvisible.Admiral {
-    public class EntStateFireCatalyzer : FireTazer {
-        public override void OnEnter() {
-            var oldPrefab = projectilePrefab;
-            projectilePrefab = CatalyzerDartSkill.projectilePrefab;
-            base.OnEnter();
-            projectilePrefab = oldPrefab;
-        }
-    }
+    public class EntStateFireCatalyzer : FireTazer {}
 }

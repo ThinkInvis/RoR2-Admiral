@@ -1,15 +1,12 @@
 ﻿using EntityStates;
+using EntityStates.Captain.Weapon;
 using R2API;
-using R2API.Utils;
 using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
     public static class CatalyzerDartSkill {
@@ -23,7 +20,7 @@ namespace ThinkInvisible.Admiral {
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
             var projPfbPfb = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainTazer"));
             projPfbPfb.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;
-            projPfbPfb.GetComponent<ProjectileImpactExplosion>().enabled = false;
+            projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 1f;
             projPfbPfb.AddComponent<MalevolentCleanseOnHit>();
             projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainCatalyzerProjectile");
 
@@ -31,13 +28,13 @@ namespace ThinkInvisible.Admiral {
             var desctoken = "ADMIRAL_CATALYZER_SKILL_DESC";
             var namestr = "Catalyzer Dart";
             LanguageAPI.Add(nametoken, namestr);
-            LanguageAPI.Add(desctoken, "Fire a fast dart which <style=cIsHealing>catalyzes all debuffs</style>, converting them to <style=cIsDamage>damage</style>: <style=cIsDamage>125%</style> of the remaining total for DoTs, <style=cIsDamage>1x200%</style> otherwise.");
+            LanguageAPI.Add(desctoken, "Fire a fast dart which <style=cIsHealing>catalyzes all debuffs</style>, converting them to <style=cIsDamage>damage</style>: <style=cIsDamage>150%</style> of the remaining total for DoTs, <style=cIsDamage>1x200%</style> otherwise.");
             
             skillDef = ScriptableObject.CreateInstance<SkillDef>();
 
             skillDef.activationStateMachineName = "Weapon";
             skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateFireCatalyzer>();
-            skillDef.interruptPriority = EntityStates.InterruptPriority.Skill;
+            skillDef.interruptPriority = InterruptPriority.Skill;
             skillDef.baseRechargeInterval = 10f;
             skillDef.baseMaxStock = 1;
             skillDef.rechargeStock = 1;
@@ -69,10 +66,19 @@ namespace ThinkInvisible.Admiral {
             };
 
             RoR2.GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
+            On.EntityStates.Captain.Weapon.FireTazer.Fire += FireTazer_Fire;
+        }
+
+        private static void FireTazer_Fire(On.EntityStates.Captain.Weapon.FireTazer.orig_Fire orig, FireTazer self) {
+            if(!(self is EntStateFireCatalyzer)) {orig(self); return;}
+            var oldPrefab = FireTazer.projectilePrefab;
+            FireTazer.projectilePrefab = CatalyzerDartSkill.projectilePrefab;
+            orig(self);
+            FireTazer.projectilePrefab = oldPrefab;
         }
 
         private static void GlobalEventManager_onServerDamageDealt(DamageReport obj) {
-            if(obj.victimBody && obj.damageInfo.inflictor.GetComponent<MalevolentCleanseOnHit>()) {
+            if(obj.victimBody && obj.damageInfo.inflictor?.GetComponent<MalevolentCleanseOnHit>()) {
                 int totalCleansed = 0;
                 for(BuffIndex i = 0; i < (BuffIndex)BuffCatalog.buffCount; i++) {
 					var buffDef = BuffCatalog.GetBuffDef(i);
@@ -90,14 +96,14 @@ namespace ThinkInvisible.Admiral {
 			    if(DotController.dotControllerLocator.TryGetValue(obj.victimBody.gameObject.GetInstanceID(), out dotController)) {
                     var stacks = dotController.dotStackList;
                     foreach(var stack in stacks) {
-                        totalDotDamage += stack.damage * Mathf.Floor(stack.timer / stack.dotDef.interval);
+                        totalDotDamage += stack.damage * Mathf.Ceil(stack.timer / stack.dotDef.interval);
                     }
 			    }
 
                 obj.victimBody.healthComponent.TakeDamage(new DamageInfo {
                     attacker = obj.attacker,
                     crit = false,
-                    damage = totalCleansed * obj.attackerBody.damage * 2f + totalDotDamage * 1.25f,
+                    damage = totalCleansed * obj.attackerBody.damage * 2f + totalDotDamage * 1.5f,
                     damageType = DamageType.Generic,
                     procCoefficient = 0f
                 });
