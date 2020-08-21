@@ -27,6 +27,8 @@ namespace ThinkInvisible.Admiral {
         public const float BeaconCDRInfluence = 1f/2f;
         public const float BeaconCDRBaseIncrease = 1f/BeaconCDRInfluence-1;
 
+        public bool legacyBeacons {get; private set;}
+
         public void Awake() {
             cfgFile = new ConfigFile(Path.Combine(Paths.ConfigPath, ModGuid + ".cfg"), true);
 
@@ -35,38 +37,47 @@ namespace ThinkInvisible.Admiral {
                 var provider = new AssetBundleResourcesProvider("@Admiral", bundle);
                 ResourcesAPI.AddProvider(provider);
             }
+            
+            var cfgLegacyBeacons = cfgFile.Bind(new ConfigDefinition("Admiral", "LegacyBeacons"), false, new ConfigDescription(
+                "If true, all changes to Orbital Supply Beacon (except usability in Hidden Realms) are disabled. MUST HAVE SAME VALUE ON BOTH SERVER AND CLIENTS IN MULTIPLAYER!"));
+            legacyBeacons = cfgLegacyBeacons.Value;
 
             //Override CanUseOrbitalSkills to only return false in bazaar, and not in other hidden realms
             var origCUOSGet = typeof(RoR2.CaptainSupplyDropController).GetMethodCached("get_canUseOrbitalSkills");
             var newCUOSGet = typeof(AdmiralPlugin).GetMethodCached(nameof(Hook_Get_CanUseOrbitalSkills));
             var CUOSHook = new Hook(origCUOSGet, newCUOSGet);
 
-            IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides += IL_CSDCUpdateSkillOverrides;
+            if(!legacyBeacons) {
+                IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides += IL_CSDCUpdateSkillOverrides;
             
-            LanguageAPI.Add("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>.");
+                LanguageAPI.Add("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>.");
 
-            //TODO: these seem to be set as needed or something?? find out where the hell these are actually defined. assuming 4 sec for now because it's close enough
-            //CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
+                //TODO: these seem to be set as needed or something?? find out where the hell these are actually defined. assuming 4 sec for now because it's close enough
+                //CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
             
-            //Show energy indicator on all beacons
-            var origNrgGet = typeof(EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState).GetMethodCached("get_shouldShowEnergy");
-            var newNrgGet = typeof(AdmiralPlugin).GetMethodCached(nameof(Hook_Get_ShouldShowEnergy));
-            var NrgHook = new Hook(origNrgGet, newNrgGet);
+                //Show energy indicator on all beacons
+                var origNrgGet = typeof(EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState).GetMethodCached("get_shouldShowEnergy");
+                var newNrgGet = typeof(AdmiralPlugin).GetMethodCached(nameof(Hook_Get_ShouldShowEnergy));
+                var NrgHook = new Hook(origNrgGet, newNrgGet);
 
-            //Change cooldown reduction/ammo pack stock increase behavior on all beacons
-            On.RoR2.GenericSkill.CalculateFinalRechargeInterval += On_GSCalculateFinalRechargeInterval;
-            On.RoR2.GenericSkill.RecalculateMaxStock += On_GSRecalculateMaxStock;
-            On.RoR2.GenericSkill.AddOneStock += On_GSAddOneStock;
-            On.RoR2.GenericSkill.RunRecharge += On_GSRunRecharge;
-            On.RoR2.GenericSkill.FixedUpdate += On_GSFixedUpdate;
+                //Change cooldown reduction/ammo pack stock increase behavior on all beacons
+                On.RoR2.GenericSkill.CalculateFinalRechargeInterval += On_GSCalculateFinalRechargeInterval;
+                On.RoR2.GenericSkill.RecalculateMaxStock += On_GSRecalculateMaxStock;
+                On.RoR2.GenericSkill.AddOneStock += On_GSAddOneStock;
+                On.RoR2.GenericSkill.RunRecharge += On_GSRunRecharge;
+                On.RoR2.GenericSkill.FixedUpdate += On_GSFixedUpdate;
+            }
 
-            //Apply individual skill patches (separated for purposes of organization)
+            //Load modules
             ItemWard.Patch();
             ShotgunOverride.Patch();
-            HealOverride.Patch();
-            EquipmentRestockOverride.Patch();
-            HackOverride.Patch();
-            ShockOverride.Patch();
+            ShockStatusTweaks.Patch();
+            if(!legacyBeacons) {
+                HealOverride.Patch();
+                EquipmentRestockOverride.Patch();
+                HackOverride.Patch();
+                ShockOverride.Patch();
+            }
             OrbitalJumpPadSkill.Patch();
             CatalyzerDartSkill.Patch();
         }
