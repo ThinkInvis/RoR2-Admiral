@@ -84,7 +84,7 @@ namespace ThinkInvisible.Admiral {
         }
 
         private static void GlobalEventManager_onServerDamageDealt(DamageReport obj) {
-            if(obj.victimBody && obj.damageInfo.inflictor?.GetComponent<MalevolentCleanseOnHit>()) {
+            if(obj.victimBody && obj.damageInfo.inflictor && obj.damageInfo.inflictor.GetComponent<MalevolentCleanseOnHit>()) {
                 int totalCleansed = 0;
                 for(BuffIndex i = 0; i < (BuffIndex)BuffCatalog.buffCount; i++) {
 					var buffDef = BuffCatalog.GetBuffDef(i);
@@ -157,8 +157,8 @@ namespace ThinkInvisible.Admiral {
 
         private void LightningOrb_OnArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, RoR2.Orbs.LightningOrb self) {
             orig(self);
-            if(self is ShockedOrb && !self.failedToKill) {
-                var skt = self.attacker?.GetComponent<ShockedKillTracker>();
+            if(self is ShockedOrb && !self.failedToKill && self.attacker) {
+                var skt = self.attacker.GetComponent<ShockedKillTracker>();
                 if(skt) {
                     skt.shockedKills++;
                     if(skt.shockedKills >= 6)
