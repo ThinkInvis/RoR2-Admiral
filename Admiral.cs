@@ -8,6 +8,8 @@ using Mono.Cecil.Cil;
 using System;
 using BepInEx.Configuration;
 using R2API;
+using System.Reflection;
+using Path = System.IO.Path;
 
 namespace ThinkInvisible.Admiral {
     
@@ -22,7 +24,13 @@ namespace ThinkInvisible.Admiral {
         internal static ConfigFile cfgFile;
 
         public void Awake() {
-            cfgFile = new ConfigFile(Paths.ConfigPath + "\\" + ModGuid + ".cfg", true);
+            cfgFile = new ConfigFile(Path.Combine(Paths.ConfigPath, ModGuid + ".cfg"), true);
+
+            using(var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Admiral.admiral_assets")) {
+                var bundle = AssetBundle.LoadFromStream(stream);
+                var provider = new AssetBundleResourcesProvider("@Admiral", bundle);
+                ResourcesAPI.AddProvider(provider);
+            }
 
             //Override CanUseOrbitalSkills to only return false in bazaar, and not in other hidden realms
             var origCUOSGet = typeof(RoR2.CaptainSupplyDropController).GetMethodCached("get_canUseOrbitalSkills");

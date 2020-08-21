@@ -20,14 +20,14 @@ namespace ThinkInvisible.Admiral {
         }
     }
 
-    public class AdmiralJumpPadAchievement : ModdedUnlockableAndAchievement<VanillaSpriteProvider> {
+    public class AdmiralJumpPadAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider> {
         public override string AchievementIdentifier => "ADMIRAL_JUMPPAD_ACHIEVEMENT_ID";
         public override string UnlockableIdentifier => "ADMIRAL_JUMPPAD_UNLOCKABLE_ID";
         public override string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
         public override string AchievementNameToken => "ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME";
         public override string AchievementDescToken => "ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION";
         public override string UnlockableNameToken => "ADMIRAL_JUMPPAD_SKILL_NAME";
-        protected override VanillaSpriteProvider SpriteProvider => new VanillaSpriteProvider("textures/bufficons/texBuffWeakIcon");
+        protected override CustomSpriteProvider SpriteProvider => new CustomSpriteProvider("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
 
         public override bool wantsBodyCallbacks => true;
 
@@ -71,14 +71,14 @@ namespace ThinkInvisible.Admiral {
         }
     }
     
-    public class AdmiralCatalyzerAchievement : ModdedUnlockableAndAchievement<VanillaSpriteProvider> {
+    public class AdmiralCatalyzerAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider> {
         public override string AchievementIdentifier => "ADMIRAL_CATALYZER_ACHIEVEMENT_ID";
         public override string UnlockableIdentifier => "ADMIRAL_CATALYZER_UNLOCKABLE_ID";
         public override string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
         public override string AchievementNameToken => "ADMIRAL_CATALYZER_ACHIEVEMENT_NAME";
         public override string AchievementDescToken => "ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION";
         public override string UnlockableNameToken => "ADMIRAL_CATALYZER_SKILL_NAME";
-        protected override VanillaSpriteProvider SpriteProvider => new VanillaSpriteProvider("textures/bufficons/texBuffWeakIcon");
+        protected override CustomSpriteProvider SpriteProvider => new CustomSpriteProvider("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralCatalyzerSkill.png");
 
         public override bool wantsBodyCallbacks => true;
 

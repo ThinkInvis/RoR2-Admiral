@@ -103,7 +103,7 @@ namespace ThinkInvisible.Admiral {
             setupSkillDef.skillName = namestr;
             setupSkillDef.skillNameToken = nametoken;
             setupSkillDef.skillDescriptionToken = desctoken;
-            setupSkillDef.icon = Resources.Load<SkillDef>("skilldefs/captainbody/PrepSupplyDrop").icon;
+            setupSkillDef.icon = Resources.Load<Sprite>("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
 
             LoadoutAPI.AddSkillDef(setupSkillDef);
 
@@ -138,7 +138,7 @@ namespace ThinkInvisible.Admiral {
             callSkillDef.skillName = namestr;
             callSkillDef.skillNameToken = nametoken;
             callSkillDef.skillDescriptionToken = desctoken;
-            callSkillDef.icon = Resources.Load<SkillDef>("skilldefs/captainbody/PrepSupplyDrop").icon;
+            callSkillDef.icon = Resources.Load<Sprite>("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
 
             LoadoutAPI.AddSkillDef(callSkillDef);
         }
