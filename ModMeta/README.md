@@ -22,7 +22,7 @@ The Shocked status now deals roughly 20% of the victim's maximum health per seco
 
 A new Secondary skill variant (same slot as Power Tazer). Fires a dart which removes all debuffs from an enemy and deals 150% of the remaining DoT damage + 1x200% per non-DoT debuff.
 
-Unlock by getting 10 Shocked kills originating from the same enemy.
+Unlock by getting 6 Shocked kills originating from the same enemy.
 
 ### Orbital Probe
 
@@ -32,13 +32,17 @@ Now usable in every Hidden Realm, except for Bazaar.
 
 A new Utility skill variant (same slot as Orbital Probe). Summons a jump pad and its target within 100 m. Lasts 20 seconds, recharges in 30 seconds; anyone, friend or foe, can trigger the jump pad within this time.
 
-Unlock by hitting a fast-moving target with an Orbital Probe.
+Unlock by near-directly hitting a fast-moving target with an Orbital Probe.
 
 ### Orbital Supply Beacon
 
 Now usable in every Hidden Realm, except for Bazaar.
 
-All beacons are no longer limited to one use per stage. Instead, they have individual cooldowns and lifetimes. The energy meter above some original beacons now exists on all of them as an indicator of time remaining.
+All beacons are no longer limited to one use per stage. Instead, they have individual cooldowns and lifetimes.
+
+Beacons are 50% resistant to cooldown reduction (including Bandolier and Brainstalks), and can never have increased max stock.
+
+The energy meter above some original beacons now exists on all of them as an indicator of time remaining.
 
 #### Beacon: Healing
 
@@ -56,7 +60,7 @@ Benefits from the same changes that Power Tazer does, due to sharing the Shocked
 
 REPLACED with Beacon: Rejuvenator.
 
-Lasts 20 seconds. Recharges in 60 seconds.
+Lasts 20 seconds. Recharges in 50 seconds.
 
 Beacon: Rejuvenator gives all allies standing nearby the new Stimmed buff, which provides +50% skill recharge rate. Will also recharge beacons, so Rejuvenator's own cooldown is higher to compensate.
 
@@ -78,6 +82,12 @@ Beacon: Special Order gives all allies standing nearby a set of temporary items 
 - See the GitHub repo for more!
 
 ## Changelog
+
+**1.5.1**
+
+- Loosened requirements for both unlock achievements.
+- Beacons are now 50% resistant to cooldown reduction and completely resistant to max stock increase.
+- Reduced Beacon: Rejuvenator cooldown to compensate for CDR resistance.
 
 **1.5.0**
 
