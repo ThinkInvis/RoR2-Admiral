@@ -72,7 +72,7 @@ namespace ThinkInvisible.Admiral {
             
             UnlockablesAPI.AddUnlockable<AdmiralCatalyzerAchievement>(false);
             LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_NAME", "Captain: Hoist By Their Own Petard");
-            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, kill 10 other enemies by Shocking the same one.");
+            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, kill 6 other enemies by Shocking the same one.");
         }
 
         private static void FireTazer_Fire(On.EntityStates.Captain.Weapon.FireTazer.orig_Fire orig, FireTazer self) {
@@ -161,8 +161,7 @@ namespace ThinkInvisible.Admiral {
                 var skt = self.attacker?.GetComponent<ShockedKillTracker>();
                 if(skt) {
                     skt.shockedKills++;
-                    Debug.Log(skt + " shock kills");
-                    if(skt.shockedKills >= 10)
+                    if(skt.shockedKills >= 6)
                         Grant();
                 }
             }

@@ -225,7 +225,7 @@ namespace ThinkInvisible.Admiral {
             if(projInd != projTestInd1 && projInd != projTestInd2 && projInd != projTestInd3) return;
             var vel = obj.victimBody.GetComponent<AverageSpeedTracker>().QuerySpeed();
             var projdist = (obj.damageInfo.position - obj.damageInfo.inflictor.transform.position).magnitude;
-            if(vel > 20f && projdist < 3f)
+            if(vel > 20f && projdist < 4f)
                 Grant();
         }
     }
