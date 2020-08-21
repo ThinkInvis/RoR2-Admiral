@@ -57,6 +57,8 @@ namespace ThinkInvisible.Admiral {
 
             LoadoutAPI.AddSkillDef(skillDef);
 
+            //todo: unlockable dependent on whether shock module is loaded
+
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSecondarySkillFamily");
             Array.Resize(ref csdf.variants, csdf.variants.Length + 1);
             csdf.variants[csdf.variants.Length - 1] = new SkillFamily.Variant {
@@ -67,6 +69,10 @@ namespace ThinkInvisible.Admiral {
 
             RoR2.GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
             On.EntityStates.Captain.Weapon.FireTazer.Fire += FireTazer_Fire;
+            
+            UnlockablesAPI.AddUnlockable<AdmiralCatalyzerAchievement>(false);
+            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_NAME", "Captain: Hoist By Their Own Petard");
+            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, kill 10 other enemies by Shocking the same one.");
         }
 
         private static void FireTazer_Fire(On.EntityStates.Captain.Weapon.FireTazer.orig_Fire orig, FireTazer self) {
@@ -115,5 +121,55 @@ namespace ThinkInvisible.Admiral {
         private static void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
             entries.Add(projectilePrefab);
         }
+    }
+
+    public class AdmiralCatalyzerAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider> {
+        public override string AchievementIdentifier => "ADMIRAL_CATALYZER_ACHIEVEMENT_ID";
+        public override string UnlockableIdentifier => "ADMIRAL_CATALYZER_UNLOCKABLE_ID";
+        public override string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
+        public override string AchievementNameToken => "ADMIRAL_CATALYZER_ACHIEVEMENT_NAME";
+        public override string AchievementDescToken => "ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION";
+        public override string UnlockableNameToken => "ADMIRAL_CATALYZER_SKILL_NAME";
+        protected override CustomSpriteProvider SpriteProvider => new CustomSpriteProvider("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralCatalyzerSkill.png");
+
+        public override bool wantsBodyCallbacks => true;
+
+        public override int LookUpRequiredBodyIndex() {
+            return BodyCatalog.FindBodyIndex("CaptainBody");
+        }
+
+        public override void OnInstall() {
+            base.OnInstall();
+            On.RoR2.Orbs.LightningOrb.OnArrival += LightningOrb_OnArrival;
+            On.RoR2.CharacterBody.Awake += CharacterBody_Awake;
+        }
+
+        public override void OnUninstall() {
+            base.OnUninstall();
+            On.RoR2.Orbs.LightningOrb.OnArrival -= LightningOrb_OnArrival;
+            On.RoR2.CharacterBody.Awake -= CharacterBody_Awake;
+        }
+        
+        private void CharacterBody_Awake(On.RoR2.CharacterBody.orig_Awake orig, CharacterBody self) {
+            orig(self);
+            self.gameObject.AddComponent<ShockedKillTracker>();
+        }
+
+        private void LightningOrb_OnArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, RoR2.Orbs.LightningOrb self) {
+            orig(self);
+            if(self is ShockedOrb && !self.failedToKill) {
+                var skt = self.attacker?.GetComponent<ShockedKillTracker>();
+                if(skt) {
+                    skt.shockedKills++;
+                    Debug.Log(skt + " shock kills");
+                    if(skt.shockedKills >= 10)
+                        Grant();
+                }
+            }
+        }
+    }
+    
+    public class ShockedKillTracker : MonoBehaviour {
+        public int shockedKills = 0;
     }
 }

@@ -141,6 +141,10 @@ namespace ThinkInvisible.Admiral {
             callSkillDef.icon = Resources.Load<Sprite>("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
 
             LoadoutAPI.AddSkillDef(callSkillDef);
+
+            UnlockablesAPI.AddUnlockable<AdmiralJumpPadAchievement>(false);
+            LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Captain: Damn The Torpedoes");
+            LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
         }
 
         private static void ProjectileImpactExplosion_Detonate(On.RoR2.Projectile.ProjectileImpactExplosion.orig_Detonate orig, ProjectileImpactExplosion self) {
@@ -172,6 +176,87 @@ namespace ThinkInvisible.Admiral {
         private static void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
             entries.Add(jumpPadPrefabProj1);
             entries.Add(jumpPadPrefabProj2);
+        }
+    }
+    
+    public class AdmiralJumpPadAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider> {
+        public override string AchievementIdentifier => "ADMIRAL_JUMPPAD_ACHIEVEMENT_ID";
+        public override string UnlockableIdentifier => "ADMIRAL_JUMPPAD_UNLOCKABLE_ID";
+        public override string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
+        public override string AchievementNameToken => "ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME";
+        public override string AchievementDescToken => "ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION";
+        public override string UnlockableNameToken => "ADMIRAL_JUMPPAD_SKILL_NAME";
+        protected override CustomSpriteProvider SpriteProvider => new CustomSpriteProvider("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
+
+        public override bool wantsBodyCallbacks => true;
+
+        int projTestInd1 = -1;
+        int projTestInd2 = -1;
+        int projTestInd3 = -1;
+
+        public override int LookUpRequiredBodyIndex() {
+            return BodyCatalog.FindBodyIndex("CaptainBody");
+        }
+
+        public override void OnInstall() {
+            base.OnInstall();
+            RoR2.GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
+            On.RoR2.CharacterBody.Awake += CharacterBody_Awake;
+			projTestInd1 = ProjectileCatalog.FindProjectileIndex("CaptainAirstrikeProjectile1");
+            projTestInd2 = ProjectileCatalog.FindProjectileIndex("CaptainAirstrikeProjectile2");
+            projTestInd3 = ProjectileCatalog.FindProjectileIndex("CaptainAirstrikeProjectile3");
+        }
+
+        public override void OnUninstall() {
+            base.OnUninstall();
+            RoR2.GlobalEventManager.onServerDamageDealt -= GlobalEventManager_onServerDamageDealt;
+            On.RoR2.CharacterBody.Awake -= CharacterBody_Awake;
+        }
+
+        private void CharacterBody_Awake(On.RoR2.CharacterBody.orig_Awake orig, CharacterBody self) {
+            orig(self);
+            self.gameObject.AddComponent<AverageSpeedTracker>();
+        }
+
+        private void GlobalEventManager_onServerDamageDealt(DamageReport obj) {
+            if(!meetsBodyRequirement) return;
+            if(!obj.victimBody || !obj.damageInfo.attacker || !obj.damageInfo.inflictor || NetworkUser.readOnlyLocalPlayersList.Count == 0 || obj.damageInfo.attacker != NetworkUser.readOnlyLocalPlayersList[0].GetCurrentBody().gameObject) return;
+            var projInd = ProjectileCatalog.GetProjectileIndex(obj.damageInfo.inflictor);
+            if(projInd != projTestInd1 && projInd != projTestInd2 && projInd != projTestInd3) return;
+            var vel = obj.victimBody.GetComponent<AverageSpeedTracker>().QuerySpeed();
+            var projdist = (obj.damageInfo.position - obj.damageInfo.inflictor.transform.position).magnitude;
+            if(vel > 20f && projdist < 3f)
+                Grant();
+        }
+    }
+    
+    public class AverageSpeedTracker : MonoBehaviour {
+        private List<Vector3> positions = new List<Vector3>();
+        private List<float> deltas = new List<float>();
+        public float pollingRate = 0.2f;
+        private uint _history = 5;
+        public uint history {get{return _history;} set{positions.Clear();deltas.Clear();_history=value;} }
+
+        private float stopwatch = 0f;
+
+        private void FixedUpdate() {
+            stopwatch += Time.fixedDeltaTime;
+            if(stopwatch > pollingRate) {
+                positions.Add(transform.position);
+                deltas.Add(stopwatch);
+                if(positions.Count >= _history) {
+                    positions.RemoveAt(0);
+                    deltas.RemoveAt(0);
+                }
+                stopwatch = 0f;
+            }
+        }
+        public float QuerySpeed() {
+            float totalVel = 0f;
+            for(var i = 0; i < positions.Count - 1; i++) {
+                totalVel += (positions[i+1] - positions[i]).magnitude / deltas[i+1];
+            }
+            return totalVel;
         }
     }
 }
