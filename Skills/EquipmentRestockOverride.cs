@@ -20,7 +20,7 @@ namespace ThinkInvisible.Admiral {
 
             var eqprestSkillDef = Resources.Load<SkillDef>("skilldefs/captainbody/CallSupplyDropEquipmentRestock");
             eqprestSkillDef.rechargeStock = 1;
-            eqprestSkillDef.baseRechargeInterval = 60f; //assumes the user will stand in the AoE and recharge this skill faster
+            eqprestSkillDef.baseRechargeInterval = 40f * (1f + 0.5f * AdmiralPlugin.BeaconCDRInfluence); //assumes the user will stand in the AoE and recharge this skill faster
 
             var eqprestPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, EquipmentRestock");
             var eqprestDecayer = eqprestPrefab.AddComponent<CaptainBeaconDecayer>();

@@ -24,6 +24,9 @@ namespace ThinkInvisible.Admiral {
         
         internal static ConfigFile cfgFile;
 
+        public const float BeaconCDRInfluence = 1f/2f;
+        public const float BeaconCDRBaseIncrease = 1f/BeaconCDRInfluence-1;
+
         public void Awake() {
             cfgFile = new ConfigFile(Path.Combine(Paths.ConfigPath, ModGuid + ".cfg"), true);
 
@@ -77,19 +80,19 @@ namespace ThinkInvisible.Admiral {
 
         private void On_GSFixedUpdate(On.RoR2.GenericSkill.orig_FixedUpdate orig, GenericSkill self) {
             if(SkillIsCaptainBeacon(self))
-                self.RunRecharge(Time.fixedDeltaTime*3);
+                self.RunRecharge(Time.fixedDeltaTime*BeaconCDRBaseIncrease);
             orig(self);
         }
 
         private void On_GSRunRecharge(On.RoR2.GenericSkill.orig_RunRecharge orig, GenericSkill self, float dt) {
             if(SkillIsCaptainBeacon(self))
-                orig(self,dt/4);
+                orig(self,dt*BeaconCDRInfluence);
             else
                 orig(self,dt);
         }
 
         private void On_GSAddOneStock(On.RoR2.GenericSkill.orig_AddOneStock orig, GenericSkill self) {
-            if(SkillIsCaptainBeacon(self)) self.rechargeStopwatch += self.finalRechargeInterval / 4f;
+            if(SkillIsCaptainBeacon(self)) self.rechargeStopwatch += self.finalRechargeInterval * BeaconCDRInfluence;
             else orig(self);
         }
 
@@ -100,7 +103,7 @@ namespace ThinkInvisible.Admiral {
 
         private float On_GSCalculateFinalRechargeInterval(On.RoR2.GenericSkill.orig_CalculateFinalRechargeInterval orig, GenericSkill self) {
             var retv = orig(self);
-            if(SkillIsCaptainBeacon(self)) return (self.baseRechargeInterval * 3 + retv) / 4f;
+            if(SkillIsCaptainBeacon(self)) return self.baseRechargeInterval * (1 - BeaconCDRInfluence) + retv * BeaconCDRInfluence;
             return retv;
         }
 
