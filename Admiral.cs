@@ -10,6 +10,7 @@ using BepInEx.Configuration;
 using R2API;
 using System.Reflection;
 using Path = System.IO.Path;
+using RoR2.Skills;
 
 namespace ThinkInvisible.Admiral {
     
@@ -49,6 +50,11 @@ namespace ThinkInvisible.Admiral {
             var newNrgGet = typeof(AdmiralPlugin).GetMethodCached(nameof(Hook_Get_ShouldShowEnergy));
             var NrgHook = new Hook(origNrgGet, newNrgGet);
 
+            //Change cooldown reduction/ammo pack stock increase behavior on all beacons
+            On.RoR2.GenericSkill.CalculateFinalRechargeInterval += On_GSCalculateFinalRechargeInterval;
+            On.RoR2.GenericSkill.RecalculateMaxStock += On_GSRecalculateMaxStock;
+            On.RoR2.GenericSkill.AddOneStock += On_GSAddOneStock;
+
             //Apply individual skill patches (separated for purposes of organization)
             ItemWard.Patch();
             ShotgunOverride.Patch();
@@ -58,6 +64,29 @@ namespace ThinkInvisible.Admiral {
             ShockOverride.Patch();
             OrbitalJumpPadSkill.Patch();
             CatalyzerDartSkill.Patch();
+        }
+        
+        private bool SkillIsCaptainBeacon(GenericSkill skill) {
+            var skfn = SkillCatalog.GetSkillFamilyName(skill.skillFamily.catalogIndex);
+            return skfn == "CaptainSupplyDrop1SkillFamily" || skfn == "CaptainSupplyDrop2SkillFamily";
+            //return skfn == "";
+            //return skill.skillNameToken == "CAPTAIN_SUPPLY_HEAL_NAME" || skill.skillNameToken == "CAPTAIN_SUPPLY_SHOCKING_NAME" || skill.skillNameToken == "CAPTAIN_SUPPLY_HACKING_NAME" || skill.skillNameToken == "CAPTAIN_SUPPLY_EQUIPMENT_RESTOCK_NAME";
+        }
+
+        private void On_GSAddOneStock(On.RoR2.GenericSkill.orig_AddOneStock orig, GenericSkill self) {
+            if(SkillIsCaptainBeacon(self)) self.rechargeStopwatch += self.finalRechargeInterval / 4f;
+            else orig(self);
+        }
+
+        private void On_GSRecalculateMaxStock(On.RoR2.GenericSkill.orig_RecalculateMaxStock orig, GenericSkill self) {
+            orig(self);
+            if(SkillIsCaptainBeacon(self)) self.maxStock = 1;
+        }
+
+        private float On_GSCalculateFinalRechargeInterval(On.RoR2.GenericSkill.orig_CalculateFinalRechargeInterval orig, GenericSkill self) {
+            var retv = orig(self);
+            if(SkillIsCaptainBeacon(self)) return (self.baseRechargeInterval * 3 + retv) / 4f;
+            return retv;
         }
 
         private static bool Hook_Get_ShouldShowEnergy(EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState self) => true;
