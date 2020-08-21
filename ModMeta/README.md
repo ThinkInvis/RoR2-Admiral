@@ -83,6 +83,12 @@ Beacon: Special Order gives all allies standing nearby a set of temporary items 
 
 ## Changelog
 
+**1.5.2**
+
+- Fixed a bug that was causing Acrid's special ability to error out... somehow.
+- Added a config option for disabling Beacon overrides (ALL changes except usability in Hidden Realms).
+- Bumped R2API dependency to v2.5.7.
+
 **1.5.1**
 
 - Loosened requirements for both unlock achievements.

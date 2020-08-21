@@ -1,10 +1,10 @@
 {
-    "name": "Admiral",
-    "version_number": "1.5.1",
-    "website_url": "https://github.com/ThinkInvis/RoR2-Admiral",
-    "description": "A character overhaul, because the Captain's due for a promotion.",
-    "dependencies": [
-        "bbepis-BepInExPack-5.3.1",
-		"tristanmcpherson-R2API-2.5.6"
-    ]
+  "name": "Admiral",
+  "version_number": "1.5.2",
+  "website_url": "https://github.com/ThinkInvis/RoR2-Admiral",
+  "description": "A character overhaul, because the Captain's due for a promotion.",
+  "dependencies": [
+    "bbepis-BepInExPack-5.3.1",
+    "tristanmcpherson-R2API-2.5.7"
+  ]
 }
