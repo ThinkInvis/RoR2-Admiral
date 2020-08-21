@@ -18,6 +18,12 @@ The Shocked status now wears off after a 10,000% health interval, up from 10% (s
 
 The Shocked status now deals roughly 20% of the victim's maximum health per second as damage to its allies within 15 meters, targeting and firing randomly.
 
+### Catalyzer Dart
+
+A new Secondary skill variant (same slot as Power Tazer). Fires a dart which removes all debuffs from an enemy and deals 150% of the remaining DoT damage + 1x200% per non-DoT debuff.
+
+Unlock by getting 10 Shocked kills originating from the same enemy.
+
 ### Orbital Probe
 
 Now usable in every Hidden Realm, except for Bazaar.
@@ -25,6 +31,8 @@ Now usable in every Hidden Realm, except for Bazaar.
 ### Orbital Jump Pad
 
 A new Utility skill variant (same slot as Orbital Probe). Summons a jump pad and its target within 100 m. Lasts 20 seconds, recharges in 30 seconds; anyone, friend or foe, can trigger the jump pad within this time.
+
+Unlock by hitting a fast-moving target with an Orbital Probe.
 
 ### Orbital Supply Beacon
 
@@ -39,6 +47,8 @@ Lasts 20 seconds. Recharges in 40 seconds.
 #### Beacon: Shocking
 
 Lasts 8 seconds. Recharges in 30 seconds.
+
+Now fires once every 1.5 seconds (up from Lots Slower) to compensate for the lower uptime.
 
 Benefits from the same changes that Power Tazer does, due to sharing the Shocked status.
 
@@ -60,12 +70,23 @@ Beacon: Special Order gives all allies standing nearby a set of temporary items 
 
 ## Issues/TODO
 
-- Orbital Jump Pad VFX is unfinished (particles are too big, reused vanilla skill icon).
+- Orbital Jump Pad VFX is unfinished (particles are too big).
+- Catalyzer Dart could also do with some visual changes.
 - Stepping on an Orbital Jump Pad can deal unavoidable falling damage; may attempt to make a 'landing pad' object to mitigate this.
 - Trying to find a way to allow canceling beacon/probe by recasting the skill.
+- Looking into implementing a module system for disabling certain parts of the mod.
 - See the GitHub repo for more!
 
 ## Changelog
+
+**1.5.0**
+
+- Added variant Secondary skill + unlock achievement: Catalyzer Dart!
+- Added an achievement for unlocking Orbital Jump Pad.
+- Added custom icon to Orbital Jump Pad.
+- Minor tweak to make Orbital Jump Pad trajectory more reliable.
+- Beacon: Shocking now has greatly increased fire rate (1 / 1.5 s).
+- Internal: ItemWard now supports item removal.
 
 **1.4.0**
 

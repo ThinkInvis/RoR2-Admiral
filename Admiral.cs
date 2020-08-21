@@ -17,7 +17,7 @@ namespace ThinkInvisible.Admiral {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(UnlockablesAPI))]
     public class AdmiralPlugin:BaseUnityPlugin {
-        public const string ModVer = "1.4.0";
+        public const string ModVer = "1.5.0";
         public const string ModName = "Admiral";
         public const string ModGuid = "com.ThinkInvisible.Admiral";
         
@@ -41,9 +41,6 @@ namespace ThinkInvisible.Admiral {
             
             LanguageAPI.Add("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>.");
 
-            //TODO: make this untrue
-            LanguageAPI.Add("CAPTAIN_SUPPLY_HACKING_DESCRIPTION", "<style=cIsUtility>Hack</style> all nearby purchasables to a cost of <style=cIsUtility>$0</style> over time. Only usable <style=cIsUtility>once per stage</style>.");
-
             //TODO: these seem to be set as needed or something?? find out where the hell these are actually defined. assuming 4 sec for now because it's close enough
             //CaptainBeaconDecayer.lifetimeDropAdjust = EntityStates.CaptainSupplyDrop.EntryState.baseDuration + EntityStates.CaptainSupplyDrop.HitGroundState.baseDuration + EntityStates.CaptainSupplyDrop.DeployState.baseDuration;
             
@@ -61,7 +58,6 @@ namespace ThinkInvisible.Admiral {
             ShockOverride.Patch();
             OrbitalJumpPadSkill.Patch();
             CatalyzerDartSkill.Patch();
-            Unlockables.Patch();
         }
 
         private static bool Hook_Get_ShouldShowEnergy(EntityStates.CaptainSupplyDrop.BaseCaptainSupplyDropState self) => true;
