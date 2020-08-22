@@ -1,49 +1,14 @@
-﻿using EntityStates;
-using R2API;
+﻿using R2API;
 using R2API.Networking.Interfaces;
 using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
-    public class OrbitalJumpPadHelper : MonoBehaviour {
-        public GameObject lastPadBase;
-    }
-
-    internal struct OrbitalJumpTargetingMessage : R2API.Networking.Interfaces.INetMessage {
-        private GameObject _targetJumpPad;
-        private Vector3 _velocity;
-
-        public void Serialize(NetworkWriter writer) {
-            writer.Write(_targetJumpPad);
-            writer.Write(_velocity);
-        }
-
-        public void Deserialize(NetworkReader reader) {
-            _targetJumpPad = reader.ReadGameObject();
-            _velocity = reader.ReadVector3();
-        }
-
-        public void OnReceived() {
-            if(!_targetJumpPad) return;
-            _targetJumpPad.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject.GetComponent<JumpVolume>().jumpVelocity = _velocity;
-        }
-
-        internal OrbitalJumpTargetingMessage(GameObject targetJumpPad, Vector3 velocity) {
-            _targetJumpPad = targetJumpPad;
-            _velocity = velocity;
-        }
-    }
-
-	public class OrbitalJumpPad1ImpactEventFlag : MonoBehaviour {}
-
-	public class OrbitalJumpPad2ImpactEventFlag : MonoBehaviour {}
 
     public static class OrbitalJumpPadSkill {
         internal static SkillDef setupSkillDef;
@@ -177,15 +142,15 @@ namespace ThinkInvisible.Admiral {
             if(self.GetComponent<OrbitalJumpPad1ImpactEventFlag>()) {
                 var owner = self.GetComponent<ProjectileController>().owner;
                 if(!owner) return;
-                var ojph = owner.GetComponent<OrbitalJumpPadHelper>();
-                if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadHelper>();
+                var ojph = owner.GetComponent<OrbitalJumpPadDeployTracker>();
+                if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadDeployTracker>();
                 var nobj = GameObject.Instantiate(OrbitalJumpPadSkill.jumpPadPrefabBase, self.transform.position, self.transform.rotation);
                 ojph.lastPadBase = nobj;
                 NetworkServer.Spawn(nobj);
             } else if(self.GetComponent<OrbitalJumpPad2ImpactEventFlag>()) {
                 var owner = self.GetComponent<ProjectileController>().owner;
                 if(!owner) return;
-                var ojph = owner.GetComponent<OrbitalJumpPadHelper>();
+                var ojph = owner.GetComponent<OrbitalJumpPadDeployTracker>();
                 if(!ojph || !ojph.lastPadBase) return;
                 var jtraj = CalculateJumpPadTrajectory(ojph.lastPadBase.transform.position, self.transform.position, 5f);
                 if(!float.IsNaN(jtraj.y)) {
@@ -202,6 +167,40 @@ namespace ThinkInvisible.Admiral {
         }
     }
     
+    public class OrbitalJumpPadDeployTracker : MonoBehaviour {
+        public GameObject lastPadBase;
+    }
+    
+	public class OrbitalJumpPad1ImpactEventFlag : MonoBehaviour {}
+
+	public class OrbitalJumpPad2ImpactEventFlag : MonoBehaviour {}
+
+    internal struct OrbitalJumpTargetingMessage : INetMessage {
+        private GameObject _targetJumpPad;
+        private Vector3 _velocity;
+
+        public void Serialize(NetworkWriter writer) {
+            writer.Write(_targetJumpPad);
+            writer.Write(_velocity);
+        }
+
+        public void Deserialize(NetworkReader reader) {
+            _targetJumpPad = reader.ReadGameObject();
+            _velocity = reader.ReadVector3();
+        }
+
+        public void OnReceived() {
+            if(!_targetJumpPad) return;
+            _targetJumpPad.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject.GetComponent<JumpVolume>().jumpVelocity = _velocity;
+        }
+
+        internal OrbitalJumpTargetingMessage(GameObject targetJumpPad, Vector3 velocity) {
+            _targetJumpPad = targetJumpPad;
+            _velocity = velocity;
+        }
+    }
+
+    #region Achievement handling
     public class AdmiralJumpPadAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider> {
         public override string AchievementIdentifier => "ADMIRAL_JUMPPAD_ACHIEVEMENT_ID";
         public override string UnlockableIdentifier => "ADMIRAL_JUMPPAD_UNLOCKABLE_ID";
@@ -282,4 +281,5 @@ namespace ThinkInvisible.Admiral {
             return totalVel;
         }
     }
+    #endregion
 }
