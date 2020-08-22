@@ -36,10 +36,11 @@ namespace ThinkInvisible.Admiral {
 			var subMethod = cClass.GetMethod("<Init>g__PayCostItems|5_1", BindingFlags.NonPublic | BindingFlags.Instance);
             MonoMod.RuntimeDetour.HookGen.HookEndpointManager.Modify(subMethod, (Action<ILContext>)gPayCostItemsHook);
 			
-			var displayPrefabPrefab = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("prefabs/effects/orbeffects/ItemTransferOrbEffect"));
+			var displayPrefabPrefab = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/effects/orbeffects/ItemTransferOrbEffect"));
 			displayPrefabPrefab.GetComponent<EffectComponent>().enabled = false;
 			displayPrefabPrefab.GetComponent<OrbEffect>().enabled = false;
 			displayPrefabPrefab.GetComponent<ItemTakenOrbEffect>().enabled = false;
+			displayPrefabPrefab.AddComponent<NetworkIdentity>();
 
 			displayPrefab = displayPrefabPrefab.InstantiateClone("ItemWardDisplay");
 		}
@@ -246,6 +247,7 @@ namespace ThinkInvisible.Admiral {
 			display.transform.Find("BillboardBase").Find("PickupSprite").GetComponent<SpriteRenderer>().sprite = ItemCatalog.GetItemDef(ind).pickupIconSprite;
 			display.transform.parent = transform;
 			displays.Add(display);
+			NetworkServer.Spawn(display);
 			displayVelocities.Add(new Vector3(0, 0, 0));
 			displayItems.Add(ind);
 			trackedInventories.RemoveAll(x => !x || !x.gameObject);
