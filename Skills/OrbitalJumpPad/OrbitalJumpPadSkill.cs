@@ -1,5 +1,6 @@
 ﻿using EntityStates;
 using R2API;
+using R2API.Networking.Interfaces;
 using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
@@ -13,6 +14,31 @@ using UnityEngine.Networking;
 namespace ThinkInvisible.Admiral {
     public class OrbitalJumpPadHelper : MonoBehaviour {
         public GameObject lastPadBase;
+    }
+
+    internal struct OrbitalJumpTargetingMessage : R2API.Networking.Interfaces.INetMessage {
+        private GameObject _targetJumpPad;
+        private Vector3 _velocity;
+
+        public void Serialize(NetworkWriter writer) {
+            writer.Write(_targetJumpPad);
+            writer.Write(_velocity);
+        }
+
+        public void Deserialize(NetworkReader reader) {
+            _targetJumpPad = reader.ReadGameObject();
+            _velocity = reader.ReadVector3();
+        }
+
+        public void OnReceived() {
+            if(!_targetJumpPad) return;
+            _targetJumpPad.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject.GetComponent<JumpVolume>().jumpVelocity = _velocity;
+        }
+
+        internal OrbitalJumpTargetingMessage(GameObject targetJumpPad, Vector3 velocity) {
+            _targetJumpPad = targetJumpPad;
+            _velocity = velocity;
+        }
     }
 
 	public class OrbitalJumpPad1ImpactEventFlag : MonoBehaviour {}
@@ -44,6 +70,8 @@ namespace ThinkInvisible.Admiral {
         }
 
         internal static void Patch() {
+            R2API.Networking.NetworkingAPI.RegisterMessageType<OrbitalJumpTargetingMessage>();
+
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
             var jppBase = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
             jppBase.transform.localScale = new Vector3(0.75f, 0.125f, 0.75f);
@@ -52,10 +80,6 @@ namespace ThinkInvisible.Admiral {
             jppBase.GetComponent<OccupyNearbyNodes>().enabled = false;
             var jppDecayer = jppBase.AddComponent<CaptainBeaconDecayer>();
             jppDecayer.lifetime = 20;
-            /*var chl = jppBase.transform.Find("mdlHumanFan").GetComponent<ChildLocator>();
-            chl.FindChild("JumpVolume").gameObject.SetActive(true);
-            chl.FindChild("LightBack").gameObject.SetActive(true);
-            chl.FindChild("LightFront").gameObject.SetActive(true);*/
             jumpPadPrefabBase = PrefabAPI.InstantiateClone(jppBase, "CaptainJumpPad");
 
             On.RoR2.Projectile.ProjectileImpactExplosion.Detonate += ProjectileImpactExplosion_Detonate;
@@ -156,19 +180,18 @@ namespace ThinkInvisible.Admiral {
                 var ojph = owner.GetComponent<OrbitalJumpPadHelper>();
                 if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadHelper>();
                 var nobj = GameObject.Instantiate(OrbitalJumpPadSkill.jumpPadPrefabBase, self.transform.position, self.transform.rotation);
-                NetworkServer.Spawn(nobj);
                 ojph.lastPadBase = nobj;
+                NetworkServer.Spawn(nobj);
             } else if(self.GetComponent<OrbitalJumpPad2ImpactEventFlag>()) {
                 var owner = self.GetComponent<ProjectileController>().owner;
                 if(!owner) return;
                 var ojph = owner.GetComponent<OrbitalJumpPadHelper>();
-                if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadHelper>();
-                if(!ojph.lastPadBase) return;
+                if(!ojph || !ojph.lastPadBase) return;
                 var jtraj = CalculateJumpPadTrajectory(ojph.lastPadBase.transform.position, self.transform.position, 5f);
-                ojph.lastPadBase.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject.GetComponent<JumpVolume>().jumpVelocity = jtraj;
-                if(!float.IsNaN(jtraj.y))
+                if(!float.IsNaN(jtraj.y)) {
+                    new OrbitalJumpTargetingMessage(ojph.lastPadBase, jtraj).Send(R2API.Networking.NetworkDestination.Clients);
                     ojph.lastPadBase.GetComponent<ChestBehavior>().Open();
-                else
+                } else
                     GameObject.Destroy(ojph.lastPadBase);
             }
         }
