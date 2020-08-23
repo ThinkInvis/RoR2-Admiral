@@ -6,17 +6,31 @@ using RoR2.Projectile;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
+using TILER2;
 using UnityEngine;
 
 namespace ThinkInvisible.Admiral {
-    public static class CatalyzerDartSkill {
-        internal static SkillDef skillDef;
+    public class CatalyzerDartSkill : AdmiralSubmodule<CatalyzerDartSkill> {
+        [AutoItemConfig("Cooldown of Catalyzer Dart.",
+            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float skillRecharge {get; private set;} = 30f;
 
-        internal static GameObject projectilePrefab;
+        [AutoItemConfig("Fraction of remaining DoT damage dealt by malevolent cleanses.",
+            AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float evilCleanseDoTDamage {get; private set;} = 1.5f;
+
+        [AutoItemConfig("Fraction of base damage dealt per non-DoT debuff by malevolent cleanses.",
+            AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float evilCleanseNonDoTDamage {get; private set;} = 2f;
+
+        internal SkillDef skillDef;
+
+        internal GameObject projectilePrefab;
 
         public class MalevolentCleanseOnHit : MonoBehaviour {}
-
-        internal static void Patch() {
+        
+        //Install should only happen once, immediately after Setup -- module can't be installed/uninstalled at runtime
+        internal override void Install() {
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
             var projPfbPfb = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainTazer"));
             projPfbPfb.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;
@@ -28,6 +42,7 @@ namespace ThinkInvisible.Admiral {
             var desctoken = "ADMIRAL_CATALYZER_SKILL_DESC";
             var namestr = "Catalyzer Dart";
             LanguageAPI.Add(nametoken, namestr);
+            //todo: update this from config
             LanguageAPI.Add(desctoken, "Fire a fast dart which <style=cIsHealing>catalyzes all debuffs</style>, converting them to <style=cIsDamage>damage</style>: <style=cIsDamage>150%</style> of the remaining total for DoTs, <style=cIsDamage>1x200%</style> otherwise.");
             
             skillDef = ScriptableObject.CreateInstance<SkillDef>();
@@ -35,7 +50,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.activationStateMachineName = "Weapon";
             skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateFireCatalyzer>();
             skillDef.interruptPriority = InterruptPriority.Skill;
-            skillDef.baseRechargeInterval = 10f;
+            skillDef.baseRechargeInterval = skillRecharge;
             skillDef.baseMaxStock = 1;
             skillDef.rechargeStock = 1;
             skillDef.isBullets = false;
@@ -75,15 +90,15 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, kill 6 other enemies by Shocking the same one.");
         }
 
-        private static void FireTazer_Fire(On.EntityStates.Captain.Weapon.FireTazer.orig_Fire orig, FireTazer self) {
+        private void FireTazer_Fire(On.EntityStates.Captain.Weapon.FireTazer.orig_Fire orig, FireTazer self) {
             if(!(self is EntStateFireCatalyzer)) {orig(self); return;}
             var oldPrefab = FireTazer.projectilePrefab;
-            FireTazer.projectilePrefab = CatalyzerDartSkill.projectilePrefab;
+            FireTazer.projectilePrefab = projectilePrefab;
             orig(self);
             FireTazer.projectilePrefab = oldPrefab;
         }
 
-        private static void GlobalEventManager_onServerDamageDealt(DamageReport obj) {
+        private void GlobalEventManager_onServerDamageDealt(DamageReport obj) {
             if(obj.victimBody && obj.damageInfo.inflictor && obj.damageInfo.inflictor.GetComponent<MalevolentCleanseOnHit>()) {
                 int totalCleansed = 0;
                 for(BuffIndex i = 0; i < (BuffIndex)BuffCatalog.buffCount; i++) {
@@ -109,7 +124,7 @@ namespace ThinkInvisible.Admiral {
                 obj.victimBody.healthComponent.TakeDamage(new DamageInfo {
                     attacker = obj.attacker,
                     crit = false,
-                    damage = totalCleansed * obj.attackerBody.damage * 2f + totalDotDamage * 1.5f,
+                    damage = totalCleansed * obj.attackerBody.damage * evilCleanseNonDoTDamage + totalDotDamage * evilCleanseDoTDamage,
                     damageType = DamageType.Generic,
                     procCoefficient = 0f
                 });
@@ -118,7 +133,7 @@ namespace ThinkInvisible.Admiral {
             }
         }
 
-        private static void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
+        private void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
             entries.Add(projectilePrefab);
         }
     }

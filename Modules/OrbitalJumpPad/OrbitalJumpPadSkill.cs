@@ -5,18 +5,30 @@ using RoR2.Projectile;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
+using TILER2;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
+    public class OrbitalJumpPadSkill : AdmiralSubmodule<OrbitalJumpPadSkill> {
+        [AutoItemConfig("Lifetime of the Orbital Jump Pad deployable.",
+            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float skillLifetime {get; private set;} = 20f;
 
-    public static class OrbitalJumpPadSkill {
-        internal static SkillDef setupSkillDef;
-        internal static SkillDef callSkillDef;
+        [AutoItemConfig("Cooldown of Orbital Jump Pad.",
+            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float skillRecharge {get; private set;} = 30f;
 
-        internal static GameObject jumpPadPrefabBase;
-        internal static GameObject jumpPadPrefabProj1;
-        internal static GameObject jumpPadPrefabProj2;
+        [AutoItemConfig("Maximum range of both Orbital Jump Pad terminals.",
+            AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        public float skillRange {get; private set;} = 100f;
+
+        internal SkillDef setupSkillDef;
+        internal SkillDef callSkillDef;
+
+        internal GameObject jumpPadPrefabBase;
+        internal GameObject jumpPadPrefabProj1;
+        internal GameObject jumpPadPrefabProj2;
 
         public static Vector3 CalculateJumpPadTrajectory(Vector3 source, Vector3 target, float extraPeakHeight) {
             var deltaPos = target - source;
@@ -34,7 +46,10 @@ namespace ThinkInvisible.Admiral {
             return new Vector3(vX0, vY0, vZ0);
         }
 
-        internal static void Patch() {
+        //Install should only happen once, immediately after Setup -- module can't be installed/uninstalled at runtime
+        internal override void Install() {
+            base.Install();
+
             R2API.Networking.NetworkingAPI.RegisterMessageType<MsgSetJumpPadTarget>();
 
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
@@ -44,7 +59,7 @@ namespace ThinkInvisible.Admiral {
             jppBase.GetComponent<RoR2.Hologram.HologramProjector>().enabled = false;
             jppBase.GetComponent<OccupyNearbyNodes>().enabled = false;
             var jppDecayer = jppBase.AddComponent<CaptainBeaconDecayer>();
-            jppDecayer.lifetime = 20;
+            jppDecayer.lifetime = skillLifetime;
             jumpPadPrefabBase = PrefabAPI.InstantiateClone(jppBase, "CaptainJumpPad");
 
             On.RoR2.Projectile.ProjectileImpactExplosion.Detonate += ProjectileImpactExplosion_Detonate;
@@ -75,7 +90,7 @@ namespace ThinkInvisible.Admiral {
             setupSkillDef.activationStateMachineName = "Skillswap";
             setupSkillDef.activationState = LoadoutAPI.StateTypeOf<EntStateSetupJumpPad>();
             setupSkillDef.interruptPriority = EntityStates.InterruptPriority.Skill;
-            setupSkillDef.baseRechargeInterval = 30f;
+            setupSkillDef.baseRechargeInterval = skillRecharge;
             setupSkillDef.baseMaxStock = 1;
             setupSkillDef.rechargeStock = 1;
             setupSkillDef.isBullets = false;
@@ -136,7 +151,7 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
         }
 
-        private static void ProjectileImpactExplosion_Detonate(On.RoR2.Projectile.ProjectileImpactExplosion.orig_Detonate orig, ProjectileImpactExplosion self) {
+        private void ProjectileImpactExplosion_Detonate(On.RoR2.Projectile.ProjectileImpactExplosion.orig_Detonate orig, ProjectileImpactExplosion self) {
             orig(self);
             if(!NetworkServer.active) return;
             if(self.GetComponent<OrbitalJumpPad1ImpactEventFlag>()) {
@@ -144,7 +159,7 @@ namespace ThinkInvisible.Admiral {
                 if(!owner) return;
                 var ojph = owner.GetComponent<OrbitalJumpPadDeployTracker>();
                 if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadDeployTracker>();
-                var nobj = GameObject.Instantiate(OrbitalJumpPadSkill.jumpPadPrefabBase, self.transform.position, self.transform.rotation);
+                var nobj = GameObject.Instantiate(jumpPadPrefabBase, self.transform.position, self.transform.rotation);
                 ojph.lastPadBase = nobj;
                 NetworkServer.Spawn(nobj);
             } else if(self.GetComponent<OrbitalJumpPad2ImpactEventFlag>()) {
@@ -161,7 +176,7 @@ namespace ThinkInvisible.Admiral {
             }
         }
 
-        private static void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
+        private void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
             entries.Add(jumpPadPrefabProj1);
             entries.Add(jumpPadPrefabProj2);
         }
