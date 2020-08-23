@@ -69,9 +69,9 @@ namespace ThinkInvisible.Admiral {
 			var displayRadius = radius/2f;
 			var displayHeight = Mathf.Max(radius/3f, 1f);
 			for(int i = displays.Count - 1; i >= 0; i--) {
-				var target = new Vector3(Mathf.Cos(countAngle*i+totalRotateAmount)*displayRadius, displayHeight, Mathf.Sin(countAngle*i+totalRotateAmount)*displayRadius) + transform.position;
+				var target = new Vector3(Mathf.Cos(countAngle*i+totalRotateAmount)*displayRadius, displayHeight, Mathf.Sin(countAngle*i+totalRotateAmount)*displayRadius);
 				var dspv = displayVelocities[i];
-				displays[i].transform.position = Vector3.SmoothDamp(displays[i].transform.position, target, ref dspv, 1f);
+				displays[i].transform.localPosition = Vector3.SmoothDamp(displays[i].transform.localPosition, target, ref dspv, 1f);
 				displayVelocities[i] = dspv;
 			}
 		}
@@ -132,9 +132,12 @@ namespace ThinkInvisible.Admiral {
 				inv.GiveItem(ind);
 				fakeInv.GiveItem(ind);
 			}
-
-			Debug.Log("Sending MsgDeltaDisplay:" + GetComponent<NetworkIdentity>().netId + ", " + ind + ", true");
-			new MsgDeltaDisplay(GetComponent<NetworkIdentity>().netId, ind, true).Send(R2API.Networking.NetworkDestination.Clients);
+			
+			//TODO: this will be unnecessary once NetworkingAPI patch happens
+			if(NetworkClient.active)
+				ClientAddItemDisplay(ind);
+			else
+				new MsgDeltaDisplay(GetComponent<NetworkIdentity>().netId, ind, true).Send(R2API.Networking.NetworkDestination.Clients);
 		}
 
 		public void ServerRemoveItem(ItemIndex ind) {
@@ -143,8 +146,10 @@ namespace ThinkInvisible.Admiral {
 			else itemcounts[ind]--;
 			if(itemcounts[ind] == 0) itemcounts.Remove(ind);
 
-			Debug.Log("Sending MsgDeltaDisplay:" + GetComponent<NetworkIdentity>().netId + ", " + ind + ", false");
-			new MsgDeltaDisplay(GetComponent<NetworkIdentity>().netId, ind, false).Send(R2API.Networking.NetworkDestination.Clients);
+			if(NetworkClient.active)
+				ClientRemoveItemDisplay(ind);
+			else
+				new MsgDeltaDisplay(GetComponent<NetworkIdentity>().netId, ind, false).Send(R2API.Networking.NetworkDestination.Clients);
 
 			trackedInventories.RemoveAll(x => !x || !x.gameObject);
 			foreach(var inv in trackedInventories) {
@@ -157,6 +162,7 @@ namespace ThinkInvisible.Admiral {
 		internal void ClientAddItemDisplay(ItemIndex ind) {
 			var display = UnityEngine.Object.Instantiate(displayPrefab, transform.position, transform.rotation);
 			display.transform.Find("BillboardBase").Find("PickupSprite").GetComponent<SpriteRenderer>().sprite = ItemCatalog.GetItemDef(ind).pickupIconSprite;
+			display.transform.parent = this.transform;
 			displays.Add(display);
 			displayItems.Add(ind);
 			displayVelocities.Add(new Vector3(0, 0, 0));
