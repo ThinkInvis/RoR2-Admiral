@@ -36,6 +36,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillNameToken = "ADMIRAL_SUPPLY_HEALING_NAME";
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_HEALING_DESCRIPTION";
             skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallSupplyDropHealing>();
+            skillDef.icon = origSkillDef.icon;
 
             LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Healing");
             LanguageAPI.Add(skillDef.skillDescriptionToken,

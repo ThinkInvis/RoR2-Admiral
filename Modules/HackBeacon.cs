@@ -63,6 +63,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillNameToken = "ADMIRAL_SUPPLY_SPECIALORDER_NAME";
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_SPECIALORDER_DESCRIPTION";
             skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallSupplyDropSpecialOrder>();
+            skillDef.icon = origSkillDef.icon;
 
             LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Special Order");
             LanguageAPI.Add(skillDef.skillDescriptionToken,

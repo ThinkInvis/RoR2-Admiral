@@ -39,6 +39,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillNameToken = "ADMIRAL_SUPPLY_SHOCKING_NAME";
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_SHOCKING_DESCRIPTION";
             skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallSupplyDropShocking>();
+            skillDef.icon = origSkillDef.icon;
 
             LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Shocking");
             LanguageAPI.Add(skillDef.skillDescriptionToken,

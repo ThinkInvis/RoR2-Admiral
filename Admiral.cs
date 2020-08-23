@@ -38,14 +38,12 @@ namespace ThinkInvisible.Admiral {
                 module.Setup();
             }
             
-            //BaseAdmiralSubmodule is inherited directly for dependents on other modules
-            foreach(AdmiralSubmodule module in BaseAdmiralSubmodule.allModules) {
-                if(module.enabled)
+            //BaseAdmiralSubmodule is inherited directly for dependents on other modules and shouldn't be installed directly during this stage
+            foreach(var baseModule in BaseAdmiralSubmodule.allModules) {
+                if(baseModule is AdmiralSubmodule module)
                     module.Install();
-            }
-            foreach(RuntimeAdmiralSubmodule module in BaseAdmiralSubmodule.allModules) {
-                if(module.enabled)
-                    module.Install();
+                else if(baseModule is RuntimeAdmiralSubmodule runtimeModule)
+                    runtimeModule.Install();
             }
         }
     }

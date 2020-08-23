@@ -24,6 +24,6 @@ namespace ThinkInvisible.Admiral {
             CUOSHook.Undo();
         }
 
-        private bool Hook_Get_CanUseOrbitalSkills(CaptainSupplyDropController self) => SceneCatalog.mostRecentSceneDef.baseSceneName != "bazaar";
+        private static bool Hook_Get_CanUseOrbitalSkills(CaptainSupplyDropController self) => SceneCatalog.mostRecentSceneDef.baseSceneName != "bazaar";
     }
 }

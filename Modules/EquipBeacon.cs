@@ -43,6 +43,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillNameToken = "ADMIRAL_SUPPLY_REJUVENATOR_NAME";
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_REJUVENATOR_DESCRIPTION";
             skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallSupplyDropRejuvenator>();
+            skillDef.icon = origSkillDef.icon;
 
             LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Rejuvenator");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
