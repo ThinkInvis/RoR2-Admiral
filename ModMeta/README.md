@@ -83,6 +83,12 @@ Beacon: Special Order gives all allies standing nearby a set of temporary items 
 
 ## Changelog
 
+**1.5.3**
+
+- Orbital Jump Pad now works correctly in multiplayer.
+- Beacon: Special Order now properly displays floating items for multiplayer clients.
+- For modders: Major breaking changes to ItemWard and FakeInventory. These may be migrated to TILER2 in the near future.
+
 **1.5.2**
 
 - Fixed a bug that was causing Acrid's special ability to error out... somehow.

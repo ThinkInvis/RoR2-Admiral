@@ -245,7 +245,6 @@ namespace ThinkInvisible.Admiral {
 			}
 
 			public void OnReceived() {
-				Debug.Log("Received MsgDeltaDisplay: " + _ownerNetId + ", " + _itemIndex + ", " + _isAdd);
 				var targetWard = Util.FindNetworkObject(_ownerNetId).GetComponent<ItemWard>();
 				if(_isAdd)
 					targetWard.ClientAddItemDisplay(_itemIndex);
