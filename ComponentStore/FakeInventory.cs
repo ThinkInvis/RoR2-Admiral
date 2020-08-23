@@ -1,15 +1,8 @@
 ﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using R2API;
-using R2API.Networking.Interfaces;
 using RoR2;
-using RoR2.Orbs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using UnityEngine;
-using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
 	class FakeInventory : Inventory {
