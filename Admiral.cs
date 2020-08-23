@@ -22,6 +22,8 @@ namespace ThinkInvisible.Admiral {
         public const string ModName = "Admiral";
         public const string ModGuid = "com.ThinkInvisible.Admiral";
         
+        internal static BepInEx.Logging.ManualLogSource logger;
+
         internal static ConfigFile cfgFile;
 
         public const float BeaconCDRInfluence = 1f/2f;
@@ -30,6 +32,7 @@ namespace ThinkInvisible.Admiral {
         public bool legacyBeacons {get; private set;}
 
         public void Awake() {
+            logger = Logger;
             cfgFile = new ConfigFile(Path.Combine(Paths.ConfigPath, ModGuid + ".cfg"), true);
 
             using(var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Admiral.admiral_assets")) {

@@ -5,6 +5,7 @@ using RoR2;
 using R2API.Utils;
 using MonoMod.RuntimeDetour;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
     public static class HackOverride {
@@ -33,6 +34,8 @@ namespace ThinkInvisible.Admiral {
         private static void On_HMSOnEnter(On.EntityStates.CaptainSupplyDrop.HackingMainState.orig_OnEnter orig, EntityStates.CaptainSupplyDrop.HackingMainState self) {
             orig(self);
 
+            if(!NetworkServer.active) return;
+
             var itemWard = self.outer.gameObject.GetComponent<ItemWard>();
 
             WeightedSelection<List<PickupIndex>> itemSelection = new WeightedSelection<List<PickupIndex>>(8);
@@ -42,7 +45,7 @@ namespace ThinkInvisible.Admiral {
             for(int i = 0; i < 5 + Run.instance.stageClearCount; i++) {
                 var list = itemSelection.Evaluate(Run.instance.treasureRng.nextNormalizedFloat);
                 var pickup = Run.instance.treasureRng.NextElementUniform(list);
-                itemWard.AddItem(PickupCatalog.GetPickupDef(pickup).itemIndex);
+                itemWard.ServerAddItem(PickupCatalog.GetPickupDef(pickup).itemIndex);
             }
         }
 
