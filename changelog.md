@@ -1,5 +1,9 @@
 ﻿# Admiral Changelog
 
+**2.0.1**
+
+- Fixed a hard crash caused by Shocked lightning hits.
+
 **2.0.0**
 
 - Refactored into a proper module system. Large swathes of the mod can now be disabled and/or configured, and should have multiplayer sync (bugs notwithstanding).

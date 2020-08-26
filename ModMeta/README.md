@@ -110,6 +110,10 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.0.1**
+
+- Fixed a hard crash caused by Shocked lightning hits.
+
 **2.0.0**
 
 - Buffed Beacon: Shocking (fire rate increased from 1/1.5 sec to 1/0.95 sec, cooldown reduced from 30 sec to 24 sec).

@@ -14,7 +14,7 @@ namespace ThinkInvisible.Admiral {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(UnlockablesAPI), nameof(R2API.Networking.NetworkingAPI))]
     public class AdmiralPlugin:BaseUnityPlugin {
-        public const string ModVer = "2.0.0";
+        public const string ModVer = "2.0.1";
         public const string ModName = "Admiral";
         public const string ModGuid = "com.ThinkInvisible.Admiral";
         
