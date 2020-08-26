@@ -2,75 +2,99 @@
 
 ## Description
 
-A sweeping overhaul for Captain. Changes include:
+A sweeping overhaul for Captain. This mod is split into several mostly-independent modules, including:
 
-### Vulcan Shotgun
+### Vulcan Shotgun Rebalance
 
-Now autofires. Time between full charge and autofire is configurable -- defaults to 20% of total charge time scaled with attack speed. An alternate config option for fixed time is available.
+Removes damage falloff from Vulcan Shotgun, making the charged fire mode more useful; but also reduces its pellet count from 8 to 6, improving balance when compared with Admiral's buffs to the rest of Captain's kit.
 
-No longer has damage falloff, making the charged fire mode more useful.
+Configurable:
+- Pellet count. Defaults to 6.
 
-Reduced pellet count from 8 to 6. The intent of this mod is to buff the rest of Captain's kit, removing the need for such an overpowered primary.
+### Vulcan Shotgun Autofire
 
-### Power Tazer (& Beacon: Shocking)
+Causes Vulcan Shotgun to autofire under client authority (doesn't need multiplayer sync).
 
-The Shocked status now wears off after a 10,000% health interval, up from 10% (so health-based 'stunbreak' is effectively disabled).
+Configurable:
+- Dynamic time between full charge and autofire, scaled with attack speed. Defaults to 20%.
+- Fixed minimum time between full charge and autofire. Defaults to 0 seconds.
 
-The Shocked status now deals roughly 20% of the victim's maximum health per second as damage to its allies within 15 meters, targeting and firing randomly.
+### Orbital Skills Everywhere
+
+Makes Orbital Probe and Beacons (whether new or original) usable in every Hidden Realm, except for Bazaar.
+
+### Shock Status Tweaks
+
+Greatly increases the damage threshold for breaking the Shocked status, to the point where it's effectively removed. Also causes Shocked to deal ~20% of the victim's maximum health per second as damage to its allies within 15 meters, targeting and firing randomly.
+
+Configurable:
+- Fire chance per frame, damage, proc coefficient, and range of Shocked AoE. Defaults to 3.3% chance, 2% max health, 0.1 proc coefficient, 15 m range.
+- Whether to apply the stunbreak threshold tweak.
 
 ### Catalyzer Dart
 
-A new Secondary skill variant (same slot as Power Tazer). Fires a dart which removes all debuffs from an enemy and deals 150% of the remaining DoT damage + 1x200% per non-DoT debuff.
+A new Secondary skill variant (same slot as Power Tazer). Fires a dart which removes all debuffs from an enemy and deals 150% of the remaining DoT damage, plus 1x200% base damage for each non-DoT debuff.
 
-Unlock by getting 6 Shocked kills originating from the same enemy.
+Unlock by getting 6 Shocked kills originating from the same enemy. Cannot be unlocked while Shock Status Tweaks is disabled.
 
-### Orbital Probe
-
-Now usable in every Hidden Realm, except for Bazaar.
+Configurable:
+- Cooldown of the Catalyzer Dart skill. Defaults to 8 sec.
+- Fraction of remaining DoT damage dealt. Defaults to 150%.
+- Fraction of base damage dealt per non-DoT debuff. Defaults to 1x200%.
 
 ### Orbital Jump Pad
 
-A new Utility skill variant (same slot as Orbital Probe). Summons a jump pad and its target within 100 m. Lasts 20 seconds, recharges in 30 seconds; anyone, friend or foe, can trigger the jump pad within this time.
+A new Utility skill variant (same slot as Orbital Probe). Summons a jump pad and its target within a limited range. Anyone, friend or foe, can trigger the jump pad within its lifetime.
 
 Unlock by near-directly hitting a fast-moving target with an Orbital Probe.
 
-### Orbital Supply Beacon
+Configurable:
+- Cooldown of the Orbital Jump Pad skill. Defaults to 30 sec.
+- Lifetime of jump pads. Defaults to 20 sec.
+- Maximum range of the Orbital Jump Pad skill. Defaults to 100 m.
 
-Now usable in every Hidden Realm, except for Bazaar.
+### Beacon Rebalance
 
-All beacons are no longer limited to one use per stage. Instead, they have individual cooldowns and lifetimes.
+Makes beacons no longer limited to one use per stage. Instead, they have individual cooldowns and lifetimes (latter indicated using the energy meter). Also adds a 50% resistance to cooldown reduction (incl. Bandolier, Brainstalks...), and complete resistance to max stock increases.
 
-Beacons are 50% resistant to cooldown reduction (including Bandolier and Brainstalks), and can never have increased max stock.
-
-The energy meter above some original beacons now exists on all of them as an indicator of time remaining.
+Configurable:
+- Strength of cooldown reduction resistance. Defaults to 50%.
 
 #### Beacon: Healing
 
-Lasts 20 seconds. Recharges in 40 seconds.
+Configurable:
+- Cannot be individually disabled.
+- Cooldown and lifetime. Defaults to 20 sec, 40 sec.
 
 #### Beacon: Shocking
 
-Lasts 8 seconds. Recharges in 30 seconds.
+Now fires once every 0.95 seconds (up from Lots Slower) to compensate for the lower uptime. Will also benefit from Shock Status Tweaks if enabled.
 
-Now fires once every 1.5 seconds (up from Lots Slower) to compensate for the lower uptime.
-
-Benefits from the same changes that Power Tazer does, due to sharing the Shocked status.
+Configurable:
+- Cannot be individually disabled.
+- Cooldown and lifetime. Defaults to 8 sec, 24 sec.
+- Fire rate. Defaults to 0.95 sec.
 
 #### Beacon: Resupply
 
-REPLACED with Beacon: Rejuvenator.
+REPLACED with Beacon: Rejuvenator. Beacon: Rejuvenator gives all allies standing nearby the new Stimmed buff, which provides +50% skill recharge rate. Will also recharge beacons, so Rejuvenator's own cooldown is higher to compensate.
 
-Lasts 20 seconds. Recharges in 50 seconds.
-
-Beacon: Rejuvenator gives all allies standing nearby the new Stimmed buff, which provides +50% skill recharge rate. Will also recharge beacons, so Rejuvenator's own cooldown is higher to compensate.
+Configurable:
+- Cannot be individually disabled.
+- Cooldown and lifetime. Defaults to 20 sec, 50 sec.
+- Additional skill recharge rate provided by Stimmed. Defaults to 50%.
 
 #### Beacon: Hacking
 
-REPLACED with Beacon: Special Order.
+REPLACED with Beacon: Special Order. Beacon: Special Order gives all allies standing nearby a set of temporary items rolled on the basic chest table, starting with 5 and increasing by 1 for every stage cleared. These items cannot be used in 3D Printers nor in Scrappers, and they're removed when the beacon breaks down or when you leave its range.
 
-Lasts 20 seconds. Recharges in 40 seconds.
-
-Beacon: Special Order gives all allies standing nearby a set of temporary items rolled on the basic chest table, starting with 5 and increasing by 1 for every stage cleared. These items cannot be used in 3D Printers nor in Scrappers, and they're removed when the beacon breaks down or when you leave its range.
+Configurable:
+- Cannot be individually disabled.
+- Cooldown and lifetime. Defaults to 20 sec, 40 sec.
+- Radius of the ItemWard. Defaults to 10 m.
+- Number of items provided on the first stage. Defaults to 5.
+- Number of items provided per additional stage cleared. Defaults to 1.
+- Rarity of the items provided. Defaults to identical to a basic chest, sans equipment (80 common : 20 uncommon : 1 rare).
 
 ## Issues/TODO
 
@@ -78,10 +102,18 @@ Beacon: Special Order gives all allies standing nearby a set of temporary items 
 - Catalyzer Dart could also do with some visual changes.
 - Stepping on an Orbital Jump Pad can deal unavoidable falling damage; may attempt to make a 'landing pad' object to mitigate this.
 - Trying to find a way to allow canceling beacon/probe by recasting the skill.
-- Looking into implementing a module system for disabling certain parts of the mod.
 - See the GitHub repo for more!
 
 ## Changelog
+
+The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
+
+**2.0.0**
+
+- Refactored into a proper module system. Large swathes of the mod can now be disabled and/or configured, and should have multiplayer sync (bugs notwithstanding).
+- Added dependency to TILER2.
+- Migrated FakeInventory and ItemWard to TILER2.
+- Beacon: Special Order is now compatible with TinkersSatchel's Mostly Tame Mimic.
 
 **1.5.3**
 
@@ -109,38 +141,3 @@ Beacon: Special Order gives all allies standing nearby a set of temporary items 
 - Minor tweak to make Orbital Jump Pad trajectory more reliable.
 - Beacon: Shocking now has greatly increased fire rate (1 / 1.5 s).
 - Internal: ItemWard now supports item removal.
-
-**1.4.0**
-
-- Added variant Utility skill: Orbital Jump Pad!
-- All beacons now use the original beacons' energy indicator as a lifetime indicator.
-- Added some extra zombie protection to Beacon: Special Order (original patch wasn't enough).
-
-**1.3.1**
-
-- Beacon: Special Order can no longer give items to enemies.
-- Beacon: Special Order can no longer give items to dead bodies caused by beacon impact (which doesn't work and could cause console errors + lower itemcount on the beacon).
-- Fixed shock health threshold override not being aggressive enough.
-
-**1.3.0**
-
-- Beacon: Hacking has been replaced with Beacon: Special Order! Provides 5 random, temporary items (+1 per stage cleared) from the Tier 1 chest drop list.
-
-**1.2.0**
-
-- Fixed inability to disable Vulcan Shotgun autofire.
-- Beacon: Rejuvenator now has a range indicator.
-- Slightly buffed Beacon: Rejuvenator range to bring it in line with existing beacons (7 m --> 10 m).
-- Beacon lifetime is now extended to account for the ~4 sec drop animation.
-
-**1.1.0**
-
-- Implemented language token overrides (R2API bug was patched).
-- Reduced Vulcan Shotgun pellet count from 8 to 6.
-- Removed damage falloff from Vulcan Shotgun.
-- Minor project reorganization.
-
-**1.0.0**
-
-- Initial version. Implements unlimited beacons with cooldown+lifetime, the Rejuvenator beacon as a replacement for Resupply, a special AoE max-health-as-damage component to the Shocked status, a tweak to Shocked which greatly increases its stunbreak threshold, and Vulcan Shotgun autofire.
-- Late notes as of 1.1.0: Initial version also made orbital skills usable in hidden realms (except bazaar).
