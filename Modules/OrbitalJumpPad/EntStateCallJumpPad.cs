@@ -21,7 +21,7 @@ namespace ThinkInvisible.Admiral {
 					this.outer.SetNextState(ns1);
 					return;
 				default:
-					Debug.LogError("Admiral: jump pad skill has invalid stock count!");
+					AdmiralPlugin.logger.LogError("Jump pad skill has invalid stock count!");
 					break;
 				}
 			}
