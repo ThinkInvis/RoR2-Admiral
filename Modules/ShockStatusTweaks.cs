@@ -10,7 +10,9 @@ using UnityEngine;
 using R2API;
 
 namespace ThinkInvisible.Admiral {
-    internal class ShockedOrb : LightningOrb {}
+    internal class ShockedOrb : LightningOrb {
+        public GameObject shockVictim;
+    }
 
     public class ShockStatusTweaks : AdmiralModule<ShockStatusTweaks> {
         [AutoItemConfig("Chance per frame to shock a nearby ally.",
@@ -69,10 +71,10 @@ namespace ThinkInvisible.Admiral {
                 x => x.MatchCallOrCallvirt<SetStateOnHurt>("SetShock"));
             c.Emit(OpCodes.Ldarg_0);
             c.Emit(OpCodes.Ldarg_1);
-            c.EmitDelegate<Action<SetStateOnHurt, DamageInfo>>((ssoh,di) => {
+            c.EmitDelegate<Action<SetStateOnHurt, DamageReport>>((ssoh,dr) => {
                 var shockHelper = ssoh.targetStateMachine.gameObject.GetComponent<ShockHelper>();
                 if(!shockHelper) shockHelper = ssoh.targetStateMachine.gameObject.AddComponent<ShockHelper>();
-                shockHelper.currentAttacker = di.attacker;
+                shockHelper.currentAttacker = dr.attacker;
             });
         }
 
@@ -109,13 +111,13 @@ namespace ThinkInvisible.Admiral {
 					damageType = DamageType.AOE,
 					damageValue = self.outer.commonComponents.characterBody.maxHealth * shockDamageFrac,
 					isCrit = false,
-                    inflictor = self.gameObject,
 					lightningType = LightningOrb.LightningType.Tesla,
 					origin = tpos,
 					procChainMask = default,
 					procCoefficient = shockProcCoef,
 					target = victim.body.mainHurtBox,
-					teamIndex = TeamIndex.None
+					teamIndex = TeamIndex.None,
+                    shockVictim = self.gameObject
 				});
             }
         }

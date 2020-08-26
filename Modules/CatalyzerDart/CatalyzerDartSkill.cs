@@ -171,8 +171,8 @@ namespace ThinkInvisible.Admiral {
 
         private void LightningOrb_OnArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, RoR2.Orbs.LightningOrb self) {
             orig(self);
-            if(self is ShockedOrb && !self.failedToKill && self.inflictor) {
-                var skt = self.inflictor.GetComponent<ShockHelper>();
+            if(self is ShockedOrb shockedOrb && !self.failedToKill && shockedOrb.shockVictim) {
+                var skt = shockedOrb.shockVictim.GetComponent<ShockHelper>();
                 if(skt) {
                     skt.shockKills++;
                     if(skt.shockKills >= 6)
