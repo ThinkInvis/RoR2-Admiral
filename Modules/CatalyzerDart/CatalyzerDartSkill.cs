@@ -35,6 +35,8 @@ namespace ThinkInvisible.Admiral {
         internal override void Setup() {
             base.Setup();
 
+            LoadoutAPI.AddSkill(typeof(EntStateFireCatalyzer));
+
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
             var projPfbPfb = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainTazer"));
             projPfbPfb.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;

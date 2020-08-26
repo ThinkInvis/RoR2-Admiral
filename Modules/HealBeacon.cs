@@ -27,6 +27,9 @@ namespace ThinkInvisible.Admiral {
         internal override void Setup() {
             base.Setup();
 
+            LoadoutAPI.AddSkill(typeof(EntStateCallSupplyDropHealing));
+            LoadoutAPI.AddSkill(typeof(EntStateHealingMainState));
+
             skillFamily1 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop1SkillFamily");
             skillFamily2 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
 

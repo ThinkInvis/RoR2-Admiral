@@ -51,6 +51,9 @@ namespace ThinkInvisible.Admiral {
 
         internal override void Setup() {
             base.Setup();
+            
+            LoadoutAPI.AddSkill(typeof(EntStateCallJumpPad));
+            LoadoutAPI.AddSkill(typeof(EntStateSetupJumpPad));
 
             R2API.Networking.NetworkingAPI.RegisterMessageType<MsgSetJumpPadTarget>();
 
