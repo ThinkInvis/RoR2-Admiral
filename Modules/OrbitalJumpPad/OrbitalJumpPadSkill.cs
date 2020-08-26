@@ -150,12 +150,7 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.Projectile.ProjectileImpactExplosion.Detonate += ProjectileImpactExplosion_Detonate;
 
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
-            Array.Resize(ref csdf.variants, csdf.variants.Length + 1);
-            csdf.variants[csdf.variants.Length - 1] = new SkillFamily.Variant {
-                skillDef = setupSkillDef,
-                viewableNode = new ViewablesCatalog.Node("ADMIRAL_JUMPPAD_SKILL_NAME", false, null),
-                unlockableName = "ADMIRAL_JUMPPAD_UNLOCKABLE_ID"
-            };
+            csdf.AddVariant(setupSkillDef, "ADMIRAL_JUMPPAD_UNLOCKABLE_ID");
         }
 
         internal override void Uninstall() {
@@ -164,9 +159,7 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.Projectile.ProjectileImpactExplosion.Detonate -= ProjectileImpactExplosion_Detonate;
 
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
-            var trimmedVariants = new List<SkillFamily.Variant>(csdf.variants);
-            trimmedVariants.RemoveAll(x => x.skillDef.skillIndex == setupSkillDef.skillIndex);
-            csdf.variants = trimmedVariants.ToArray();
+            csdf.RemoveVariant(setupSkillDef);
         }
 
         private void ProjectileImpactExplosion_Detonate(On.RoR2.Projectile.ProjectileImpactExplosion.orig_Detonate orig, ProjectileImpactExplosion self) {
