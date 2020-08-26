@@ -8,7 +8,7 @@ namespace ThinkInvisible.Admiral {
     /// <summary>
     /// Partial port of an upcoming R2API.LanguageAPI feature.
     /// </summary>
-    public static class LanguageAPIBleedingEdge {
+    internal static class LanguageAPIBleedingEdge {
         internal static void Patch() {
             Language.onCurrentLanguageChanged += OnCurrentLanguageChanged;
         }
