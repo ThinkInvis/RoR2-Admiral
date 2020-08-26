@@ -43,7 +43,7 @@ namespace ThinkInvisible.Admiral {
         public float itemTier3Chance {get; private set;} = 0.01f;
         
         public override string configDescription => "Contains config for the Beacon: Hacking submodule of Modules.BeaconRebalance.";
-        public override bool addEnabledConfig => false;
+        public override bool managedEnable => false;
 
         private SkillFamily skillFamily1;
         private SkillFamily skillFamily2;

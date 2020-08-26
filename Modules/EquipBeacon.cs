@@ -22,7 +22,7 @@ namespace ThinkInvisible.Admiral {
         public float rechargeRate {get; private set;} = 0.5f;
 
         public override string configDescription => "Contains config for the Beacon: Resupply submodule of Modules.BeaconRebalance.";
-        public override bool addEnabledConfig => false;
+        public override bool managedEnable => false;
 
         private GameObject rejuvWardPrefab;
 

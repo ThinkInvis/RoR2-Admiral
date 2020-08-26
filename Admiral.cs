@@ -41,7 +41,7 @@ namespace ThinkInvisible.Admiral {
 
         public void Start() {
             foreach(var module in AdmiralModule.allModules) {
-                if(module.enabled) {
+                if(module.enabled && module.managedEnable) {
                     module.Install();
                     module.InstallLang();
                 }

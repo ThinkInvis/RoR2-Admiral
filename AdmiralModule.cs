@@ -25,7 +25,7 @@ namespace ThinkInvisible.Admiral {
         public bool enabled {get; internal set;} = true;
 
         public virtual string configDescription => null;
-        public virtual bool addEnabledConfig => true;
+        public virtual bool managedEnable => true;
         public virtual AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch;
         public virtual bool invalidatesLanguage => false;
         
@@ -68,7 +68,7 @@ namespace ThinkInvisible.Admiral {
             FilingDictionary<AdmiralModule> f = new FilingDictionary<AdmiralModule>();
             foreach(Type type in Assembly.GetCallingAssembly().GetTypes().Where(t => t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(AdmiralModule)))) {
                 var newBpl = (AdmiralModule)Activator.CreateInstance(type);
-                if(newBpl.addEnabledConfig)
+                if(newBpl.managedEnable)
                     newBpl.Bind(typeof(AdmiralModule).GetProperty(nameof(enabled)), cfl, "Admiral", "Modules." + newBpl.GetType().Name, new AutoItemConfigAttribute(
                     ((newBpl.configDescription != null) ? (newBpl.configDescription + "\n") : "") + "Set to False to disable this module and all of its content. Doing so may cause changes in other modules as well.",
                     newBpl.enabledConfigFlags));

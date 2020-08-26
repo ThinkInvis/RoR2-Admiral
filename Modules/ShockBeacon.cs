@@ -20,7 +20,7 @@ namespace ThinkInvisible.Admiral {
         public float shockRate {get; private set;} = 0.95f;
         
         public override string configDescription => "Contains config for the Beacon: Shocking submodule of Modules.BeaconRebalance.";
-        public override bool addEnabledConfig => false;
+        public override bool managedEnable => false;
 
         private SkillFamily skillFamily1;
         private SkillFamily skillFamily2;
