@@ -16,8 +16,11 @@ namespace ThinkInvisible.Admiral {
         public override bool invalidatesLanguage => true;
         public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferUntilNextStage;
 
+        internal GameObject muzzleFlashPrefab;
+
         internal override void Setup() {
             base.Setup();
+            muzzleFlashPrefab = Resources.Load<GameObject>("prefabs/effects/muzzleflashes/MuzzleflashSupplyDrop, Healing");
         }
 
         internal override void InstallLang() {

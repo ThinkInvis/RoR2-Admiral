@@ -77,7 +77,7 @@ namespace ThinkInvisible.Admiral {
 
             LoadoutAPI.AddSkillDef(skillDef);
 
-            var beaconPrefabPrefab = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Hacking"));
+            var beaconPrefabPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Hacking").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
             beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
@@ -113,6 +113,7 @@ namespace ThinkInvisible.Admiral {
         public class EntStateCallSupplyDropSpecialOrder : EntityStates.Captain.Weapon.CallSupplyDropHacking {
             public override void OnEnter() {
                 supplyDropPrefab = HackBeacon.instance.beaconPrefab;
+                muzzleflashEffect = BeaconRebalance.instance.muzzleFlashPrefab;
                 base.OnEnter();
             }
         }

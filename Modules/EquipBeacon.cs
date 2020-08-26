@@ -60,7 +60,8 @@ namespace ThinkInvisible.Admiral {
 
             stimmedBuffIndex = BuffAPI.Add(new CustomBuff("Stimmed", "textures/itemicons/texSyringeIcon", Color.red, false, false));
 
-            var beaconPrefabPrefab = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, EquipmentRestock"));
+            //need to InstantiateClone because letting the prefabprefab wake up breaks some effects (animation curve components)
+            var beaconPrefabPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, EquipmentRestock").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
             beaconPrefabPrefab.GetComponent<ProxyInteraction>().enabled = false;
             beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
@@ -119,6 +120,7 @@ namespace ThinkInvisible.Admiral {
         public class EntStateCallSupplyDropRejuvenator : EntityStates.Captain.Weapon.CallSupplyDropEquipmentRestock {
             public override void OnEnter() {
                 supplyDropPrefab = EquipBeacon.instance.beaconPrefab;
+                muzzleflashEffect = BeaconRebalance.instance.muzzleFlashPrefab;
                 base.OnEnter();
             }
         }
