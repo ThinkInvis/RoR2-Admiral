@@ -110,6 +110,12 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.0.2**
+
+- Fixed temporary beacons missing VFX/SFX.
+- Fixed temporary beacons not appearing for multiplayer clients (hopefully).
+- Removed some stray debug logging.
+
 **2.0.1**
 
 - Fixed a hard crash caused by Shocked lightning hits.
@@ -133,18 +139,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 - Fixed a bug that was causing Acrid's special ability to error out... somehow.
 - Added a config option for disabling Beacon overrides (ALL changes except usability in Hidden Realms).
 - Bumped R2API dependency to v2.5.7.
-
-**1.5.1**
-
-- Loosened requirements for both unlock achievements.
-- Beacons are now 50% resistant to cooldown reduction and completely resistant to max stock increase.
-- Reduced Beacon: Rejuvenator cooldown to compensate for CDR resistance.
-
-**1.5.0**
-
-- Added variant Secondary skill + unlock achievement: Catalyzer Dart!
-- Added an achievement for unlocking Orbital Jump Pad.
-- Added custom icon to Orbital Jump Pad.
-- Minor tweak to make Orbital Jump Pad trajectory more reliable.
-- Beacon: Shocking now has greatly increased fire rate (1 / 1.5 s).
-- Internal: ItemWard now supports item removal.

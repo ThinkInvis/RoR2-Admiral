@@ -1,5 +1,11 @@
 ﻿# Admiral Changelog
 
+**2.0.2**
+
+- Fixed temporary beacons missing VFX/SFX.
+- Fixed temporary beacons not appearing for multiplayer clients (hopefully).
+- Removed some stray debug logging.
+
 **2.0.1**
 
 - Fixed a hard crash caused by Shocked lightning hits.
