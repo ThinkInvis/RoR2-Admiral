@@ -7,6 +7,7 @@ using MonoMod.Cil;
 using Mono.Cecil.Cil;
 using System;
 using UnityEngine;
+using R2API;
 
 namespace ThinkInvisible.Admiral {
     internal class ShockedOrb : LightningOrb {}
