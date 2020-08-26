@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using Mono.Cecil.Cil;
 using TILER2;
+using R2API;
 
 namespace ThinkInvisible.Admiral {
     public class BeaconRebalance : AdmiralModule<BeaconRebalance> {
@@ -21,7 +22,7 @@ namespace ThinkInvisible.Admiral {
 
         internal override void InstallLang() {
             base.InstallLang();
-            languageOverlays.Add(LanguageAPIBleedingEdge.AddOverlay("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>."));
+            languageOverlays.Add(LanguageAPI.AddOverlay("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>."));
         }
 
         internal override void Install() {

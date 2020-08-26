@@ -44,7 +44,7 @@ namespace ThinkInvisible.Admiral {
 
         internal override void InstallLang() {
             base.InstallLang();
-            languageOverlays.Add(LanguageAPIBleedingEdge.AddOverlay("KEYWORD_SHOCKING", "<style=cKeywordName>Shocking</style><style=cSub>Interrupts enemies and temporarily stuns them. A victim of Shocking will <style=cIsDamage>damage their nearby allies</style> for a fraction of their own maximum health per second."));
+            languageOverlays.Add(LanguageAPI.AddOverlay("KEYWORD_SHOCKING", "<style=cKeywordName>Shocking</style><style=cSub>Interrupts enemies and temporarily stuns them. A victim of Shocking will <style=cIsDamage>damage their nearby allies</style> for a fraction of their own maximum health per second."));
         }
 
         internal override void Install() {

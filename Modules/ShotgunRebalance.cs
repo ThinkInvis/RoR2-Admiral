@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using R2API;
+using RoR2;
 using TILER2;
 
 namespace ThinkInvisible.Admiral {
@@ -12,7 +13,7 @@ namespace ThinkInvisible.Admiral {
 
         internal override void InstallLang() {
             base.InstallLang();
-            languageOverlays.Add(LanguageAPIBleedingEdge.AddOverlay("CAPTAIN_PRIMARY_DESCRIPTION", "Fire a blast of pellets that deal <style=cIsDamage>6x120% damage</style> with no falloff. Charging the attack narrows the <style=cIsUtility>spread</style>."));
+            languageOverlays.Add(LanguageAPI.AddOverlay("CAPTAIN_PRIMARY_DESCRIPTION", "Fire a blast of pellets that deal <style=cIsDamage>6x120% damage</style> with no falloff. Charging the attack narrows the <style=cIsUtility>spread</style>."));
         }
 
         internal override void Install() {
