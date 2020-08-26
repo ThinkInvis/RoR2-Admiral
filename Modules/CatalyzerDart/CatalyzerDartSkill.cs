@@ -159,36 +159,14 @@ namespace ThinkInvisible.Admiral {
             return BodyCatalog.FindBodyIndex("CaptainBody");
         }
 
-        private bool isInstalledWithShock = false;
-        private bool isInstalledNoShock = false;
-
         public override void OnInstall() {
             base.OnInstall();
-            if(ShockStatusTweaks.instance.enabled) {
-                On.RoR2.Orbs.LightningOrb.OnArrival += LightningOrb_OnArrival;
-                isInstalledWithShock = true;
-            } else {
-                isInstalledNoShock = true;
-            }
+            On.RoR2.Orbs.LightningOrb.OnArrival += LightningOrb_OnArrival;
         }
 
         public override void OnUninstall() {
             base.OnUninstall();
             On.RoR2.Orbs.LightningOrb.OnArrival -= LightningOrb_OnArrival;
-            isInstalledWithShock = false;
-            isInstalledNoShock = false;
-        }
-
-        internal void SwitchInstall() {
-            if(isInstalledWithShock && !ShockStatusTweaks.instance.enabled) {
-                On.RoR2.Orbs.LightningOrb.OnArrival += LightningOrb_OnArrival;
-                isInstalledNoShock = true;
-                isInstalledWithShock = false;
-            } else if(isInstalledNoShock && ShockStatusTweaks.instance.enabled) {
-                On.RoR2.Orbs.LightningOrb.OnArrival -= LightningOrb_OnArrival;
-                isInstalledWithShock = true;
-                isInstalledNoShock = false;
-            }
         }
 
         private void LightningOrb_OnArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, RoR2.Orbs.LightningOrb self) {
