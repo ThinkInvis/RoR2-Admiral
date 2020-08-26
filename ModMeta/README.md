@@ -73,7 +73,7 @@ Now fires once every 0.95 seconds (up from Lots Slower) to compensate for the lo
 Configurable:
 - Cannot be individually disabled.
 - Cooldown and lifetime. Defaults to 8 sec, 24 sec.
-- Fire rate. Defaults to 0.95 sec.
+- Time between pulses. Defaults to 0.95 sec.
 
 #### Beacon: Resupply
 
@@ -98,6 +98,8 @@ Configurable:
 
 ## Issues/TODO
 
+- Drop sound for new beacons went missing. Still trying to find it.
+- Loadout selection of new skills is not remembered between launches of the game.
 - Orbital Jump Pad VFX is unfinished (particles are too big).
 - Catalyzer Dart could also do with some visual changes.
 - Stepping on an Orbital Jump Pad can deal unavoidable falling damage; may attempt to make a 'landing pad' object to mitigate this.
@@ -110,8 +112,9 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 
 **2.0.0**
 
+- Buffed Beacon: Shocking (fire rate increased from 1/1.5 sec to 1/0.95 sec, cooldown reduced from 30 sec to 24 sec).
 - Refactored into a proper module system. Large swathes of the mod can now be disabled and/or configured, and should have multiplayer sync (bugs notwithstanding).
-- Added dependency to TILER2.
+- Added dependency to TILER2 2.0.0.
 - Migrated FakeInventory and ItemWard to TILER2.
 - Beacon: Special Order is now compatible with TinkersSatchel's Mostly Tame Mimic.
 
