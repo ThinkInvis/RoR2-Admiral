@@ -6,7 +6,7 @@ using EntityStates.CaptainSupplyDrop;
 using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class ShockBeacon : BaseAdmiralSubmodule<ShockBeacon> {
+    public class ShockBeacon : AdmiralModule<ShockBeacon> {
         [AutoItemConfig("Lifetime of the Beacon: Shocking deployable.",
             AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 8f;
@@ -18,6 +18,9 @@ namespace ThinkInvisible.Admiral {
         [AutoItemConfig("Fire rate of Beacon: Shocking.",
             AutoItemConfigFlags.None, 0f, float.MaxValue)]
         public float shockRate {get; private set;} = 0.95f;
+        
+        public override string configDescription => "Contains config for the Beacon: Shocking submodule of Modules.BeaconRebalance.";
+        public override bool addEnabledConfig => false;
 
         private SkillFamily skillFamily1;
         private SkillFamily skillFamily2;

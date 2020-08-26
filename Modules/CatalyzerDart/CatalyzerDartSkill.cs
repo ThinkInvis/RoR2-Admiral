@@ -10,10 +10,10 @@ using TILER2;
 using UnityEngine;
 
 namespace ThinkInvisible.Admiral {
-    public class CatalyzerDartSkill : AdmiralSubmodule<CatalyzerDartSkill> {
+    public class CatalyzerDartSkill : AdmiralModule<CatalyzerDartSkill> {
         [AutoItemConfig("Cooldown of Catalyzer Dart.",
             AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float skillRecharge {get; private set;} = 30f;
+        public float skillRecharge {get; private set;} = 8f;
 
         [AutoItemConfig("Fraction of remaining DoT damage dealt by malevolent cleanses.",
             AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -23,14 +23,18 @@ namespace ThinkInvisible.Admiral {
             AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float evilCleanseNonDoTDamage {get; private set;} = 2f;
 
+        public override string configDescription => "Adds the Catalyzer Dart secondary skill variant.";
+        public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferForever;
+
         internal SkillDef skillDef;
 
         internal GameObject projectilePrefab;
 
         public class MalevolentCleanseOnHit : MonoBehaviour {}
-        
-        //Install should only happen once, immediately after Setup -- module can't be installed/uninstalled at runtime
-        internal override void Install() {
+
+        internal override void Setup() {
+            base.Setup();
+
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
             var projPfbPfb = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainTazer"));
             projPfbPfb.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;
@@ -72,22 +76,25 @@ namespace ThinkInvisible.Admiral {
 
             LoadoutAPI.AddSkillDef(skillDef);
 
-            //todo: unlockable dependent on whether shock module is loaded
-
-            var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSecondarySkillFamily");
-            Array.Resize(ref csdf.variants, csdf.variants.Length + 1);
-            csdf.variants[csdf.variants.Length - 1] = new SkillFamily.Variant {
-                skillDef = skillDef,
-                viewableNode = new ViewablesCatalog.Node(nametoken, false, null),
-                unlockableName = "ADMIRAL_CATALYZER_UNLOCKABLE_ID"
-            };
-
-            RoR2.GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
-            On.EntityStates.Captain.Weapon.FireTazer.Fire += FireTazer_Fire;
-            
             UnlockablesAPI.AddUnlockable<AdmiralCatalyzerAchievement>(false);
             LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_NAME", "Captain: Hoist By Their Own Petard");
             LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, kill 6 other enemies by Shocking the same one.");
+        }
+
+        internal override void Install() {
+            base.Install();
+
+            //todo: unlockable dependent on whether shock module is loaded
+            Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSecondarySkillFamily").AddVariant(skillDef, "ADMIRAL_CATALYZER_UNLOCKABLE_ID");
+
+            RoR2.GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
+            On.EntityStates.Captain.Weapon.FireTazer.Fire += FireTazer_Fire;    
+        }
+
+        internal override void Uninstall() {
+            base.Uninstall();
+
+            Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSecondarySkillFamily").RemoveVariant(skillDef);
         }
 
         private void FireTazer_Fire(On.EntityStates.Captain.Weapon.FireTazer.orig_Fire orig, FireTazer self) {
@@ -153,37 +160,48 @@ namespace ThinkInvisible.Admiral {
             return BodyCatalog.FindBodyIndex("CaptainBody");
         }
 
+        private bool isInstalledWithShock = false;
+        private bool isInstalledNoShock = false;
+
         public override void OnInstall() {
             base.OnInstall();
-            On.RoR2.Orbs.LightningOrb.OnArrival += LightningOrb_OnArrival;
-            On.RoR2.CharacterBody.Awake += CharacterBody_Awake;
+            if(ShockStatusTweaks.instance.enabled) {
+                On.RoR2.Orbs.LightningOrb.OnArrival += LightningOrb_OnArrival;
+                isInstalledWithShock = true;
+            } else {
+                isInstalledNoShock = true;
+            }
         }
 
         public override void OnUninstall() {
             base.OnUninstall();
             On.RoR2.Orbs.LightningOrb.OnArrival -= LightningOrb_OnArrival;
-            On.RoR2.CharacterBody.Awake -= CharacterBody_Awake;
+            isInstalledWithShock = false;
+            isInstalledNoShock = false;
         }
-        
-        private void CharacterBody_Awake(On.RoR2.CharacterBody.orig_Awake orig, CharacterBody self) {
-            orig(self);
-            self.gameObject.AddComponent<ShockedKillTracker>();
+
+        internal void SwitchInstall() {
+            if(isInstalledWithShock && !ShockStatusTweaks.instance.enabled) {
+                On.RoR2.Orbs.LightningOrb.OnArrival += LightningOrb_OnArrival;
+                isInstalledNoShock = true;
+                isInstalledWithShock = false;
+            } else if(isInstalledNoShock && ShockStatusTweaks.instance.enabled) {
+                On.RoR2.Orbs.LightningOrb.OnArrival -= LightningOrb_OnArrival;
+                isInstalledWithShock = true;
+                isInstalledNoShock = false;
+            }
         }
 
         private void LightningOrb_OnArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, RoR2.Orbs.LightningOrb self) {
             orig(self);
-            if(self is ShockedOrb && !self.failedToKill && self.attacker) {
-                var skt = self.attacker.GetComponent<ShockedKillTracker>();
+            if(self is ShockedOrb && !self.failedToKill && self.inflictor) {
+                var skt = self.inflictor.GetComponent<ShockHelper>();
                 if(skt) {
-                    skt.shockedKills++;
-                    if(skt.shockedKills >= 6)
+                    skt.shockKills++;
+                    if(skt.shockKills >= 6)
                         Grant();
                 }
             }
         }
-    }
-    
-    public class ShockedKillTracker : MonoBehaviour {
-        public int shockedKills = 0;
     }
 }

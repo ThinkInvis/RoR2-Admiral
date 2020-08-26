@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
-    public class OrbitalJumpPadSkill : AdmiralSubmodule<OrbitalJumpPadSkill> {
+    public class OrbitalJumpPadSkill : AdmiralModule<OrbitalJumpPadSkill> {
         [AutoItemConfig("Lifetime of the Orbital Jump Pad deployable.",
             AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
@@ -22,6 +22,9 @@ namespace ThinkInvisible.Admiral {
         [AutoItemConfig("Maximum range of both Orbital Jump Pad terminals.",
             AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRange {get; private set;} = 100f;
+
+        public override string configDescription => "Adds the Orbital Jump Pad utility skill variant.";
+        public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferForever;
 
         internal SkillDef setupSkillDef;
         internal SkillDef callSkillDef;
@@ -46,11 +49,14 @@ namespace ThinkInvisible.Admiral {
             return new Vector3(vX0, vY0, vZ0);
         }
 
-        //Install should only happen once, immediately after Setup -- module can't be installed/uninstalled at runtime
-        internal override void Install() {
-            base.Install();
+        internal override void Setup() {
+            base.Setup();
 
             R2API.Networking.NetworkingAPI.RegisterMessageType<MsgSetJumpPadTarget>();
+
+            UnlockablesAPI.AddUnlockable<AdmiralJumpPadAchievement>(false);
+            LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Captain: Damn The Torpedoes");
+            LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
 
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
             var jppBase = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
@@ -61,8 +67,6 @@ namespace ThinkInvisible.Admiral {
             var jppDecayer = jppBase.AddComponent<CaptainBeaconDecayer>();
             jppDecayer.lifetime = skillLifetime;
             jumpPadPrefabBase = PrefabAPI.InstantiateClone(jppBase, "CaptainJumpPad");
-
-            On.RoR2.Projectile.ProjectileImpactExplosion.Detonate += ProjectileImpactExplosion_Detonate;
 
             //On.EntityStates.Captain.Weapon.CallAirstrikeBase.ModifyProjectile += On_CABModifyProjectile;
             var jppProj1 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
@@ -111,14 +115,6 @@ namespace ThinkInvisible.Admiral {
 
             LoadoutAPI.AddSkillDef(setupSkillDef);
 
-            var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
-            Array.Resize(ref csdf.variants, csdf.variants.Length + 1);
-            csdf.variants[csdf.variants.Length - 1] = new SkillFamily.Variant {
-                skillDef = setupSkillDef,
-                viewableNode = new ViewablesCatalog.Node(nametoken, false, null),
-                unlockableName = "ADMIRAL_JUMPPAD_UNLOCKABLE_ID"
-            };
-
             callSkillDef = ScriptableObject.CreateInstance<SkillDef>();
 
             callSkillDef.activationStateMachineName = "Weapon";
@@ -145,10 +141,32 @@ namespace ThinkInvisible.Admiral {
             callSkillDef.icon = Resources.Load<Sprite>("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
 
             LoadoutAPI.AddSkillDef(callSkillDef);
+        }
 
-            UnlockablesAPI.AddUnlockable<AdmiralJumpPadAchievement>(false);
-            LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Captain: Damn The Torpedoes");
-            LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
+        //Install should only happen once, immediately after Setup -- module can't be installed/uninstalled at runtime
+        internal override void Install() {
+            base.Install();
+
+            On.RoR2.Projectile.ProjectileImpactExplosion.Detonate += ProjectileImpactExplosion_Detonate;
+
+            var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
+            Array.Resize(ref csdf.variants, csdf.variants.Length + 1);
+            csdf.variants[csdf.variants.Length - 1] = new SkillFamily.Variant {
+                skillDef = setupSkillDef,
+                viewableNode = new ViewablesCatalog.Node("ADMIRAL_JUMPPAD_SKILL_NAME", false, null),
+                unlockableName = "ADMIRAL_JUMPPAD_UNLOCKABLE_ID"
+            };
+        }
+
+        internal override void Uninstall() {
+            base.Uninstall();
+
+            On.RoR2.Projectile.ProjectileImpactExplosion.Detonate -= ProjectileImpactExplosion_Detonate;
+
+            var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
+            var trimmedVariants = new List<SkillFamily.Variant>(csdf.variants);
+            trimmedVariants.RemoveAll(x => x.skillDef.skillIndex == setupSkillDef.skillIndex);
+            csdf.variants = trimmedVariants.ToArray();
         }
 
         private void ProjectileImpactExplosion_Detonate(On.RoR2.Projectile.ProjectileImpactExplosion.orig_Detonate orig, ProjectileImpactExplosion self) {
@@ -258,10 +276,12 @@ namespace ThinkInvisible.Admiral {
 
         private void GlobalEventManager_onServerDamageDealt(DamageReport obj) {
             if(!meetsBodyRequirement) return;
-            if(!obj.victimBody || !obj.damageInfo.attacker || !obj.damageInfo.inflictor || NetworkUser.readOnlyLocalPlayersList.Count == 0 || obj.damageInfo.attacker != NetworkUser.readOnlyLocalPlayersList[0].GetCurrentBody().gameObject) return;
+            if(!obj.victimBody || !obj.damageInfo.attacker || !obj.damageInfo.inflictor || NetworkUser.readOnlyLocalPlayersList.Count == 0 || obj.damageInfo.attacker != NetworkUser.readOnlyLocalPlayersList[0].GetCurrentBody()?.gameObject) return;
             var projInd = ProjectileCatalog.GetProjectileIndex(obj.damageInfo.inflictor);
             if(projInd != projTestInd1 && projInd != projTestInd2 && projInd != projTestInd3) return;
-            var vel = obj.victimBody.GetComponent<AverageSpeedTracker>().QuerySpeed();
+            var ast = obj.victimBody.GetComponent<AverageSpeedTracker>();
+            if(!ast) return;
+            var vel = ast.QuerySpeed();
             var projdist = (obj.damageInfo.position - obj.damageInfo.inflictor.transform.position).magnitude;
             if(vel > 20f && projdist < 4f)
                 Grant();

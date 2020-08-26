@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class EquipBeacon : BaseAdmiralSubmodule<EquipBeacon> {
+    public class EquipBeacon : AdmiralModule<EquipBeacon> {
         [AutoItemConfig("Lifetime of the Beacon: Rejuvenator deployable.",
             AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
@@ -19,6 +19,9 @@ namespace ThinkInvisible.Admiral {
         [AutoItemConfig("Additional fraction of skill recharge rate to provide from the Stimmed buff.",
             AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float rechargeRate {get; private set;} = 0.5f;
+
+        public override string configDescription => "Contains config for the Beacon: Resupply submodule of Modules.BeaconRebalance.";
+        public override bool addEnabledConfig => false;
 
         private GameObject rejuvWardPrefab;
 

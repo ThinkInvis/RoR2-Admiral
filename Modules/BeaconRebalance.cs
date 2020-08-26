@@ -6,13 +6,22 @@ using Mono.Cecil.Cil;
 using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class BeaconRebalance : RuntimeAdmiralSubmodule<BeaconRebalance> {
+    public class BeaconRebalance : AdmiralModule<BeaconRebalance> {
         [AutoItemConfig("Fractional influence of cooldown reduction/restock on temporary beacons (0 = no effect, 1 = full effect).",
             AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, 1f)]
         public float beaconCDRInfluence {get; private set;} = 0.5f;
+        
+        public override string configDescription => "Changes all Beacon skills to have cooldown and lifetime, and replaces some variants which are incompatible with this model.";
+        public override bool invalidatesLanguage => true;
+        public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferUntilNextStage;
 
         internal override void Setup() {
             base.Setup();
+        }
+
+        internal override void InstallLang() {
+            base.InstallLang();
+            R2API.LanguageAPI.AddOverlay("", "");
         }
 
         internal override void Install() {

@@ -6,7 +6,7 @@ using EntityStates.CaptainSupplyDrop;
 using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class HealBeacon : BaseAdmiralSubmodule<HealBeacon> {
+    public class HealBeacon : AdmiralModule<HealBeacon> {
         [AutoItemConfig("Lifetime of the Beacon: Healing deployable.",
             AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
@@ -14,6 +14,9 @@ namespace ThinkInvisible.Admiral {
         [AutoItemConfig("Cooldown of Beacon: Healing.",
             AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;
+
+        public override string configDescription => "Contains config for the Beacon: Healing submodule of Modules.BeaconRebalance.";
+        public override bool addEnabledConfig => false;
 
         private SkillFamily skillFamily1;
         private SkillFamily skillFamily2;

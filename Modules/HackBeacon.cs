@@ -9,7 +9,7 @@ using R2API.Networking;
 using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
-    public class HackBeacon : BaseAdmiralSubmodule<HackBeacon> {
+    public class HackBeacon : AdmiralModule<HackBeacon> {
         [AutoItemConfig("Lifetime of the Beacon: Special Order deployable.",
             AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
@@ -41,6 +41,9 @@ namespace ThinkInvisible.Admiral {
         [AutoItemConfig("Selection weight for red items (defaults to identical to T1 chest).",
             AutoItemConfigFlags.None, 0f, float.MaxValue)]
         public float itemTier3Chance {get; private set;} = 0.01f;
+        
+        public override string configDescription => "Contains config for the Beacon: Hacking submodule of Modules.BeaconRebalance.";
+        public override bool addEnabledConfig => false;
 
         private SkillFamily skillFamily1;
         private SkillFamily skillFamily2;

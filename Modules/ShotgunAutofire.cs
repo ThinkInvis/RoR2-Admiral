@@ -2,7 +2,7 @@
 using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class ShotgunAutofire : RuntimeAdmiralSubmodule<ShotgunAutofire> {
+    public class ShotgunAutofire : AdmiralModule<ShotgunAutofire> {
         [AutoItemConfig("Time, in fraction of total charge time, to wait before autofiring Vulcan Shotgun after reaching full charge.",
             AutoItemConfigFlags.None, 0f, float.MaxValue)]
         public float fireDelayDynamic {get; private set;} = 0.2f;
@@ -10,6 +10,9 @@ namespace ThinkInvisible.Admiral {
         [AutoItemConfig("Absolute minimum time, in seconds, to wait before autofiring Vulcan Shotgun after reaching full charge.",
             AutoItemConfigFlags.None, 0f, float.MaxValue)]
         public float fireDelayFixed {get; private set;} = 0f;
+        
+        public override string configDescription => "Causes Vulcan Shotgun to autofire. Client-side.";
+        public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.None;
 
         internal override void Install() {
             base.Install();

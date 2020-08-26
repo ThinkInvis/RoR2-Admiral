@@ -32,19 +32,21 @@ namespace ThinkInvisible.Admiral {
                 ResourcesAPI.AddProvider(provider);
             }
             
-            BaseAdmiralSubmodule.InitAll("Admiral", cfgFile);
+            AdmiralModule.InitAll(cfgFile);
 
-            foreach(var module in BaseAdmiralSubmodule.allModules) {
+            foreach(var module in AdmiralModule.allModules) {
                 module.Setup();
             }
-            
-            //BaseAdmiralSubmodule is inherited directly for dependents on other modules and shouldn't be installed directly during this stage
-            foreach(var baseModule in BaseAdmiralSubmodule.allModules) {
-                if(baseModule is AdmiralSubmodule module)
+        }
+
+        public void Start() {
+            foreach(var module in AdmiralModule.allModules) {
+                if(module.enabled) {
                     module.Install();
-                else if(baseModule is RuntimeAdmiralSubmodule runtimeModule)
-                    runtimeModule.Install();
+                    module.InstallLang();
+                }
             }
+            RoR2.Language.CCLanguageReload(new RoR2.ConCommandArgs());
         }
     }
 }
