@@ -12,7 +12,7 @@ namespace ThinkInvisible.Admiral {
 
         internal override void InstallLang() {
             base.InstallLang();
-            languageOverlays.Add(R2API.LanguageAPI.AddOverlay("CAPTAIN_PRIMARY_DESCRIPTION", "Fire a blast of pellets that deal <style=cIsDamage>6x120% damage</style> with no falloff. Charging the attack narrows the <style=cIsUtility>spread</style>."));
+            languageOverlays.Add(LanguageAPIBleedingEdge.AddOverlay("CAPTAIN_PRIMARY_DESCRIPTION", "Fire a blast of pellets that deal <style=cIsDamage>6x120% damage</style> with no falloff. Charging the attack narrows the <style=cIsUtility>spread</style>."));
         }
 
         internal override void Install() {

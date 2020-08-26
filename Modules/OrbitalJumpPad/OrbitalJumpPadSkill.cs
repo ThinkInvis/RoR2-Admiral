@@ -289,14 +289,15 @@ namespace ThinkInvisible.Admiral {
     }
     
     public class AverageSpeedTracker : MonoBehaviour {
-        private List<Vector3> positions = new List<Vector3>();
-        private List<float> deltas = new List<float>();
+        private readonly List<Vector3> positions = new List<Vector3>();
+        private readonly List<float> deltas = new List<float>();
         public float pollingRate = 0.2f;
         private uint _history = 5;
         public uint history {get{return _history;} set{positions.Clear();deltas.Clear();_history=value;} }
 
         private float stopwatch = 0f;
-
+        
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Used by UnityEngine")]
         private void FixedUpdate() {
             stopwatch += Time.fixedDeltaTime;
             if(stopwatch > pollingRate) {

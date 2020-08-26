@@ -21,7 +21,7 @@ namespace ThinkInvisible.Admiral {
 
         internal override void InstallLang() {
             base.InstallLang();
-            R2API.LanguageAPI.AddOverlay("", "");
+            languageOverlays.Add(LanguageAPIBleedingEdge.AddOverlay("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>."));
         }
 
         internal override void Install() {

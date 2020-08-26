@@ -28,7 +28,8 @@ namespace ThinkInvisible.Admiral {
         public virtual AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch;
         public virtual bool invalidatesLanguage => false;
         
-        protected List<R2API.LanguageAPI.LanguageOverlay> languageOverlays = new List<R2API.LanguageAPI.LanguageOverlay>();
+        //protected List<R2API.LanguageAPI.LanguageOverlay> languageOverlays = new List<R2API.LanguageAPI.LanguageOverlay>();
+        protected List<LanguageAPIBleedingEdge.LanguageOverlay> languageOverlays = new List<LanguageAPIBleedingEdge.LanguageOverlay>();
 
         internal virtual void Setup() {
             ConfigEntryChanged += (sender, args) => {

@@ -5,6 +5,7 @@ using R2API;
 using EntityStates.CaptainSupplyDrop;
 using UnityEngine.Networking;
 using TILER2;
+using static TILER2.SkillUtil;
 
 namespace ThinkInvisible.Admiral {
     public class EquipBeacon : AdmiralModule<EquipBeacon> {
@@ -38,7 +39,7 @@ namespace ThinkInvisible.Admiral {
             skillFamily2 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
 
             origSkillDef = Resources.Load<SkillDef>("skilldefs/captainbody/CallSupplyDropEquipmentRestock");
-            skillDef = MiscUtil.CloneSkillDef(origSkillDef);
+            skillDef = SkillUtil.CloneSkillDef(origSkillDef);
 
             skillDef.rechargeStock = 1;
             skillDef.baseRechargeInterval = skillRecharge;
@@ -46,7 +47,6 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillNameToken = "ADMIRAL_SUPPLY_REJUVENATOR_NAME";
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_REJUVENATOR_DESCRIPTION";
             skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallSupplyDropRejuvenator>();
-            skillDef.icon = origSkillDef.icon;
 
             LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Rejuvenator");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
@@ -94,15 +94,15 @@ namespace ThinkInvisible.Admiral {
 
         internal override void Install() {
             base.Install();
-            skillFamily1.OverrideVariant(origSkillDef, skillDef);
-            skillFamily2.OverrideVariant(origSkillDef, skillDef);
+            skillFamily1.ReplaceVariant(origSkillDef, skillDef);
+            skillFamily2.ReplaceVariant(origSkillDef, skillDef);
             On.RoR2.Skills.SkillDef.OnFixedUpdate += On_SkillDefFixedUpdate;
         }
 
         internal override void Uninstall() {
             base.Uninstall();
-            skillFamily1.OverrideVariant(skillDef, origSkillDef);
-            skillFamily2.OverrideVariant(skillDef, origSkillDef);
+            skillFamily1.ReplaceVariant(skillDef, origSkillDef);
+            skillFamily2.ReplaceVariant(skillDef, origSkillDef);
             On.RoR2.Skills.SkillDef.OnFixedUpdate -= On_SkillDefFixedUpdate;
         }
 

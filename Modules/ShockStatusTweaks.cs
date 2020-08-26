@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using RoR2.Orbs;
 using TILER2;
 using UnityEngine.Networking;
-using EntityStates;
 using MonoMod.Cil;
 using Mono.Cecil.Cil;
 using System;
@@ -45,7 +44,7 @@ namespace ThinkInvisible.Admiral {
 
         internal override void InstallLang() {
             base.InstallLang();
-            R2API.LanguageAPI.AddOverlay("KEYWORD_SHOCKING", "<style=cKeywordName>Shocking</style><style=cSub>Interrupts enemies and temporarily stuns them. A victim of Shocking will <style=cIsDamage>damage their nearby allies</style> for a fraction of their own maximum health per second.");
+            languageOverlays.Add(LanguageAPIBleedingEdge.AddOverlay("KEYWORD_SHOCKING", "<style=cKeywordName>Shocking</style><style=cSub>Interrupts enemies and temporarily stuns them. A victim of Shocking will <style=cIsDamage>damage their nearby allies</style> for a fraction of their own maximum health per second."));
         }
 
         internal override void Install() {

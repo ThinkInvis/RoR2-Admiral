@@ -1,7 +1,5 @@
 ﻿using RoR2;
-using BepInEx.Configuration;
 using R2API.Utils;
-using R2API;
 using MonoMod.RuntimeDetour;
 
 namespace ThinkInvisible.Admiral {
@@ -25,7 +23,8 @@ namespace ThinkInvisible.Admiral {
             base.Uninstall();
             CUOSHook.Undo();
         }
-
+        
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0060:Remove unused parameters", Justification = "Used by MonoMod.RuntimeDetour")]
         private static bool Hook_Get_CanUseOrbitalSkills(CaptainSupplyDropController self) => SceneCatalog.mostRecentSceneDef.baseSceneName != "bazaar";
     }
 }

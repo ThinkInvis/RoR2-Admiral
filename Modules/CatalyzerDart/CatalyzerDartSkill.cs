@@ -120,8 +120,7 @@ namespace ThinkInvisible.Admiral {
                     totalCleansed++;
                 
                 float totalDotDamage = 0f;
-			    DotController dotController;
-			    if(DotController.dotControllerLocator.TryGetValue(obj.victimBody.gameObject.GetInstanceID(), out dotController)) {
+			    if(DotController.dotControllerLocator.TryGetValue(obj.victimBody.gameObject.GetInstanceID(), out DotController dotController)) {
                     var stacks = dotController.dotStackList;
                     foreach(var stack in stacks) {
                         totalDotDamage += stack.damage * Mathf.Ceil(stack.timer / stack.dotDef.interval);
