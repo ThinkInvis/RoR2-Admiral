@@ -114,11 +114,8 @@ namespace ThinkInvisible.Admiral {
 
         public class EntStateCallSupplyDropRejuvenator : EntityStates.Captain.Weapon.CallSupplyDropEquipmentRestock {
             public override void OnEnter() {
-                Debug.Log(supplyDropPrefab);
                 supplyDropPrefab = EquipBeacon.instance.beaconPrefab;
-                Debug.Log(supplyDropPrefab);
                 base.OnEnter();
-                Debug.Log(supplyDropPrefab);
             }
         }
 
