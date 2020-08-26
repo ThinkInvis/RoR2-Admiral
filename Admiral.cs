@@ -10,7 +10,7 @@ using TILER2;
 namespace ThinkInvisible.Admiral {
     
     [BepInDependency("com.bepis.r2api")]
-    [BepInDependency(TILER2Plugin.ModGuid)]
+    [BepInDependency(TILER2Plugin.ModGuid, "2.0.0")]
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(UnlockablesAPI), nameof(R2API.Networking.NetworkingAPI))]
     public class AdmiralPlugin:BaseUnityPlugin {
