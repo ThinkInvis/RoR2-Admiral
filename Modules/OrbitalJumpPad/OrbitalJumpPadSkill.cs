@@ -23,6 +23,9 @@ namespace ThinkInvisible.Admiral {
             AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRange {get; private set;} = 100f;
 
+        [AutoItemConfig("If true, arcs previewing Orbital Jump Pad trajectory will appear.")]
+        public bool showArcs {get; private set;} = true;
+
         public override string configDescription => "Adds the Orbital Jump Pad utility skill variant.";
         public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferForever;
 
@@ -32,22 +35,6 @@ namespace ThinkInvisible.Admiral {
         internal GameObject jumpPadPrefabBase;
         internal GameObject jumpPadPrefabProj1;
         internal GameObject jumpPadPrefabProj2;
-
-        public static Vector3 CalculateJumpPadTrajectory(Vector3 source, Vector3 target, float extraPeakHeight) {
-            var deltaPos = target - source;
-            var yF = deltaPos.y;
-            var yPeak = Mathf.Max(Mathf.Max(yF, 0) + extraPeakHeight, yF, 0);
-            //everything will be absolutely ruined if gravity goes in any direction other than -y. them's the breaks.
-            var g = -UnityEngine.Physics.gravity.y;
-            //calculate initial vertical velocity
-            float vY0 = Mathf.Sqrt(2f * g * yPeak);
-            //calculate total travel time from vertical velocity
-            float tF = Mathf.Sqrt(2)/g * (Mathf.Sqrt(g * (yPeak - yF)) + Mathf.Sqrt(g * yPeak));
-            //use total travel time to calculate other velocity components
-            var vX0 = deltaPos.x/tF;
-            var vZ0 = deltaPos.z/tF;
-            return new Vector3(vX0, vY0, vZ0);
-        }
 
         internal override void Setup() {
             base.Setup();
@@ -62,30 +49,15 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
 
             ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
+
             var jppBase = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
-            jppBase.transform.localScale = new Vector3(0.75f, 0.125f, 0.75f);
-            jppBase.GetComponent<PurchaseInteraction>().enabled = false;
-            jppBase.GetComponent<RoR2.Hologram.HologramProjector>().enabled = false;
-            jppBase.GetComponent<OccupyNearbyNodes>().enabled = false;
-            var jppDecayer = jppBase.AddComponent<CaptainBeaconDecayer>();
-            jppDecayer.lifetime = skillLifetime;
-            jumpPadPrefabBase = PrefabAPI.InstantiateClone(jppBase, "CaptainJumpPad");
+            jumpPadPrefabBase = PrefabAPI.InstantiateClone(ModifyJumpPadPrefab(jppBase), "CaptainJumpPad");
 
             var jppProj1 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
-            var iexp = jppProj1.GetComponent<ProjectileImpactExplosion>();
-            iexp.blastDamageCoefficient = 0.1f;
-            iexp.blastRadius = 5f;
-            iexp.lifetime = 0.5f;
-            jppProj1.AddComponent<OrbitalJumpPad1ImpactEventFlag>();
-            jumpPadPrefabProj1 = PrefabAPI.InstantiateClone(jppProj1, "CaptainJumpPadProjectile1");
+            jumpPadPrefabProj1 = PrefabAPI.InstantiateClone(ModifyAirstrike1Prefab(jppProj1), "CaptainJumpPadProjectile1");
 
             var jppProj2 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
-            var iexp2 = jppProj2.GetComponent<ProjectileImpactExplosion>();
-            iexp2.blastDamageCoefficient = 0.05f;
-            iexp2.blastRadius = 2.5f;
-            iexp2.lifetime = 0.5f;
-            jppProj2.AddComponent<OrbitalJumpPad2ImpactEventFlag>();
-            jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(jppProj2, "CaptainJumpPadProjectile2");
+            jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(ModifyAirstrike2Prefab(jppProj2), "CaptainJumpPadProjectile2");
 
             var nametoken = "ADMIRAL_JUMPPAD_SKILL_NAME";
             var desctoken = "ADMIRAL_JUMPPAD_SKILL_DESC";
@@ -151,6 +123,7 @@ namespace ThinkInvisible.Admiral {
             base.Install();
 
             On.RoR2.Projectile.ProjectileImpactExplosion.Detonate += ProjectileImpactExplosion_Detonate;
+            On.RoR2.JumpVolume.OnTriggerStay += JumpVolume_OnTriggerStay;
 
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
             csdf.AddVariant(setupSkillDef, "ADMIRAL_JUMPPAD_UNLOCKABLE_ID");
@@ -160,9 +133,120 @@ namespace ThinkInvisible.Admiral {
             base.Uninstall();
 
             On.RoR2.Projectile.ProjectileImpactExplosion.Detonate -= ProjectileImpactExplosion_Detonate;
+            On.RoR2.JumpVolume.OnTriggerStay -= JumpVolume_OnTriggerStay;
 
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
             csdf.RemoveVariant(setupSkillDef);
+        }
+        
+        public static (Vector3, float) CalculateJumpPadTrajectory(Vector3 source, Vector3 target, float extraPeakHeight) {
+            var deltaPos = target - source;
+            var yF = deltaPos.y;
+            var yPeak = Mathf.Max(Mathf.Max(yF, 0) + extraPeakHeight, yF, 0);
+            //everything will be absolutely ruined if gravity goes in any direction other than -y. them's the breaks.
+            var g = -UnityEngine.Physics.gravity.y;
+            //calculate initial vertical velocity
+            float vY0 = Mathf.Sqrt(2f * g * yPeak);
+            //calculate total travel time from vertical velocity
+            float tF = Mathf.Sqrt(2)/g * (Mathf.Sqrt(g * (yPeak - yF)) + Mathf.Sqrt(g * yPeak));
+            //use total travel time to calculate other velocity components
+            var vX0 = deltaPos.x/tF;
+            var vZ0 = deltaPos.z/tF;
+            return (new Vector3(vX0, vY0, vZ0), tF);
+        }
+
+        public static Vector3[] CalculateJumpPadPoints(Vector3 source, Vector3 target, float extraPeakHeight, int displayPointsToGenerate) {
+            var deltaPos = target - source;
+            var yF = deltaPos.y;
+            var yPeak = Mathf.Max(Mathf.Max(yF, 0) + extraPeakHeight, yF, 0);
+            var g = -UnityEngine.Physics.gravity.y;
+            float vY0 = Mathf.Sqrt(2f * g * yPeak);
+            float tF = Mathf.Sqrt(2)/g * (Mathf.Sqrt(g * (yPeak - yF)) + Mathf.Sqrt(g * yPeak));
+            var vX0 = deltaPos.x/tF;
+            var vZ0 = deltaPos.z/tF;
+
+            var velocity = new Vector3(vX0, vY0, vZ0);
+
+            //calculate points for display
+            var generatedPoints = new Vector3[displayPointsToGenerate];
+            var timePerPoint = tF/(displayPointsToGenerate - 1f);
+            for(int i = 0; i < displayPointsToGenerate; i++) {
+                generatedPoints[i] = Trajectory.CalculatePositionAtTime(source, velocity, timePerPoint * i);
+            }
+
+            return generatedPoints;
+        }
+
+        private GameObject ModifyJumpPadPrefab(GameObject origPrefab) {
+            ///////
+            ////vfx
+            //main obj scale
+            origPrefab.transform.localScale = new Vector3(0.75f, 0.125f, 0.75f);
+            
+            //particle systems scale
+            var jvolTsf = origPrefab.transform.Find("mdlHumanFan").Find("JumpVolume");
+            var loopPsysTsf = jvolTsf.Find("LoopParticles").Find("Particle System");
+            loopPsysTsf.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            var loopPsysMain = loopPsysTsf.gameObject.GetComponent<ParticleSystem>().main;
+            loopPsysMain.startSpeed = new ParticleSystem.MinMaxCurve(6f);
+
+            var loopFdustTsf = jvolTsf.Find("LoopParticles").Find("ForwardDust");
+            loopFdustTsf.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            var loopFdustMain = loopFdustTsf.gameObject.GetComponent<ParticleSystem>().main;
+            loopFdustMain.startSpeed = new ParticleSystem.MinMaxCurve(0.5f, 12f);
+
+            var actFdustTsf = jvolTsf.Find("ActivateParticles").Find("ForwardDust");
+            actFdustTsf.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+            var actFdustMain = actFdustTsf.gameObject.GetComponent<ParticleSystem>().main;
+            actFdustMain.startSpeed = new ParticleSystem.MinMaxCurve(0.75f, 15f);
+
+            var actCircleTsf = jvolTsf.Find("ActivateParticles").Find("Circle");
+            actCircleTsf.localScale = new Vector3(0.25f, 0.25f, 0.125f);
+
+            //add LineRenderer
+            var lineRen = jvolTsf.gameObject.AddComponent<LineRenderer>();
+            //var lineRenMtlSnagFrom = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainHealingWard"));
+            //lineRen.material = lineRenMtlSnagFrom.transform.Find("Indicator").Find("IndicatorRing").gameObject.GetComponent<MeshRenderer>().material;
+            lineRen.material = UnityEngine.Object.Instantiate(Resources.Load<Material>("materials/matBlueprintsOk"));
+            //GameObject.Destroy(lineRenMtlSnagFrom);
+            lineRen.material.SetColor("_TintColor", new Color(2f, 0.2f, 10f, 3f));
+            lineRen.positionCount = 32;
+            List<Keyframe> kfmArr = new List<Keyframe>();
+            for(int i = 0; i < lineRen.positionCount; i++) {
+                kfmArr.Add(new Keyframe(i/32f, (1f-MiscUtil.Wrap(i/8f,0f,1f))*0.875f));
+            }
+            lineRen.widthCurve = new AnimationCurve{keys=kfmArr.ToArray()};
+            //lineRen.startColor = new Color(0.25f, 0.01f, 2f, 0.4f);
+            //lineRen.endColor = new Color(0.25f, 0.01f, 2f, 0.1f);
+
+            ////////////
+            ////behavior
+            origPrefab.GetComponent<PurchaseInteraction>().enabled = false;
+            origPrefab.GetComponent<RoR2.Hologram.HologramProjector>().enabled = false;
+            origPrefab.GetComponent<OccupyNearbyNodes>().enabled = false;
+            jvolTsf.gameObject.AddComponent<TemporaryFallProtectionProvider>();
+            var jppDecayer = origPrefab.AddComponent<CaptainBeaconDecayer>();
+            jppDecayer.lifetime = skillLifetime;
+
+            return origPrefab;
+        }
+        
+        private GameObject ModifyAirstrike1Prefab(GameObject origPrefab) {
+            var iexp = origPrefab.GetComponent<ProjectileImpactExplosion>();
+            iexp.blastDamageCoefficient = 0.1f;
+            iexp.blastRadius = 5f;
+            iexp.lifetime = 0.5f;
+            origPrefab.AddComponent<OrbitalJumpPad1ImpactEventFlag>();
+            return origPrefab;
+        }
+
+        private GameObject ModifyAirstrike2Prefab(GameObject origPrefab) {
+            var iexp = origPrefab.GetComponent<ProjectileImpactExplosion>();
+            iexp.blastDamageCoefficient = 0.05f;
+            iexp.blastRadius = 2.5f;
+            iexp.lifetime = 0.5f;
+            origPrefab.AddComponent<OrbitalJumpPad2ImpactEventFlag>();
+            return origPrefab;
         }
 
         private void ProjectileImpactExplosion_Detonate(On.RoR2.Projectile.ProjectileImpactExplosion.orig_Detonate orig, ProjectileImpactExplosion self) {
@@ -184,12 +268,25 @@ namespace ThinkInvisible.Admiral {
                 var ojph = owner.GetComponent<OrbitalJumpPadDeployTracker>();
                 if(!ojph || !ojph.lastPadBase) return;
                 var jtraj = CalculateJumpPadTrajectory(ojph.lastPadBase.transform.position, self.transform.position, 5f);
-                if(!float.IsNaN(jtraj.y)) {
-                    new MsgSetJumpPadTarget(ojph.lastPadBase, jtraj).Send(R2API.Networking.NetworkDestination.Clients);
+                if(!float.IsNaN(jtraj.Item1.y)) {
+                    ojph.lastPadBase.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject.GetComponent<TemporaryFallProtectionProvider>().time = jtraj.Item2 + 1f; //grace period of 1s
+                    new MsgSetJumpPadTarget(ojph.lastPadBase, jtraj.Item1, self.transform.position).Send(R2API.Networking.NetworkDestination.Clients);
                     ojph.lastPadBase.GetComponent<ChestBehavior>().Open();
                 } else
                     GameObject.Destroy(ojph.lastPadBase);
             }
+        }
+        
+        private void JumpVolume_OnTriggerStay(On.RoR2.JumpVolume.orig_OnTriggerStay orig, JumpVolume self, Collider other) {
+            orig(self, other);
+            if(!NetworkServer.active) return;
+            var fpProv = self.GetComponent<TemporaryFallProtectionProvider>();
+            var cb = other.GetComponent<CharacterBody>();
+            if(!fpProv || !cb) return;
+            var fpRecep = other.GetComponent<TemporaryFallDamageProtection>();
+            if(!fpRecep) fpRecep = other.gameObject.AddComponent<TemporaryFallDamageProtection>();
+            fpRecep.attachedBody = cb;
+            fpRecep.Apply();
         }
 
         private void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
@@ -200,38 +297,72 @@ namespace ThinkInvisible.Admiral {
         private struct MsgSetJumpPadTarget : INetMessage {
             private GameObject _targetJumpPad;
             private Vector3 _velocity;
+            private Vector3 _targetPos;
 
             public void Serialize(NetworkWriter writer) {
                 writer.Write(_targetJumpPad);
                 writer.Write(_velocity);
+                writer.Write(_targetPos);
             }
 
             public void Deserialize(NetworkReader reader) {
                 _targetJumpPad = reader.ReadGameObject();
                 _velocity = reader.ReadVector3();
+                _targetPos = reader.ReadVector3();
             }
 
             public void OnReceived() {
                 if(!_targetJumpPad) return;
-                _targetJumpPad.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject.GetComponent<JumpVolume>().jumpVelocity = _velocity;
+                var jumpVolObj = _targetJumpPad.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject;
+                jumpVolObj.GetComponent<JumpVolume>().jumpVelocity = _velocity;
+                var lRen = jumpVolObj.GetComponent<LineRenderer>();
+                if(OrbitalJumpPadSkill.instance.showArcs)
+                    lRen.SetPositions(CalculateJumpPadPoints(jumpVolObj.transform.position, _targetPos, 5f, 32));
+                else
+                    lRen.enabled = false;
             }
 
-            public MsgSetJumpPadTarget(GameObject targetJumpPad, Vector3 velocity) {
+            public MsgSetJumpPadTarget(GameObject targetJumpPad, Vector3 velocity, Vector3 targetPos) {
                 _targetJumpPad = targetJumpPad;
                 _velocity = velocity;
+                _targetPos = targetPos;
             }
         }
     }
     
+    public class TemporaryFallDamageProtection : MonoBehaviour {
+        public CharacterBody attachedBody;
+        bool hasProtection = false;
+        bool disableNextFrame = false;
+        private void FixedUpdate() {
+            if(!attachedBody) return;
+            if(disableNextFrame) {
+                disableNextFrame = false;
+                hasProtection = false;
+                attachedBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
+            } else if(hasProtection) {
+                if(!attachedBody.characterMotor || attachedBody.characterMotor.isGrounded || !attachedBody.characterMotor.disableAirControlUntilCollision) {
+                    disableNextFrame = true;
+                }
+            }
+        }
+        public void Apply() {
+            if(!attachedBody || !attachedBody.characterMotor) return;
+            hasProtection = true;
+            attachedBody.bodyFlags |= CharacterBody.BodyFlags.IgnoreFallDamage;
+        }
+    }
+    public class TemporaryFallProtectionProvider : MonoBehaviour {
+        public float time = 0f;
+    }
+
     public class OrbitalJumpPadDeployTracker : MonoBehaviour {
         public GameObject lastPadBase;
         public GameObject prevPadBase;
     }
     
 	public class OrbitalJumpPad1ImpactEventFlag : MonoBehaviour {}
-
 	public class OrbitalJumpPad2ImpactEventFlag : MonoBehaviour {}
-
 
     #region Achievement handling
     public class AdmiralJumpPadAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider> {
