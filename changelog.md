@@ -1,5 +1,18 @@
 ﻿# Admiral Changelog
 
+**2.1.0**
+
+- Post-playtest balance/QoL update for Catalyzer Dart and Orbital Jump Pad:
+- Orbital Jump Pad felt awkward to use for several reasons, and its VFX was bugged. Several other design TODOs have also been resolved.
+	- Orbital Jump Pad and its target now take 0.5s to land, down from 2s.
+	- Orbital Jump Pads now display an arc towards their destination (can be disabled clientside).
+	- Stepping into an Orbital Jump Pad now provides fall damage protection until you land or hit something (same as Acrid jump).
+	- Orbital Jump Pads are now limited to two per player at a time. The oldest one will be destroyed early if a third is placed.
+	- Orbital Jump Pad particles are now properly scaled down along with the fan model.
+- Catalyzer Dart's damage was underwhelming, partially due to the scarcity and low duration of most DoTs -- and the opportunity cost of losing the non-DoTs. Since these changes are default-config-only, they won't automatically apply if you've already installed the mod.
+	- Buffed default Catalyzer Dart DoT damage from 150% to 300%.
+	- Buffed default Catalyzer Dart non-DoT damage from 1x200% to 1x500%.
+
 **2.0.2**
 
 - Fixed temporary beacons missing VFX/SFX.

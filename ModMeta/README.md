@@ -29,22 +29,22 @@ Greatly increases the damage threshold for breaking the Shocked status, to the p
 
 Configurable:
 - Fire chance per frame, damage, proc coefficient, and range of Shocked AoE. Defaults to 3.3% chance, 2% max health, 0.1 proc coefficient, 15 m range.
-- Whether to apply the stunbreak threshold tweak.
+- Whether to apply the stunbreak threshold tweak. Defaults to enabled.
 
 ### Catalyzer Dart
 
-A new Secondary skill variant (same slot as Power Tazer). Fires a dart which removes all debuffs from an enemy and deals 150% of the remaining DoT damage, plus 1x200% base damage for each non-DoT debuff.
+A new Secondary skill variant (same slot as Power Tazer). Fires a dart which removes all debuffs from an enemy and deals 300% of the remaining DoT damage, plus 1x500% base damage for each non-DoT debuff.
 
-Unlock by getting 6 Shocked kills originating from the same enemy. Cannot be unlocked while Shock Status Tweaks is disabled.
+Unlock by getting 6 Shocked kills originating from the same enemy. *Cannot be unlocked while Shock Status Tweaks is disabled*.
 
 Configurable:
 - Cooldown of the Catalyzer Dart skill. Defaults to 8 sec.
-- Fraction of remaining DoT damage dealt. Defaults to 150%.
-- Fraction of base damage dealt per non-DoT debuff. Defaults to 1x200%.
+- Fraction of remaining DoT damage dealt. Defaults to 300%.
+- Fraction of base damage dealt per non-DoT debuff. Defaults to 1x500%.
 
 ### Orbital Jump Pad
 
-A new Utility skill variant (same slot as Orbital Probe). Summons a jump pad and its target within a limited range. Anyone, friend or foe, can trigger the jump pad within its lifetime.
+A new Utility skill variant (same slot as Orbital Probe). Summons a jump pad and its target within a limited range, displaying a preview of the jump's trajectory. Anyone, friend or foe, can trigger the jump pad within its lifetime. Stepping onto an Orbital Jump Pad provides fall damage protection until landing or hitting something.
 
 Unlock by near-directly hitting a fast-moving target with an Orbital Probe.
 
@@ -52,6 +52,7 @@ Configurable:
 - Cooldown of the Orbital Jump Pad skill. Defaults to 30 sec.
 - Lifetime of jump pads. Defaults to 20 sec.
 - Maximum range of the Orbital Jump Pad skill. Defaults to 100 m.
+- Whether to show trajectory previews (clientside). Defaults to enabled.
 
 ### Beacon Rebalance
 
@@ -98,17 +99,27 @@ Configurable:
 
 ## Issues/TODO
 
-- Drop sound for new beacons went missing. Still trying to find it.
 - Loadout selection of new skills is not remembered between launches of the game.
-- Orbital Jump Pad VFX is unfinished (particles are too big).
-- Catalyzer Dart could also do with some visual changes.
-- Stepping on an Orbital Jump Pad can deal unavoidable falling damage; may attempt to make a 'landing pad' object to mitigate this.
+- Catalyzer Dart could do with some visual changes.
 - Trying to find a way to allow canceling beacon/probe by recasting the skill.
 - See the GitHub repo for more!
 
 ## Changelog
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
+
+**2.1.0**
+
+- Post-playtest balance/QoL update for Catalyzer Dart and Orbital Jump Pad:
+- Orbital Jump Pad felt awkward to use for several reasons, and its VFX was bugged. Several other design TODOs have also been resolved.
+	- Orbital Jump Pad and its target now take 0.5s to land, down from 2s.
+	- Orbital Jump Pads now display an arc towards their destination (can be disabled clientside).
+	- Stepping into an Orbital Jump Pad now provides fall damage protection until you land or hit something (same as Acrid jump).
+	- Orbital Jump Pads are now limited to two per player at a time. The oldest one will be destroyed early if a third is placed.
+	- Orbital Jump Pad particles are now properly scaled down along with the fan model.
+- Catalyzer Dart's seemed underwhelming after extended use, partially due to the scarcity and low duration of most DoTs -- and the opportunity cost of losing the non-DoTs. Since these changes are default-config-only, they won't automatically apply if you've already installed the mod.
+	- Buffed default Catalyzer Dart DoT damage from 150% to 300%.
+	- Buffed default Catalyzer Dart non-DoT damage from 1x200% to 1x500%.
 
 **2.0.2**
 
