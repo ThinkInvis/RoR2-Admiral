@@ -174,6 +174,8 @@ namespace ThinkInvisible.Admiral {
                 var ojph = owner.GetComponent<OrbitalJumpPadDeployTracker>();
                 if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadDeployTracker>();
                 var nobj = GameObject.Instantiate(jumpPadPrefabBase, self.transform.position, self.transform.rotation);
+                if(ojph.prevPadBase) GameObject.Destroy(ojph.prevPadBase);
+                ojph.prevPadBase = ojph.lastPadBase;
                 ojph.lastPadBase = nobj;
                 NetworkServer.Spawn(nobj);
             } else if(self.GetComponent<OrbitalJumpPad2ImpactEventFlag>()) {
@@ -223,6 +225,7 @@ namespace ThinkInvisible.Admiral {
     
     public class OrbitalJumpPadDeployTracker : MonoBehaviour {
         public GameObject lastPadBase;
+        public GameObject prevPadBase;
     }
     
 	public class OrbitalJumpPad1ImpactEventFlag : MonoBehaviour {}
