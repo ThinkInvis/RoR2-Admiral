@@ -71,7 +71,6 @@ namespace ThinkInvisible.Admiral {
             jppDecayer.lifetime = skillLifetime;
             jumpPadPrefabBase = PrefabAPI.InstantiateClone(jppBase, "CaptainJumpPad");
 
-            //On.EntityStates.Captain.Weapon.CallAirstrikeBase.ModifyProjectile += On_CABModifyProjectile;
             var jppProj1 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
             var iexp = jppProj1.GetComponent<ProjectileImpactExplosion>();
             iexp.blastDamageCoefficient = 0.1f;
@@ -146,7 +145,6 @@ namespace ThinkInvisible.Admiral {
             LoadoutAPI.AddSkillDef(callSkillDef);
         }
 
-        //Install should only happen once, immediately after Setup -- module can't be installed/uninstalled at runtime
         internal override void Install() {
             base.Install();
 
