@@ -75,6 +75,7 @@ namespace ThinkInvisible.Admiral {
             var iexp = jppProj1.GetComponent<ProjectileImpactExplosion>();
             iexp.blastDamageCoefficient = 0.1f;
             iexp.blastRadius = 5f;
+            iexp.lifetime = 0.5f;
             jppProj1.AddComponent<OrbitalJumpPad1ImpactEventFlag>();
             jumpPadPrefabProj1 = PrefabAPI.InstantiateClone(jppProj1, "CaptainJumpPadProjectile1");
 
@@ -82,6 +83,7 @@ namespace ThinkInvisible.Admiral {
             var iexp2 = jppProj2.GetComponent<ProjectileImpactExplosion>();
             iexp2.blastDamageCoefficient = 0.05f;
             iexp2.blastRadius = 2.5f;
+            iexp2.lifetime = 0.5f;
             jppProj2.AddComponent<OrbitalJumpPad2ImpactEventFlag>();
             jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(jppProj2, "CaptainJumpPadProjectile2");
 
