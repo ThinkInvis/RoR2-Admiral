@@ -17,11 +17,11 @@ namespace ThinkInvisible.Admiral {
 
         [AutoItemConfig("Fraction of remaining DoT damage dealt by malevolent cleanses.",
             AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float evilCleanseDoTDamage {get; private set;} = 1.5f;
+        public float evilCleanseDoTDamage {get; private set;} = 3f;
 
         [AutoItemConfig("Fraction of base damage dealt per non-DoT debuff by malevolent cleanses.",
             AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float evilCleanseNonDoTDamage {get; private set;} = 2f;
+        public float evilCleanseNonDoTDamage {get; private set;} = 5f;
 
         public override string configDescription => "Adds the Catalyzer Dart secondary skill variant.";
         public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferForever;
@@ -49,7 +49,7 @@ namespace ThinkInvisible.Admiral {
             var namestr = "Catalyzer Dart";
             LanguageAPI.Add(nametoken, namestr);
             //todo: update this from config
-            LanguageAPI.Add(desctoken, "Fire a fast dart which <style=cIsHealing>catalyzes all debuffs</style>, converting them to <style=cIsDamage>damage</style>: <style=cIsDamage>150%</style> of the remaining total for DoTs, <style=cIsDamage>1x200%</style> otherwise.");
+            LanguageAPI.Add(desctoken, "Fire a fast dart which <style=cIsHealing>catalyzes all debuffs</style>, converting them to <style=cIsDamage>damage</style>: <style=cIsDamage>300%</style> of the remaining total for DoTs, <style=cIsDamage>1x500%</style> otherwise.");
             
             skillDef = ScriptableObject.CreateInstance<SkillDef>();
 
