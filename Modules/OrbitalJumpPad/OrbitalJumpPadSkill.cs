@@ -268,7 +268,6 @@ namespace ThinkInvisible.Admiral {
                 if(!ojph || !ojph.lastPadBase) return;
                 var jtraj = CalculateJumpPadTrajectory(ojph.lastPadBase.transform.position, self.transform.position, 5f);
                 if(!float.IsNaN(jtraj.Item1.y)) {
-                    ojph.lastPadBase.transform.Find("mdlHumanFan").Find("JumpVolume").gameObject.GetComponent<TemporaryFallProtectionProvider>().time = jtraj.Item2 + 1f; //grace period of 1s
                     new MsgSetJumpPadTarget(ojph.lastPadBase, jtraj.Item1, self.transform.position).Send(R2API.Networking.NetworkDestination.Clients);
                     ojph.lastPadBase.GetComponent<ChestBehavior>().Open();
                 } else
@@ -278,13 +277,11 @@ namespace ThinkInvisible.Admiral {
         
         private void JumpVolume_OnTriggerStay(On.RoR2.JumpVolume.orig_OnTriggerStay orig, JumpVolume self, Collider other) {
             orig(self, other);
-            if(!NetworkServer.active) return;
             var fpProv = self.GetComponent<TemporaryFallProtectionProvider>();
             var cb = other.GetComponent<CharacterBody>();
-            if(!fpProv || !cb) return;
+            if(!fpProv || !cb || !cb.characterMotor) return;
             var fpRecep = other.GetComponent<TemporaryFallDamageProtection>();
             if(!fpRecep) fpRecep = other.gameObject.AddComponent<TemporaryFallDamageProtection>();
-            fpRecep.attachedBody = cb;
             fpRecep.Apply();
         }
 
@@ -329,31 +326,42 @@ namespace ThinkInvisible.Admiral {
         }
     }
     
-    public class TemporaryFallDamageProtection : MonoBehaviour {
-        public CharacterBody attachedBody;
+    public class TemporaryFallDamageProtection : NetworkBehaviour {
+        private CharacterBody attachedBody;
         bool hasProtection = false;
         bool disableNextFrame = false;
+        bool disableN2f = false;
         private void FixedUpdate() {
-            if(!attachedBody) return;
-            if(disableNextFrame) {
+            if(disableN2f) {
+                disableN2f = false;
+                disableNextFrame = true;
+            } else if(disableNextFrame) {
                 disableNextFrame = false;
                 hasProtection = false;
                 attachedBody.bodyFlags &= ~CharacterBody.BodyFlags.IgnoreFallDamage;
             } else if(hasProtection) {
-                if(!attachedBody.characterMotor || attachedBody.characterMotor.isGrounded || !attachedBody.characterMotor.disableAirControlUntilCollision) {
-                    disableNextFrame = true;
+                if(attachedBody.characterMotor.Motor.GroundingStatus.IsStableOnGround && !attachedBody.characterMotor.Motor.LastGroundingStatus.IsStableOnGround) {
+                    disableN2f = true;
                 }
             }
         }
+        private void Awake() {
+            attachedBody = GetComponent<CharacterBody>();
+            attachedBody.characterMotor.onMovementHit += CharacterMotor_onMovementHit;
+        }
+
         public void Apply() {
-            if(!attachedBody || !attachedBody.characterMotor) return;
             hasProtection = true;
             attachedBody.bodyFlags |= CharacterBody.BodyFlags.IgnoreFallDamage;
         }
+
+        private void CharacterMotor_onMovementHit(ref CharacterMotor.MovementHitInfo movementHitInfo) {
+            if(hasProtection && !disableN2f && !disableNextFrame) {
+                disableN2f = true;
+            }
+        }
     }
-    public class TemporaryFallProtectionProvider : MonoBehaviour {
-        public float time = 0f;
-    }
+    public class TemporaryFallProtectionProvider : MonoBehaviour {}
 
     public class OrbitalJumpPadDeployTracker : MonoBehaviour {
         public GameObject lastPadBase;
