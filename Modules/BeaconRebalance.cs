@@ -5,6 +5,7 @@ using System;
 using Mono.Cecil.Cil;
 using TILER2;
 using R2API;
+using RoR2.Skills;
 
 namespace ThinkInvisible.Admiral {
     public class BeaconRebalance : AdmiralModule<BeaconRebalance> {
@@ -31,6 +32,7 @@ namespace ThinkInvisible.Admiral {
         internal override void Install() {
             base.Install();
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides += IL_CSDCUpdateSkillOverrides;
+            On.RoR2.CaptainSupplyDropController.SetSkillOverride += On_CSDCSetSkillOverride;
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval += On_GSCalculateFinalRechargeInterval;
             On.RoR2.GenericSkill.RecalculateMaxStock += On_GSRecalculateMaxStock;
             On.RoR2.GenericSkill.AddOneStock += On_GSAddOneStock;
@@ -42,9 +44,15 @@ namespace ThinkInvisible.Admiral {
             ShockBeacon.instance.Install();
         }
 
+        private void On_CSDCSetSkillOverride(On.RoR2.CaptainSupplyDropController.orig_SetSkillOverride orig, CaptainSupplyDropController self, ref SkillDef currentSkillDef, SkillDef newSkillDef, GenericSkill component) {
+            if(SkillIsTemporaryBeacon(component)) return;
+            orig(self, ref currentSkillDef, newSkillDef, component);
+        }
+
         internal override void Uninstall() {
             base.Uninstall();
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides -= IL_CSDCUpdateSkillOverrides;
+            On.RoR2.CaptainSupplyDropController.SetSkillOverride -= On_CSDCSetSkillOverride;
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval -= On_GSCalculateFinalRechargeInterval;
             On.RoR2.GenericSkill.RecalculateMaxStock -= On_GSRecalculateMaxStock;
             On.RoR2.GenericSkill.AddOneStock -= On_GSAddOneStock;
@@ -56,11 +64,14 @@ namespace ThinkInvisible.Admiral {
             ShockBeacon.instance.Uninstall();
         }
         
+        private bool SkillIsTemporaryBeacon(SkillDef skillDef) {
+            return skillDef == EquipBeacon.instance.skillDef
+                || skillDef == HackBeacon.instance.skillDef
+                || skillDef == HealBeacon.instance.skillDef
+                || skillDef == ShockBeacon.instance.skillDef;
+        }
         private bool SkillIsTemporaryBeacon(GenericSkill skill) {
-            return skill.skillDef == EquipBeacon.instance.skillDef
-                || skill.skillDef == HackBeacon.instance.skillDef
-                || skill.skillDef == HealBeacon.instance.skillDef
-                || skill.skillDef == ShockBeacon.instance.skillDef;
+            return SkillIsTemporaryBeacon(skill.skillDef);
         }
 
         private void On_GSFixedUpdate(On.RoR2.GenericSkill.orig_FixedUpdate orig, GenericSkill self) {
@@ -98,16 +109,18 @@ namespace ThinkInvisible.Admiral {
 
             int maskLocIndex = -1;
             bool ILFound = c.TryGotoNext(
-                x=>x.MatchLdloc(out maskLocIndex),
+                x=>x.MatchStloc(out maskLocIndex),
+                x=>x.MatchLdloc(maskLocIndex),
                 x=>x.MatchLdarg(out _),
                 x=>x.MatchLdfld<CaptainSupplyDropController>("authorityEnabledSkillsMask"),
                 x=>x.MatchBeq(out _));
 
             if(ILFound) {
-                c.Index++;
-                c.EmitDelegate<Func<byte, byte>>(orig => 3);
-                c.Emit(OpCodes.Dup);
-                c.Emit(OpCodes.Stloc, maskLocIndex);
+                c.Index = 0;
+                c.GotoNext(x => x.MatchStloc(maskLocIndex));
+                c.EmitDelegate<Func<byte, byte>>((orig) => {
+                    return 3;
+                });
             } else {
                 AdmiralPlugin.logger.LogError("BeaconRebalance/CSDCUpdateSkillOverrides: Failed to apply IL patch (target instructions not found)");
             }
