@@ -89,7 +89,7 @@ namespace ThinkInvisible.Admiral {
             itemWard.radius = wardRadius;
             var rngInd = beaconPrefabPrefab.transform.Find("ModelBase").Find("captain supply drop").Find("Indicator");
             rngInd.gameObject.GetComponent<ObjectScaleCurve>().enabled = false;
-            rngInd.GetChild(0).localScale /= 2f;
+            rngInd.GetChild(0).localScale /= 1.5f;
             itemWard.rangeIndicator = rngInd;
 
             beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, SpecialOrder");
