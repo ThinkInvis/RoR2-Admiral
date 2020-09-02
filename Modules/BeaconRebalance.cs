@@ -32,7 +32,6 @@ namespace ThinkInvisible.Admiral {
         internal override void Install() {
             base.Install();
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides += IL_CSDCUpdateSkillOverrides;
-            On.RoR2.CaptainSupplyDropController.SetSkillOverride += On_CSDCSetSkillOverride;
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval += On_GSCalculateFinalRechargeInterval;
             On.RoR2.GenericSkill.RecalculateMaxStock += On_GSRecalculateMaxStock;
             On.RoR2.GenericSkill.AddOneStock += On_GSAddOneStock;
@@ -44,15 +43,9 @@ namespace ThinkInvisible.Admiral {
             ShockBeacon.instance.Install();
         }
 
-        private void On_CSDCSetSkillOverride(On.RoR2.CaptainSupplyDropController.orig_SetSkillOverride orig, CaptainSupplyDropController self, ref SkillDef currentSkillDef, SkillDef newSkillDef, GenericSkill component) {
-            if(SkillIsTemporaryBeacon(component)) return;
-            orig(self, ref currentSkillDef, newSkillDef, component);
-        }
-
         internal override void Uninstall() {
             base.Uninstall();
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides -= IL_CSDCUpdateSkillOverrides;
-            On.RoR2.CaptainSupplyDropController.SetSkillOverride -= On_CSDCSetSkillOverride;
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval -= On_GSCalculateFinalRechargeInterval;
             On.RoR2.GenericSkill.RecalculateMaxStock -= On_GSRecalculateMaxStock;
             On.RoR2.GenericSkill.AddOneStock -= On_GSAddOneStock;
