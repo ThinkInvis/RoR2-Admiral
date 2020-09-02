@@ -35,7 +35,7 @@ namespace ThinkInvisible.Admiral {
 
         private void On_FireCaptainShotgunCtor(On.EntityStates.Captain.Weapon.FireCaptainShotgun.orig_ctor orig, EntityStates.Captain.Weapon.FireCaptainShotgun self) {
             orig(self);
-            self.bulletCount = 6;
+            self.bulletCount = pelletCount;
         }
     }
 }
