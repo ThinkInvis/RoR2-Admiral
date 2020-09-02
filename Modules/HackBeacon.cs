@@ -139,8 +139,8 @@ namespace ThinkInvisible.Admiral {
             }
 
             public override void FixedUpdate() {
-                base.FixedUpdate();
-                if(Util.HasEffectiveAuthority(outer.networkIdentity)) scanTimer = 999f;
+                //base.FixedUpdate();
+                fixedAge += Time.fixedDeltaTime;
             }
         }
     }
