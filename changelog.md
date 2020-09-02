@@ -1,5 +1,15 @@
 ﻿# Admiral Changelog
 
+**2.1.1**
+
+- Updated for RoR2 1.0.1.1 and R2API 2.5.14.
+	- Fixed OrbitalSkillsAnywhere not causing any changes.
+	- Fixed OrbitalJumpPad detonation effects (jump pad spawn/target set) not working.
+	- Fixed BeaconRebalance not preventing skill overrides to UsedUpSkillDef.
+- Fixed ShotgunRebalance pellet count config not applying.
+- Fixed Beacon: Special Order being able to hack T1 chests and shrines and increase its ItemWard item count on completion.
+- Fixed Beacon: Special Order display radius being ~50% smaller than the actual radius.
+
 **2.1.0**
 
 - Post-playtest balance/QoL update for Catalyzer Dart and Orbital Jump Pad:

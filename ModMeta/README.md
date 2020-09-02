@@ -108,6 +108,16 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.1.1**
+
+- Updated for RoR2 1.0.1.1 and R2API 2.5.14.
+	- Fixed OrbitalSkillsAnywhere not causing any changes.
+	- Fixed OrbitalJumpPad detonation effects (jump pad spawn/target set) not working.
+	- Fixed BeaconRebalance not preventing skill overrides to UsedUpSkillDef.
+- Fixed ShotgunRebalance pellet count config not applying.
+- Fixed Beacon: Special Order being able to hack T1 chests and shrines and increase its ItemWard item count on completion.
+- Fixed Beacon: Special Order display radius being ~50% smaller than the actual radius.
+
 **2.1.0**
 
 - Post-playtest balance/QoL update for Catalyzer Dart and Orbital Jump Pad:
@@ -138,15 +148,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 - Added dependency to TILER2 2.0.0.
 - Migrated FakeInventory and ItemWard to TILER2.
 - Beacon: Special Order is now compatible with TinkersSatchel's Mostly Tame Mimic.
-
-**1.5.3**
-
-- Orbital Jump Pad now works correctly in multiplayer.
-- Beacon: Special Order now properly displays floating items for multiplayer clients.
-- For modders: Major breaking changes to ItemWard and FakeInventory. These may be migrated to TILER2 in the near future.
-
-**1.5.2**
-
-- Fixed a bug that was causing Acrid's special ability to error out... somehow.
-- Added a config option for disabling Beacon overrides (ALL changes except usability in Hidden Realms).
-- Bumped R2API dependency to v2.5.7.
