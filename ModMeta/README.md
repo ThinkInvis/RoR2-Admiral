@@ -31,6 +31,16 @@ Configurable:
 - Fire chance per frame, damage, proc coefficient, and range of Shocked AoE. Defaults to 3.3% chance, 2% max health, 0.1 proc coefficient, 15 m range.
 - Whether to apply the stunbreak threshold tweak. Defaults to enabled.
 
+### Valiant Blaster
+
+A new Primary skill variant (same slot as Vulcan Shotgun). Rapidly fires a combo of up to 3 slow-moving explosive orbs for 1x500%, 1x500%, and 1x800% damage. Fully-charged shots move faster, have much larger blast radius, and deal 1x2400% damage. Firing a 3rd or charged shot will push you backwards, then force a stand-still reload. Waiting for the combo to timeout performs a faster, mobile reload.
+
+Unlock by getting 600 TOTAL hits with Vulcan Shotgun.
+
+Configurable:
+- Whether reload speed increases with attack speed.
+- Minimum time required to fully charge (allows firing uncharged shots with high attack speed). Defaults to 0.5 sec.
+
 ### Catalyzer Dart
 
 A new Secondary skill variant (same slot as Power Tazer). Fires a dart which removes all debuffs from an enemy and deals 300% of the remaining DoT damage, plus 1x500% base damage for each non-DoT debuff.
@@ -100,6 +110,7 @@ Configurable:
 ## Issues/TODO
 
 - Loadout selection of new skills is not remembered between launches of the game.
+- Valiant Blaster needs unique firing animations.
 - Catalyzer Dart could do with some visual changes.
 - Trying to find a way to allow canceling beacon/probe by recasting the skill.
 - See the GitHub repo for more!
@@ -107,6 +118,10 @@ Configurable:
 ## Changelog
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
+
+**2.2.0**
+
+- Added variant Primary skill + unlock achievement: Valiant Blaster!
 
 **2.1.1**
 
@@ -140,11 +155,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 **2.0.1**
 
 - Fixed a hard crash caused by Shocked lightning hits.
-
-**2.0.0**
-
-- Buffed Beacon: Shocking (fire rate increased from 1/1.5 sec to 1/0.95 sec, cooldown reduced from 30 sec to 24 sec).
-- Refactored into a proper module system. Large swathes of the mod can now be disabled and/or configured, and should have multiplayer sync (bugs notwithstanding).
-- Added dependency to TILER2 2.0.0.
-- Migrated FakeInventory and ItemWard to TILER2.
-- Beacon: Special Order is now compatible with TinkersSatchel's Mostly Tame Mimic.

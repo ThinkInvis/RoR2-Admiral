@@ -1,5 +1,9 @@
 ﻿# Admiral Changelog
 
+**2.2.0**
+
+- Added variant Primary skill + unlock achievement: Valiant Blaster!
+
 **2.1.1**
 
 - Updated for RoR2 1.0.1.1 and R2API 2.5.14.
