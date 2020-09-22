@@ -100,7 +100,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.stockToConsume = 1;
             skillDef.isCombatSkill = true;
             skillDef.noSprint = true;
-            skillDef.canceledFromSprinting = true;
+            skillDef.canceledFromSprinting = false;
             skillDef.mustKeyPress = true;
             skillDef.fullRestockOnAssign = true;
             skillDef.dontAllowPastMaxStocks = true;

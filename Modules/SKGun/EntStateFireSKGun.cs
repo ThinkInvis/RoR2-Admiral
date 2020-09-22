@@ -70,6 +70,6 @@ namespace ThinkInvisible.Admiral {
                 isCharged ? 2f : 10f, Util.CheckRoll(critStat, characterBody.master));
         }
 
-        public override InterruptPriority GetMinimumInterruptPriority() => usedAllAmmo ? InterruptPriority.PrioritySkill : InterruptPriority.Any;
+        public override InterruptPriority GetMinimumInterruptPriority() => usedAllAmmo ? InterruptPriority.PrioritySkill : InterruptPriority.Skill;
     }
 }
