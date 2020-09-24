@@ -1,5 +1,9 @@
 ﻿# Admiral Changelog
 
+**2.2.1**
+
+- Charging Valiant Blaster now completely prevents sprinting (whether through an autosprint mod or mashing the sprint key).
+
 **2.2.0**
 
 - Added variant Primary skill + unlock achievement: Valiant Blaster!

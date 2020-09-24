@@ -119,6 +119,10 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.2.1**
+
+- Charging Valiant Blaster now completely prevents sprinting (whether through an autosprint mod or mashing the sprint key).
+
 **2.2.0**
 
 - Added variant Primary skill + unlock achievement: Valiant Blaster!
@@ -151,7 +155,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 - Fixed temporary beacons missing VFX/SFX.
 - Fixed temporary beacons not appearing for multiplayer clients (hopefully).
 - Removed some stray debug logging.
-
-**2.0.1**
-
-- Fixed a hard crash caused by Shocked lightning hits.
