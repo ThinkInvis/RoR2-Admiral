@@ -13,6 +13,7 @@ namespace ThinkInvisible.Admiral {
 		public override void FixedUpdate() {
 			fixedAge += Time.fixedDeltaTime;
 			characterBody.SetAimTimer(1f);
+			characterBody.isSprinting = false; //slow down please
 			if(fixedAge >= chargeDuration) {
 				if(chargeupVfxGameObject) {
 					EntityState.Destroy(chargeupVfxGameObject);
