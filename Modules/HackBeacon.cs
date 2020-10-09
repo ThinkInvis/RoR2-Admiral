@@ -7,6 +7,7 @@ using TILER2;
 using System.Collections.Generic;
 using R2API.Networking;
 using UnityEngine.Networking;
+using System.Linq;
 
 namespace ThinkInvisible.Admiral {
     public class HackBeacon : AdmiralModule<HackBeacon> {
@@ -128,9 +129,9 @@ namespace ThinkInvisible.Admiral {
                 var itemWard = outer.gameObject.GetComponent<ItemWard>();
 
                 WeightedSelection<List<PickupIndex>> itemSelection = new WeightedSelection<List<PickupIndex>>(8);
-                itemSelection.AddChoice(Run.instance.availableTier1DropList, HackBeacon.instance.itemTier1Chance);
-                itemSelection.AddChoice(Run.instance.availableTier2DropList, HackBeacon.instance.itemTier2Chance);
-                itemSelection.AddChoice(Run.instance.availableTier3DropList, HackBeacon.instance.itemTier3Chance);
+                itemSelection.AddChoice(Run.instance.availableTier1DropList.Where(x => !FakeInventory.blacklist.Contains(PickupCatalog.GetPickupDef(x).itemIndex)).ToList(), HackBeacon.instance.itemTier1Chance);
+                itemSelection.AddChoice(Run.instance.availableTier2DropList.Where(x => !FakeInventory.blacklist.Contains(PickupCatalog.GetPickupDef(x).itemIndex)).ToList(), HackBeacon.instance.itemTier2Chance);
+                itemSelection.AddChoice(Run.instance.availableTier3DropList.Where(x => !FakeInventory.blacklist.Contains(PickupCatalog.GetPickupDef(x).itemIndex)).ToList(), HackBeacon.instance.itemTier3Chance);
                 for(int i = 0; i < HackBeacon.instance.baseItems + HackBeacon.instance.itemsPerStage * Run.instance.stageClearCount; i++) {
                     var list = itemSelection.Evaluate(Run.instance.treasureRng.nextNormalizedFloat);
                     var pickup = Run.instance.treasureRng.NextElementUniform(list);
