@@ -119,6 +119,11 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.2.2**
+
+- Implements changes from TILER2 2.2.3.
+	- Beacon: Special Order will no longer select items which are in FakeInventory.blacklist.
+
 **2.2.1**
 
 - Charging Valiant Blaster now completely prevents sprinting (whether through an autosprint mod or mashing the sprint key).
@@ -149,9 +154,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 - Catalyzer Dart's seemed underwhelming after extended use, partially due to the scarcity and low duration of most DoTs -- and the opportunity cost of losing the non-DoTs. Since these changes are default-config-only, they won't automatically apply if you've already installed the mod.
 	- Buffed default Catalyzer Dart DoT damage from 150% to 300%.
 	- Buffed default Catalyzer Dart non-DoT damage from 1x200% to 1x500%.
-
-**2.0.2**
-
-- Fixed temporary beacons missing VFX/SFX.
-- Fixed temporary beacons not appearing for multiplayer clients (hopefully).
-- Removed some stray debug logging.

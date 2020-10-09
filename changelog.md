@@ -1,5 +1,10 @@
 ﻿# Admiral Changelog
 
+**2.2.2**
+
+- Implements changes from TILER2 2.2.3.
+	- Beacon: Special Order will no longer select items which are in FakeInventory.blacklist.
+
 **2.2.1**
 
 - Charging Valiant Blaster now completely prevents sprinting (whether through an autosprint mod or mashing the sprint key).
