@@ -1,5 +1,9 @@
 ﻿# Admiral Changelog
 
+**2.2.3**
+
+- Added a missing R2API submodule dependency.
+
 **2.2.2**
 
 - Implements changes from TILER2 2.2.3.

@@ -119,6 +119,10 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.2.3**
+
+- Added a missing R2API submodule dependency.
+
 **2.2.2**
 
 - Implements changes from TILER2 2.2.3.
@@ -141,16 +145,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 - Fixed ShotgunRebalance pellet count config not applying.
 - Fixed Beacon: Special Order being able to hack T1 chests and shrines and increase its ItemWard item count on completion.
 - Fixed Beacon: Special Order display radius being ~50% smaller than the actual radius.
-
-**2.1.0**
-
-- Post-playtest balance/QoL update for Catalyzer Dart and Orbital Jump Pad:
-- Orbital Jump Pad felt awkward to use for several reasons, and its VFX was bugged. Several other design TODOs have also been resolved.
-	- Orbital Jump Pad and its target now take 0.5s to land, down from 2s.
-	- Orbital Jump Pads now display an arc towards their destination (can be disabled clientside).
-	- Stepping into an Orbital Jump Pad now provides fall damage protection until you land or hit something (same as Acrid jump).
-	- Orbital Jump Pads are now limited to two per player at a time. The oldest one will be destroyed early if a third is placed.
-	- Orbital Jump Pad particles are now properly scaled down along with the fan model.
-- Catalyzer Dart's seemed underwhelming after extended use, partially due to the scarcity and low duration of most DoTs -- and the opportunity cost of losing the non-DoTs. Since these changes are default-config-only, they won't automatically apply if you've already installed the mod.
-	- Buffed default Catalyzer Dart DoT damage from 150% to 300%.
-	- Buffed default Catalyzer Dart non-DoT damage from 1x200% to 1x500%.
