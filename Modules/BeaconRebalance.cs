@@ -8,28 +8,28 @@ using R2API;
 using RoR2.Skills;
 
 namespace ThinkInvisible.Admiral {
-    public class BeaconRebalance : AdmiralModule<BeaconRebalance> {
-        [AutoItemConfig("Fractional influence of cooldown reduction/restock on temporary beacons (0 = no effect, 1 = full effect).",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, 1f)]
+    public class BeaconRebalance : T2Module<BeaconRebalance> {
+        [AutoConfig("Fractional influence of cooldown reduction/restock on temporary beacons (0 = no effect, 1 = full effect).",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
         public float beaconCDRInfluence {get; private set;} = 0.5f;
         
-        public override string configDescription => "Changes all Beacon skills to have cooldown and lifetime, and replaces some variants which are incompatible with this model.";
-        public override bool invalidatesLanguage => true;
-        public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferUntilNextStage;
+        public override string enabledConfigDescription => "Changes all Beacon skills to have cooldown and lifetime, and replaces some variants which are incompatible with this model.";
+        public override AutoConfigUpdateActionTypes enabledConfigUpdateActionTypes => AutoConfigUpdateActionTypes.InvalidateLanguage;
+        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferUntilNextStage;
 
         internal GameObject muzzleFlashPrefab;
 
-        internal override void Setup() {
-            base.Setup();
+        public override void SetupAttributes() {
+            base.SetupAttributes();
             muzzleFlashPrefab = Resources.Load<GameObject>("prefabs/effects/muzzleflashes/MuzzleflashSupplyDrop, Healing");
         }
 
-        internal override void InstallLang() {
-            base.InstallLang();
+        public override void InstallLanguage() {
+            base.InstallLanguage();
             languageOverlays.Add(LanguageAPI.AddOverlay("CAPTAIN_SPECIAL_DESCRIPTION", "Request one of two <style=cIsUtility>temporary</style> Supply Beacons. Both beacons have <style=cIsUtility>independent cooldowns</style>."));
         }
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides += IL_CSDCUpdateSkillOverrides;
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval += On_GSCalculateFinalRechargeInterval;
@@ -43,7 +43,7 @@ namespace ThinkInvisible.Admiral {
             ShockBeacon.instance.Install();
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides -= IL_CSDCUpdateSkillOverrides;
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval -= On_GSCalculateFinalRechargeInterval;

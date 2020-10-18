@@ -6,11 +6,12 @@ using R2API;
 using System.Reflection;
 using Path = System.IO.Path;
 using TILER2;
+using static TILER2.MiscUtil;
 
 namespace ThinkInvisible.Admiral {
     
     [BepInDependency("com.bepis.r2api", "2.5.14")]
-    [BepInDependency(TILER2Plugin.ModGuid, "2.2.3")]
+    [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(UnlockablesAPI), nameof(R2API.Networking.NetworkingAPI), nameof(EffectAPI))]
     public class AdmiralPlugin:BaseUnityPlugin {
@@ -22,6 +23,8 @@ namespace ThinkInvisible.Admiral {
 
         internal static ConfigFile cfgFile;
 
+        FilingDictionary<T2Module> allModules;
+
         public void Awake() {
             logger = Logger;
             cfgFile = new ConfigFile(Path.Combine(Paths.ConfigPath, ModGuid + ".cfg"), true);
@@ -32,20 +35,18 @@ namespace ThinkInvisible.Admiral {
                 ResourcesAPI.AddProvider(provider);
             }
             
-            AdmiralModule.InitAll(cfgFile);
+            allModules = T2Module.InitModules(new T2Module.ModInfo {
+                displayName = "Admiral",
+                longIdentifier = "Admiral",
+                shortIdentifier = "ADML",
+                mainConfigFile = cfgFile
+            });
 
-            foreach(var module in AdmiralModule.allModules) {
-                module.Setup();
-            }
+            T2Module.SetupAll_PluginAwake(allModules);
         }
 
         public void Start() {
-            foreach(var module in AdmiralModule.allModules) {
-                if(module.enabled && module.managedEnable) {
-                    module.Install();
-                    module.InstallLang();
-                }
-            }
+            T2Module.SetupAll_PluginStart(allModules);
             RoR2.Language.CCLanguageReload(new RoR2.ConCommandArgs());
         }
     }

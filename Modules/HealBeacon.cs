@@ -6,16 +6,16 @@ using EntityStates.CaptainSupplyDrop;
 using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class HealBeacon : AdmiralModule<HealBeacon> {
-        [AutoItemConfig("Lifetime of the Beacon: Healing deployable.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+    public class HealBeacon : T2Module<HealBeacon> {
+        [AutoConfig("Lifetime of the Beacon: Healing deployable.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
-        [AutoItemConfig("Cooldown of Beacon: Healing.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Cooldown of Beacon: Healing.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;
 
-        public override string configDescription => "Contains config for the Beacon: Healing submodule of Modules.BeaconRebalance.";
+        public override string enabledConfigDescription => "Contains config for the Beacon: Healing submodule of Modules.BeaconRebalance.";
         public override bool managedEnable => false;
 
         private SkillFamily skillFamily1;
@@ -24,8 +24,8 @@ namespace ThinkInvisible.Admiral {
         internal SkillDef skillDef;
         internal GameObject beaconPrefab;
 
-        internal override void Setup() {
-            base.Setup();
+        public override void SetupAttributes() {
+            base.SetupAttributes();
 
             LoadoutAPI.AddSkill(typeof(EntStateCallSupplyDropHealing));
             LoadoutAPI.AddSkill(typeof(EntStateHealingMainState));
@@ -58,14 +58,14 @@ namespace ThinkInvisible.Admiral {
             GameObject.Destroy(beaconPrefabPrefab);
         }
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
 
             skillFamily1.ReplaceVariant(origSkillDef, skillDef);
             skillFamily2.ReplaceVariant(origSkillDef, skillDef);
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
 
             skillFamily1.ReplaceVariant(skillDef, origSkillDef);

@@ -9,24 +9,24 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
-    public class OrbitalJumpPadSkill : AdmiralModule<OrbitalJumpPadSkill> {
-        [AutoItemConfig("Lifetime of the Orbital Jump Pad deployable.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+    public class OrbitalJumpPadSkill : T2Module<OrbitalJumpPadSkill> {
+        [AutoConfig("Lifetime of the Orbital Jump Pad deployable.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
-        [AutoItemConfig("Cooldown of Orbital Jump Pad.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Cooldown of Orbital Jump Pad.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 30f;
 
-        [AutoItemConfig("Maximum range of both Orbital Jump Pad terminals.",
-            AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Maximum range of both Orbital Jump Pad terminals.",
+            AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRange {get; private set;} = 100f;
 
-        [AutoItemConfig("If true, arcs previewing Orbital Jump Pad trajectory will appear.")]
+        [AutoConfig("If true, arcs previewing Orbital Jump Pad trajectory will appear.")]
         public bool showArcs {get; private set;} = true;
 
-        public override string configDescription => "Adds the Orbital Jump Pad utility skill variant.";
-        public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferForever;
+        public override string enabledConfigDescription => "Adds the Orbital Jump Pad utility skill variant.";
+        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferForever;
 
         internal SkillDef setupSkillDef;
         internal SkillDef callSkillDef;
@@ -35,8 +35,8 @@ namespace ThinkInvisible.Admiral {
         internal GameObject jumpPadPrefabProj1;
         internal GameObject jumpPadPrefabProj2;
 
-        internal override void Setup() {
-            base.Setup();
+        public override void SetupAttributes() {
+            base.SetupAttributes();
             
             LoadoutAPI.AddSkill(typeof(EntStateCallJumpPad));
             LoadoutAPI.AddSkill(typeof(EntStateSetupJumpPad));
@@ -118,7 +118,7 @@ namespace ThinkInvisible.Admiral {
             LoadoutAPI.AddSkillDef(callSkillDef);
         }
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
 
             On.RoR2.Projectile.ProjectileImpactExplosion.DetonateServer += ProjectileImpactExplosion_DetonateServer;
@@ -128,7 +128,7 @@ namespace ThinkInvisible.Admiral {
             csdf.AddVariant(setupSkillDef, "ADMIRAL_JUMPPAD_UNLOCKABLE_ID");
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
 
             On.RoR2.Projectile.ProjectileImpactExplosion.DetonateServer -= ProjectileImpactExplosion_DetonateServer;

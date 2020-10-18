@@ -3,26 +3,27 @@ using RoR2;
 using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class ShotgunRebalance : AdmiralModule<ShotgunRebalance> {
-        [AutoItemConfig("Pellet count for Vulcan Shotgun.",
-            AutoItemConfigFlags.PreventNetMismatch, 1, int.MaxValue)]
+    public class ShotgunRebalance : T2Module<ShotgunRebalance> {
+        [AutoConfig("Pellet count for Vulcan Shotgun.",
+            AutoConfigFlags.PreventNetMismatch, 1, int.MaxValue)]
         public int pelletCount {get; private set;} = 6;
 
-        public override string configDescription => "Reduces Vulcan Shotgun pellet count.";
-        public override bool invalidatesLanguage => true;
+        public override bool managedEnable => true;
+        public override string enabledConfigDescription => "Reduces Vulcan Shotgun pellet count.";
+        public override AutoConfigUpdateActionTypes enabledConfigUpdateActionTypes => AutoConfigUpdateActionTypes.InvalidateLanguage;
 
-        internal override void InstallLang() {
-            base.InstallLang();
-            languageOverlays.Add(LanguageAPI.AddOverlay("CAPTAIN_PRIMARY_DESCRIPTION", "Fire a blast of pellets that deal <style=cIsDamage>6x120% damage</style> with no falloff. Charging the attack narrows the <style=cIsUtility>spread</style>."));
+        public override void InstallLanguage() {
+            genericLanguageTokens["CAPTAIN_PRIMARY_DESCRIPTION"] = "Fire a blast of pellets that deal <style=cIsDamage>6x120% damage</style> with no falloff. Charging the attack narrows the <style=cIsUtility>spread</style>.";
+            base.InstallLanguage();
         }
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
             On.EntityStates.Captain.Weapon.FireCaptainShotgun.ModifyBullet += On_FCSModifyBullet;
             On.EntityStates.Captain.Weapon.FireCaptainShotgun.ctor += On_FireCaptainShotgunCtor;
         }
-        
-        internal override void Uninstall() {
+
+        public override void Uninstall() {
             base.Uninstall();
             On.EntityStates.Captain.Weapon.FireCaptainShotgun.ModifyBullet -= On_FCSModifyBullet;
             On.EntityStates.Captain.Weapon.FireCaptainShotgun.ctor -= On_FireCaptainShotgunCtor;

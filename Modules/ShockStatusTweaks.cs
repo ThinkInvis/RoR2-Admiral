@@ -14,50 +14,43 @@ namespace ThinkInvisible.Admiral {
         public GameObject shockVictim;
     }
 
-    public class ShockStatusTweaks : AdmiralModule<ShockStatusTweaks> {
-        [AutoItemConfig("Chance per frame to shock a nearby ally.",
-            AutoItemConfigFlags.None, 0f, 1f)]
+    public class ShockStatusTweaks : T2Module<ShockStatusTweaks> {
+        [AutoConfig("Chance per frame to shock a nearby ally.",
+            AutoConfigFlags.None, 0f, 1f)]
         public float shockChance {get; private set;} = 0.033f;
 
-        [AutoItemConfig("Percentage of attacker max health dealt in damage per shock orb.",
-            AutoItemConfigFlags.None, 0f, float.MaxValue)]
+        [AutoConfig("Percentage of attacker max health dealt in damage per shock orb.",
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float shockDamageFrac {get; private set;} = 0.02f;
         
-        [AutoItemConfig("Range within which Shocked can damage allies.",
-            AutoItemConfigFlags.None, 0f, float.MaxValue)]
+        [AutoConfig("Range within which Shocked can damage allies.",
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float shockRadius {get; private set;} = 15f;
 
-        [AutoItemConfig("Proc coefficient of Shocked arcs.",
-            AutoItemConfigFlags.None, 0f, 1f)]
+        [AutoConfig("Proc coefficient of Shocked arcs.",
+            AutoConfigFlags.None, 0f, 1f)]
         public float shockProcCoef {get; private set;} = 0.1f;
 
-        [AutoItemConfig("If true, the damage threshold for breaking an enemy out of Shocked will be increased to ridiculous levels.",
-            AutoItemConfigFlags.PreventNetMismatch)]
+        [AutoConfig("If true, the damage threshold for breaking an enemy out of Shocked will be increased to ridiculous levels.",
+            AutoConfigFlags.PreventNetMismatch)]
         public bool doThresholdTweak {get; private set;} = true;
 
-        public override string configDescription => "Removes the health threshold from the Shocked status and causes it to deal AoE damage based on victim max health.";
-        public override bool invalidatesLanguage => true;
+        public override string enabledConfigDescription => "Removes the health threshold from the Shocked status and causes it to deal AoE damage based on victim max health.";
+        public override AutoConfigUpdateActionTypes enabledConfigUpdateActionTypes => AutoConfigUpdateActionTypes.InvalidateLanguage;
 
-        internal Xoroshiro128Plus shockRng;
-
-        internal override void Setup() {
-            base.Setup();
-            shockRng = new Xoroshiro128Plus(0u);
-        }
-
-        internal override void InstallLang() {
-            base.InstallLang();
+        public override void InstallLanguage() {
+            base.InstallLanguage();
             languageOverlays.Add(LanguageAPI.AddOverlay("KEYWORD_SHOCKING", "<style=cKeywordName>Shocking</style><style=cSub>Interrupts enemies and temporarily stuns them. A victim of Shocking will <style=cIsDamage>damage their nearby allies</style> for a fraction of their own maximum health per second."));
         }
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
             On.EntityStates.ShockState.OnEnter += On_ShockStateOnEnter;
             On.EntityStates.ShockState.FixedUpdate += On_ShockStateFixedUpdate;
             IL.RoR2.SetStateOnHurt.OnTakeDamageServer += IL_SSOHTakeDamageServer;
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
             On.EntityStates.ShockState.OnEnter -= On_ShockStateOnEnter;
             On.EntityStates.ShockState.FixedUpdate -= On_ShockStateFixedUpdate;
@@ -87,7 +80,7 @@ namespace ThinkInvisible.Admiral {
         private void On_ShockStateFixedUpdate(On.EntityStates.ShockState.orig_FixedUpdate orig, EntityStates.ShockState self) {
             orig(self);
             if(!NetworkServer.active) return;
-            if(shockRng.nextNormalizedFloat < shockChance) { //works out as roughly 10/sec
+            if(rng.nextNormalizedFloat < shockChance) { //works out as roughly 10/sec
                 var teamFilter = self.outer.commonComponents.teamComponent;
 			    List<TeamComponent> teamMembers = new List<TeamComponent>();
 			    bool isFF = FriendlyFireManager.friendlyFireMode != FriendlyFireManager.FriendlyFireMode.Off;
@@ -100,7 +93,7 @@ namespace ThinkInvisible.Admiral {
 			    teamMembers.Remove(teamFilter);
                 teamMembers.RemoveAll(x => (x.transform.position - tpos).sqrMagnitude > sqrad || !x.body || !x.body.mainHurtBox || !x.body.isActiveAndEnabled);
                 if(teamMembers.Count == 0) return;
-                var victim = shockRng.NextElementUniform(teamMembers);
+                var victim = rng.NextElementUniform(teamMembers);
                 GameObject attackerObj = null;
                 var shockHelper = self.GetComponent<ShockHelper>();
                 if(shockHelper) attackerObj = shockHelper.currentAttacker;

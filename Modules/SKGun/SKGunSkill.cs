@@ -13,20 +13,20 @@ using TILER2;
 using UnityEngine;
 
 namespace ThinkInvisible.Admiral {
-    public class SKGunSkill : AdmiralModule<SKGunSkill> {
+    public class SKGunSkill : T2Module<SKGunSkill> {
         public const float recoveryTime = 0.5f;
         public const float fullReloadTime = 1.25f;
 
-        [AutoItemConfig("If false, Valiant Blaster reload rate will not increase with attack speed.",
-            AutoItemConfigFlags.PreventNetMismatch)]
+        [AutoConfig("If false, Valiant Blaster reload rate will not increase with attack speed.",
+            AutoConfigFlags.PreventNetMismatch)]
         public bool attackSpeedAffectsReload {get; private set;} = true;
 
-        [AutoItemConfig("Minimum time required to fully charge Valiant Blaster (does not affect base charge time, only attack speed scaling).",
-            AutoItemConfigFlags.PreventNetMismatch)]
+        [AutoConfig("Minimum time required to fully charge Valiant Blaster (does not affect base charge time, only attack speed scaling).",
+            AutoConfigFlags.PreventNetMismatch)]
         public float minChargeTime {get; private set;} = 0.5f;
 
-        public override string configDescription => "Adds the Valiant Blaster primary skill variant.";
-        public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferForever;
+        public override string enabledConfigDescription => "Adds the Valiant Blaster primary skill variant.";
+        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferForever;
 
         internal BuffIndex slowSkillDebuff;
 
@@ -36,8 +36,8 @@ namespace ThinkInvisible.Admiral {
         internal GameObject projectilePrefab;
         internal GameObject chargedProjectilePrefab;
 
-        internal override void Setup() {
-            base.Setup();
+        public override void SetupAttributes() {
+            base.SetupAttributes();
             
             LoadoutAPI.AddSkill(typeof(EntStateChargeSKGun));
             LoadoutAPI.AddSkill(typeof(EntStateFireSKGun));
@@ -121,7 +121,7 @@ namespace ThinkInvisible.Admiral {
             slowSkillDebuff = BuffAPI.Add(new CustomBuff("AdmiralHeavyWeaponDebuff", "@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralHeavyWeaponDebuff.png", Color.yellow, true, false));
         }
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
 
             Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainPrimarySkillFamily").AddVariant(skillDef, "ADMIRAL_SKGUN_UNLOCKABLE_ID");
@@ -129,7 +129,7 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
 
             Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainPrimarySkillFamily").RemoveVariant(skillDef);

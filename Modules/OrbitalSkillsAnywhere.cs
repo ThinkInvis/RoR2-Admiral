@@ -2,25 +2,26 @@
 using R2API.Utils;
 using MonoMod.RuntimeDetour;
 using RoR2.Skills;
+using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class OrbitalSkillsAnywhere : AdmiralModule<OrbitalSkillsAnywhere> {
+    public class OrbitalSkillsAnywhere : T2Module<OrbitalSkillsAnywhere> {
         Hook CUOSHook;
-        internal override void Setup() {
-            base.Setup();
+        public override void SetupBehavior() {
+            base.SetupBehavior();
             var origCUOSGet = typeof(CaptainOrbitalSkillDef).GetMethodCached("get_isAvailable");
             var newCUOSGet = typeof(OrbitalSkillsAnywhere).GetMethodCached(nameof(Hook_Get_IsAvailable));
             CUOSHook = new Hook(origCUOSGet, newCUOSGet, new HookConfig{ManualApply=true});
         }
 
-        public override string configDescription => "Allows orbital skills to be used anywhere except Bazaar.";
+        public override string enabledConfigDescription => "Allows orbital skills to be used anywhere except Bazaar.";
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
             CUOSHook.Apply();
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
             CUOSHook.Undo();
         }

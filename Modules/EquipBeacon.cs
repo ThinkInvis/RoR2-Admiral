@@ -8,20 +8,20 @@ using TILER2;
 using static TILER2.SkillUtil;
 
 namespace ThinkInvisible.Admiral {
-    public class EquipBeacon : AdmiralModule<EquipBeacon> {
-        [AutoItemConfig("Lifetime of the Beacon: Rejuvenator deployable.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+    public class EquipBeacon : T2Module<EquipBeacon> {
+        [AutoConfig("Lifetime of the Beacon: Rejuvenator deployable.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
-        [AutoItemConfig("Cooldown of Beacon: Rejuvenator.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Cooldown of Beacon: Rejuvenator.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 50f;
 
-        [AutoItemConfig("Additional fraction of skill recharge rate to provide from the Stimmed buff.",
-            AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Additional fraction of skill recharge rate to provide from the Stimmed buff.",
+            AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float rechargeRate {get; private set;} = 0.5f;
 
-        public override string configDescription => "Contains config for the Beacon: Resupply submodule of Modules.BeaconRebalance.";
+        public override string enabledConfigDescription => "Contains config for the Beacon: Resupply submodule of Modules.BeaconRebalance.";
         public override bool managedEnable => false;
 
         private GameObject rejuvWardPrefab;
@@ -33,8 +33,8 @@ namespace ThinkInvisible.Admiral {
         internal GameObject beaconPrefab;
         public BuffIndex stimmedBuffIndex {get; private set;}
 
-        internal override void Setup() {
-            base.Setup();
+        public override void SetupAttributes() {
+            base.SetupAttributes();
 
             LoadoutAPI.AddSkill(typeof(EntStateCallSupplyDropRejuvenator));
             LoadoutAPI.AddSkill(typeof(EntStateRejuvenatorMainState));
@@ -97,14 +97,14 @@ namespace ThinkInvisible.Admiral {
             GameObject.Destroy(chwPrefab);
         }
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
             skillFamily1.ReplaceVariant(origSkillDef, skillDef);
             skillFamily2.ReplaceVariant(origSkillDef, skillDef);
             On.RoR2.Skills.SkillDef.OnFixedUpdate += On_SkillDefFixedUpdate;
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
             skillFamily1.ReplaceVariant(skillDef, origSkillDef);
             skillFamily2.ReplaceVariant(skillDef, origSkillDef);

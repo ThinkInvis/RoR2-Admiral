@@ -1,19 +1,16 @@
 ﻿using RoR2;
+using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class CancelOrbitalSkills : AdmiralModule<CancelOrbitalSkills> {
-        internal override void Setup() {
-            base.Setup();
-        }
+    public class CancelOrbitalSkills : T2Module<CancelOrbitalSkills> {
+        public override string enabledConfigDescription => "Allows orbital skills to be cancelled by reactivating the skill.";
 
-        public override string configDescription => "Allows orbital skills to be cancelled by reactivating the skill.";
-
-        internal override void Install() {
+        public override void Install() {
             base.Install();
             On.RoR2.GenericSkill.ExecuteIfReady += GenericSkill_ExecuteIfReady;
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
             On.RoR2.GenericSkill.ExecuteIfReady -= GenericSkill_ExecuteIfReady;
         }

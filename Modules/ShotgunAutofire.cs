@@ -2,24 +2,25 @@
 using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class ShotgunAutofire : AdmiralModule<ShotgunAutofire> {
-        [AutoItemConfig("Time, in fraction of total charge time, to wait before autofiring Vulcan Shotgun after reaching full charge.",
-            AutoItemConfigFlags.None, 0f, float.MaxValue)]
+    public class ShotgunAutofire : T2Module<ShotgunAutofire> {
+        [AutoConfig("Time, in fraction of total charge time, to wait before autofiring Vulcan Shotgun after reaching full charge.",
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float fireDelayDynamic {get; private set;} = 0.2f;
 
-        [AutoItemConfig("Absolute minimum time, in seconds, to wait before autofiring Vulcan Shotgun after reaching full charge.",
-            AutoItemConfigFlags.None, 0f, float.MaxValue)]
+        [AutoConfig("Absolute minimum time, in seconds, to wait before autofiring Vulcan Shotgun after reaching full charge.",
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float fireDelayFixed {get; private set;} = 0f;
-        
-        public override string configDescription => "Causes Vulcan Shotgun to autofire. Client-side.";
-        public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.None;
 
-        internal override void Install() {
+        public override bool managedEnable => true;
+        public override string enabledConfigDescription => "Causes Vulcan Shotgun to autofire. Client-side.";
+        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.None;
+
+        public override void Install() {
             base.Install();
             On.EntityStates.Captain.Weapon.ChargeCaptainShotgun.FixedUpdate += On_CapChargeShotgunFixedUpdate;
         }
-        
-        internal override void Uninstall() {
+
+        public override void Uninstall() {
             base.Uninstall();
             On.EntityStates.Captain.Weapon.ChargeCaptainShotgun.FixedUpdate -= On_CapChargeShotgunFixedUpdate;
         }

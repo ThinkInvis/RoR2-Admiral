@@ -10,40 +10,40 @@ using UnityEngine.Networking;
 using System.Linq;
 
 namespace ThinkInvisible.Admiral {
-    public class HackBeacon : AdmiralModule<HackBeacon> {
-        [AutoItemConfig("Lifetime of the Beacon: Special Order deployable.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+    public class HackBeacon : T2Module<HackBeacon> {
+        [AutoConfig("Lifetime of the Beacon: Special Order deployable.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
-        [AutoItemConfig("Cooldown of Beacon: Special Order.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Cooldown of Beacon: Special Order.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;
 
-        [AutoItemConfig("Radius of the Item Ward emitted by Beacon: Special Order.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Radius of the Item Ward emitted by Beacon: Special Order.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float wardRadius {get; private set;} = 10f;
         
-        [AutoItemConfig("Items provided by Beacon: Special Order on the first stage.",
-            AutoItemConfigFlags.None, 0, int.MaxValue)]
+        [AutoConfig("Items provided by Beacon: Special Order on the first stage.",
+            AutoConfigFlags.None, 0, int.MaxValue)]
         public int baseItems {get; private set;} = 5;
         
-        [AutoItemConfig("Items provided by Beacon: Special Order per stage cleared.",
-            AutoItemConfigFlags.None, 0, int.MaxValue)]
+        [AutoConfig("Items provided by Beacon: Special Order per stage cleared.",
+            AutoConfigFlags.None, 0, int.MaxValue)]
         public int itemsPerStage {get; private set;} = 1;
 
-        [AutoItemConfig("Selection weight for white items (defaults to identical to T1 chest).",
-            AutoItemConfigFlags.None, 0f, float.MaxValue)]
+        [AutoConfig("Selection weight for white items (defaults to identical to T1 chest).",
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float itemTier1Chance {get; private set;} = 0.8f;
 
-        [AutoItemConfig("Selection weight for green items (defaults to identical to T1 chest).",
-            AutoItemConfigFlags.None, 0f, float.MaxValue)]
+        [AutoConfig("Selection weight for green items (defaults to identical to T1 chest).",
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float itemTier2Chance {get; private set;} = 0.2f;
 
-        [AutoItemConfig("Selection weight for red items (defaults to identical to T1 chest).",
-            AutoItemConfigFlags.None, 0f, float.MaxValue)]
+        [AutoConfig("Selection weight for red items (defaults to identical to T1 chest).",
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float itemTier3Chance {get; private set;} = 0.01f;
         
-        public override string configDescription => "Contains config for the Beacon: Hacking submodule of Modules.BeaconRebalance.";
+        public override string enabledConfigDescription => "Contains config for the Beacon: Hacking submodule of Modules.BeaconRebalance.";
         public override bool managedEnable => false;
 
         private SkillFamily skillFamily1;
@@ -52,8 +52,8 @@ namespace ThinkInvisible.Admiral {
         internal SkillDef skillDef;
         internal GameObject beaconPrefab;
 
-        internal override void Setup() {
-            base.Setup();
+        public override void SetupAttributes() {
+            base.SetupAttributes();
             
             LoadoutAPI.AddSkill(typeof(EntStateCallSupplyDropSpecialOrder));
             LoadoutAPI.AddSkill(typeof(EntStateSpecialOrderMainState));
@@ -97,14 +97,14 @@ namespace ThinkInvisible.Admiral {
             GameObject.Destroy(beaconPrefabPrefab);
         }
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
 
             skillFamily1.ReplaceVariant(origSkillDef, skillDef);
             skillFamily2.ReplaceVariant(origSkillDef, skillDef);
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
 
             skillFamily1.ReplaceVariant(skillDef, origSkillDef);

@@ -10,21 +10,21 @@ using TILER2;
 using UnityEngine;
 
 namespace ThinkInvisible.Admiral {
-    public class CatalyzerDartSkill : AdmiralModule<CatalyzerDartSkill> {
-        [AutoItemConfig("Cooldown of Catalyzer Dart.",
-            AutoItemConfigFlags.DeferForever | AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+    public class CatalyzerDartSkill : T2Module<CatalyzerDartSkill> {
+        [AutoConfig("Cooldown of Catalyzer Dart.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 8f;
 
-        [AutoItemConfig("Fraction of remaining DoT damage dealt by malevolent cleanses.",
-            AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Fraction of remaining DoT damage dealt by malevolent cleanses.",
+            AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float evilCleanseDoTDamage {get; private set;} = 3f;
 
-        [AutoItemConfig("Fraction of base damage dealt per non-DoT debuff by malevolent cleanses.",
-            AutoItemConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+        [AutoConfig("Fraction of base damage dealt per non-DoT debuff by malevolent cleanses.",
+            AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float evilCleanseNonDoTDamage {get; private set;} = 5f;
 
-        public override string configDescription => "Adds the Catalyzer Dart secondary skill variant.";
-        public override AutoItemConfigFlags enabledConfigFlags => AutoItemConfigFlags.PreventNetMismatch | AutoItemConfigFlags.DeferForever;
+        public override string enabledConfigDescription => "Adds the Catalyzer Dart secondary skill variant.";
+        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferForever;
 
         internal SkillDef skillDef;
 
@@ -32,8 +32,8 @@ namespace ThinkInvisible.Admiral {
 
         public class MalevolentCleanseOnHit : MonoBehaviour {}
 
-        internal override void Setup() {
-            base.Setup();
+        public override void SetupAttributes() {
+            base.SetupAttributes();
 
             LoadoutAPI.AddSkill(typeof(EntStateFireCatalyzer));
 
@@ -83,7 +83,7 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, kill 6 other enemies by Shocking the same one.");
         }
 
-        internal override void Install() {
+        public override void Install() {
             base.Install();
 
             //todo: unlockable dependent on whether shock module is loaded
@@ -93,7 +93,7 @@ namespace ThinkInvisible.Admiral {
             On.EntityStates.Captain.Weapon.FireTazer.Fire += FireTazer_Fire;    
         }
 
-        internal override void Uninstall() {
+        public override void Uninstall() {
             base.Uninstall();
 
             Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSecondarySkillFamily").RemoveVariant(skillDef);
