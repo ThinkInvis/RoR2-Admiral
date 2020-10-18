@@ -119,6 +119,10 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.3.0**
+
+- Implements changes from TILER2 3.0.0.
+
 **2.2.3**
 
 - Added a missing R2API submodule dependency.
@@ -135,13 +139,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 **2.2.0**
 
 - Added variant Primary skill + unlock achievement: Valiant Blaster!
-
-**2.1.1**
-
-- Updated for RoR2 1.0.1.1 and R2API 2.5.14.
-	- Fixed OrbitalSkillsAnywhere not causing any changes.
-	- Fixed OrbitalJumpPad detonation effects (jump pad spawn/target set) not working.
-	- Fixed BeaconRebalance not preventing skill overrides to UsedUpSkillDef.
-- Fixed ShotgunRebalance pellet count config not applying.
-- Fixed Beacon: Special Order being able to hack T1 chests and shrines and increase its ItemWard item count on completion.
-- Fixed Beacon: Special Order display radius being ~50% smaller than the actual radius.

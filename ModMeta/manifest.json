@@ -1,11 +1,11 @@
 {
   "name": "Admiral",
-  "version_number": "2.2.3",
+  "version_number": "2.3.0",
   "website_url": "https://github.com/ThinkInvis/RoR2-Admiral",
   "description": "A character overhaul, because the Captain's due for a promotion.",
   "dependencies": [
     "bbepis-BepInExPack-5.3.1",
     "tristanmcpherson-R2API-2.5.14",
-    "ThinkInvis-TILER2-2.2.3"
+    "ThinkInvis-TILER2-3.0.0"
   ]
 }
