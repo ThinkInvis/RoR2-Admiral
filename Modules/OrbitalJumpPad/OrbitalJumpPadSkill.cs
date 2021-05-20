@@ -49,16 +49,16 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Captain: Damn The Torpedoes");
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
 
-            ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
-
             var jppBase = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
             jumpPadPrefabBase = PrefabAPI.InstantiateClone(ModifyJumpPadPrefab(jppBase), "CaptainJumpPad");
 
             var jppProj1 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
             jumpPadPrefabProj1 = PrefabAPI.InstantiateClone(ModifyAirstrike1Prefab(jppProj1), "CaptainJumpPadProjectile1");
+            ProjectileAPI.Add(jumpPadPrefabProj1);
 
             var jppProj2 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
             jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(ModifyAirstrike2Prefab(jppProj2), "CaptainJumpPadProjectile2");
+            ProjectileAPI.Add(jumpPadPrefabProj2);
 
             var nametoken = "ADMIRAL_JUMPPAD_SKILL_NAME";
             var desctoken = "ADMIRAL_JUMPPAD_SKILL_DESC";
@@ -283,11 +283,6 @@ namespace ThinkInvisible.Admiral {
             fpRecep.Apply();
         }
 
-        private void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
-            entries.Add(jumpPadPrefabProj1);
-            entries.Add(jumpPadPrefabProj2);
-        }
-        
         private struct MsgSetJumpPadTarget : INetMessage {
             private GameObject _targetJumpPad;
             private Vector3 _velocity;

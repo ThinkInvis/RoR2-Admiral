@@ -51,10 +51,8 @@ namespace ThinkInvisible.Admiral {
             //todo: update this from config
             LanguageAPI.Add(desctoken, "Fire a rapid combo of up to 3 slow-moving explosive orbs for <style=cIsDamage>1x500%, 1x500%, and 1x800% damage</style>. <style=cIsUtility>Fully charge</style> to fire a faster, heavier round for <style=cIsDamage>1x2400% damage</style>. Must <style=cDeath>stand still to reload</style> after firing a 3rd or charged shot -- cancel the combo to stay mobile.");
             
-            ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
-            
             var projPfbPfb = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/VagrantCannon"));
-            projPfbPfb.GetComponent<ProjectileSimple>().velocity = 150f;
+            projPfbPfb.GetComponent<ProjectileSimple>().desiredForwardSpeed = 150f;
             projPfbPfb.GetComponent<ProjectileSimple>().lifetime = 3f;
             projPfbPfb.GetComponent<ProjectileSimple>().enableVelocityOverLifetime = false;
             projPfbPfb.GetComponent<SphereCollider>().radius = 0.5f;
@@ -69,8 +67,9 @@ namespace ThinkInvisible.Admiral {
             EffectAPI.AddEffect(eff);
             projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect = eff;
             chargedProjectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunChargedProjectile");
-            
-            projPfbPfb.GetComponent<ProjectileSimple>().velocity = 35f;
+            ProjectileAPI.Add(chargedProjectilePrefab);
+
+            projPfbPfb.GetComponent<ProjectileSimple>().desiredForwardSpeed = 35f;
             projPfbPfb.GetComponent<SphereCollider>().radius = 0.25f;
             projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 5f;
             eff = PrefabAPI.InstantiateClone(projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect, "CaptainSkGunImpactEffect", false);
@@ -85,6 +84,8 @@ namespace ThinkInvisible.Admiral {
             ghost.transform.Find("Spit, World").localScale = Vector3.one * 0.5f;
             projPfbPfb.GetComponent<ProjectileController>().ghostPrefab = ghost;
             projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunProjectile");
+            ProjectileAPI.Add(projectilePrefab);
+
 
 
             skillDef = ScriptableObject.CreateInstance<SkillDef>();
@@ -151,11 +152,6 @@ namespace ThinkInvisible.Admiral {
                 self.jumpPower = 0;
                 self.maxJumpHeight = 0;
             }
-        }
-
-        private void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
-            entries.Add(projectilePrefab);
-            entries.Add(chargedProjectilePrefab);
         }
     }
 

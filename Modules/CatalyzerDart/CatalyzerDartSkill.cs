@@ -39,12 +39,12 @@ namespace ThinkInvisible.Admiral {
 
             LoadoutAPI.AddSkill(typeof(EntStateFireCatalyzer));
 
-            ProjectileCatalog.getAdditionalEntries += ProjectileCatalog_getAdditionalEntries;
             var projPfbPfb = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainTazer"));
             projPfbPfb.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;
             projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 1f;
             projPfbPfb.AddComponent<MalevolentCleanseOnHit>();
             projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainCatalyzerProjectile");
+            ProjectileAPI.Add(projectilePrefab);
 
             var nametoken = "ADMIRAL_CATALYZER_SKILL_NAME";
             var desctoken = "ADMIRAL_CATALYZER_SKILL_DESC";
@@ -139,10 +139,6 @@ namespace ThinkInvisible.Admiral {
 
                 Util.CleanseBody(obj.victimBody, true, false, true, true, false);
             }
-        }
-
-        private void ProjectileCatalog_getAdditionalEntries(List<GameObject> entries) {
-            entries.Add(projectilePrefab);
         }
     }
 
