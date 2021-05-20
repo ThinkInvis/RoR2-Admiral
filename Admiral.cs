@@ -10,7 +10,7 @@ using static TILER2.MiscUtil;
 
 namespace ThinkInvisible.Admiral {
     
-    [BepInDependency("com.bepis.r2api", "2.5.14")]
+    [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(UnlockablesAPI), nameof(R2API.Networking.NetworkingAPI), nameof(EffectAPI))]
