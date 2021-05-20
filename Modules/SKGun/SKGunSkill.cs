@@ -28,7 +28,7 @@ namespace ThinkInvisible.Admiral {
         public override string enabledConfigDescription => "Adds the Valiant Blaster primary skill variant.";
         public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferForever;
 
-        internal BuffIndex slowSkillDebuff;
+        internal BuffDef slowSkillDebuff;
 
         internal UnlockableDef unlockable;
 
@@ -118,7 +118,13 @@ namespace ThinkInvisible.Admiral {
 
             shotgunKillsStatDef = RoR2.Stats.StatDef.Register("admiralSKGunAchievementProgress", RoR2.Stats.StatRecordType.Sum, RoR2.Stats.StatDataType.ULong, 0);
 
-            slowSkillDebuff = BuffAPI.Add(new CustomBuff("AdmiralHeavyWeaponDebuff", "@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralHeavyWeaponDebuff.png", Color.yellow, true, false));
+            slowSkillDebuff = ScriptableObject.CreateInstance<BuffDef>();
+            slowSkillDebuff.buffColor = Color.yellow;
+            slowSkillDebuff.canStack = false;
+            slowSkillDebuff.iconSprite = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralHeavyWeaponDebuff.png");
+            slowSkillDebuff.isDebuff = true;
+            slowSkillDebuff.name = "AdmiralHeavyWeaponDebuff";
+            BuffAPI.Add(new CustomBuff(slowSkillDebuff));
         }
 
         public override void Install() {
