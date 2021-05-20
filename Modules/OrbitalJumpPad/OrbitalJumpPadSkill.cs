@@ -31,6 +31,8 @@ namespace ThinkInvisible.Admiral {
         internal SkillDef setupSkillDef;
         internal SkillDef callSkillDef;
 
+        internal UnlockableDef unlockable;
+
         internal GameObject jumpPadPrefabBase;
         internal GameObject jumpPadPrefabProj1;
         internal GameObject jumpPadPrefabProj2;
@@ -43,7 +45,7 @@ namespace ThinkInvisible.Admiral {
 
             R2API.Networking.NetworkingAPI.RegisterMessageType<MsgSetJumpPadTarget>();
 
-            UnlockablesAPI.AddUnlockable<AdmiralJumpPadAchievement>(false);
+            unlockable = UnlockableAPI.AddUnlockable<AdmiralJumpPadAchievement>(false);
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Captain: Damn The Torpedoes");
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
 
@@ -125,7 +127,7 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.JumpVolume.OnTriggerStay += JumpVolume_OnTriggerStay;
 
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
-            csdf.AddVariant(setupSkillDef, "ADMIRAL_JUMPPAD_UNLOCKABLE_ID");
+            csdf.AddVariant(setupSkillDef, unlockable);
         }
 
         public override void Uninstall() {
@@ -372,22 +374,32 @@ namespace ThinkInvisible.Admiral {
 	public class OrbitalJumpPad2ImpactEventFlag : MonoBehaviour {}
 
     #region Achievement handling
-    public class AdmiralJumpPadAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider> {
-        public override string AchievementIdentifier => "ADMIRAL_JUMPPAD_ACHIEVEMENT_ID";
-        public override string UnlockableIdentifier => "ADMIRAL_JUMPPAD_UNLOCKABLE_ID";
-        public override string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
-        public override string AchievementNameToken => "ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME";
-        public override string AchievementDescToken => "ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION";
-        public override string UnlockableNameToken => "ADMIRAL_JUMPPAD_SKILL_NAME";
-        protected override CustomSpriteProvider SpriteProvider => new CustomSpriteProvider("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
+    public class AdmiralJumpPadAchievement : RoR2.Achievements.BaseAchievement, IModdedUnlockableDataProvider {
+        public string AchievementIdentifier => "ADMIRAL_JUMPPAD_ACHIEVEMENT_ID";
+        public string UnlockableIdentifier => "ADMIRAL_JUMPPAD_UNLOCKABLE_ID";
+        public string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
+        public string AchievementNameToken => "ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME";
+        public string AchievementDescToken => "ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION";
+        public string UnlockableNameToken => "ADMIRAL_JUMPPAD_SKILL_NAME";
 
         public override bool wantsBodyCallbacks => true;
+
+        public Sprite Sprite => AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
+
+        public System.Func<string> GetHowToUnlock => () => Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", new[] {
+            Language.GetString(AchievementNameToken), Language.GetString(AchievementDescToken)});
+
+        public System.Func<string> GetUnlocked => () => Language.GetStringFormatted("UNLOCKED_FORMAT", new[] {
+            Language.GetString(AchievementNameToken), Language.GetString(AchievementDescToken)});
 
         int projTestInd1 = -1;
         int projTestInd2 = -1;
         int projTestInd3 = -1;
 
-        public override int LookUpRequiredBodyIndex() {
+        public AdmiralJumpPadAchievement() : base() {
+        }
+
+        public override BodyIndex LookUpRequiredBodyIndex() {
             return BodyCatalog.FindBodyIndex("CaptainBody");
         }
 

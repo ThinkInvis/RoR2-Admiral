@@ -30,6 +30,8 @@ namespace ThinkInvisible.Admiral {
 
         internal BuffIndex slowSkillDebuff;
 
+        internal UnlockableDef unlockable;
+
         internal SkillDef skillDef;
         internal RoR2.Stats.StatDef shotgunKillsStatDef;
 
@@ -112,7 +114,7 @@ namespace ThinkInvisible.Admiral {
 
             LoadoutAPI.AddSkillDef(skillDef);
 
-            UnlockablesAPI.AddUnlockable<AdmiralSKGunAchievement>(false);
+            unlockable = UnlockableAPI.AddUnlockable<AdmiralSKGunAchievement>(false);
             LanguageAPI.Add("ADMIRAL_SKGUN_ACHIEVEMENT_NAME", "Captain: Well-Seasoned");
             LanguageAPI.Add("ADMIRAL_SKGUN_ACHIEVEMENT_DESCRIPTION", "As Captain, hit with Vulcan Shotgun 600 TOTAL times.");
 
@@ -124,7 +126,7 @@ namespace ThinkInvisible.Admiral {
         public override void Install() {
             base.Install();
 
-            Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainPrimarySkillFamily").AddVariant(skillDef, "ADMIRAL_SKGUN_UNLOCKABLE_ID");
+            Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainPrimarySkillFamily").AddVariant(skillDef, unlockable);
 
             On.RoR2.CharacterBody.RecalculateStats += CharacterBody_RecalculateStats;
         }
@@ -153,18 +155,25 @@ namespace ThinkInvisible.Admiral {
         }
     }
 
-    public class AdmiralSKGunAchievement : ModdedUnlockableAndAchievement<CustomSpriteProvider> {
-        public override string AchievementIdentifier => "ADMIRAL_SKGUN_ACHIEVEMENT_ID";
-        public override string UnlockableIdentifier => "ADMIRAL_SKGUN_UNLOCKABLE_ID";
-        public override string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
-        public override string AchievementNameToken => "ADMIRAL_SKGUN_ACHIEVEMENT_NAME";
-        public override string AchievementDescToken => "ADMIRAL_SKGUN_ACHIEVEMENT_DESCRIPTION";
-        public override string UnlockableNameToken => "ADMIRAL_SKGUN_SKILL_NAME";
-        protected override CustomSpriteProvider SpriteProvider => new CustomSpriteProvider("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralSKGunSkill.png");
+    public class AdmiralSKGunAchievement : RoR2.Achievements.BaseAchievement, IModdedUnlockableDataProvider {
+        public string AchievementIdentifier => "ADMIRAL_SKGUN_ACHIEVEMENT_ID";
+        public string UnlockableIdentifier => "ADMIRAL_SKGUN_UNLOCKABLE_ID";
+        public string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
+        public string AchievementNameToken => "ADMIRAL_SKGUN_ACHIEVEMENT_NAME";
+        public string AchievementDescToken => "ADMIRAL_SKGUN_ACHIEVEMENT_DESCRIPTION";
+        public string UnlockableNameToken => "ADMIRAL_SKGUN_SKILL_NAME";
+
+        public Sprite Sprite => AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralSKGunSkill.png");
+
+        public System.Func<string> GetHowToUnlock => () => Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", new[] {
+            Language.GetString(AchievementNameToken), Language.GetString(AchievementDescToken)});
+
+        public System.Func<string> GetUnlocked => () => Language.GetStringFormatted("UNLOCKED_FORMAT", new[] {
+            Language.GetString(AchievementNameToken), Language.GetString(AchievementDescToken)});
 
         public override bool wantsBodyCallbacks => true;
 
-        public override int LookUpRequiredBodyIndex() {
+        public override BodyIndex LookUpRequiredBodyIndex() {
             return BodyCatalog.FindBodyIndex("CaptainBody");
         }
 
