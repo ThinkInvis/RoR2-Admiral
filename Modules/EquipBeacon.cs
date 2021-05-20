@@ -31,7 +31,7 @@ namespace ThinkInvisible.Admiral {
         private SkillDef origSkillDef;
         internal SkillDef skillDef;
         internal GameObject beaconPrefab;
-        public BuffIndex stimmedBuffIndex {get; private set;}
+        public BuffDef stimmedBuff {get; private set;}
 
         public override void SetupAttributes() {
             base.SetupAttributes();
@@ -58,7 +58,13 @@ namespace ThinkInvisible.Admiral {
 
             LoadoutAPI.AddSkillDef(skillDef);
 
-            stimmedBuffIndex = BuffAPI.Add(new CustomBuff("Stimmed", "textures/itemicons/texSyringeIcon", Color.red, false, false));
+            stimmedBuff = ScriptableObject.CreateInstance<BuffDef>();
+            stimmedBuff.name = "Stimmed";
+            stimmedBuff.iconSprite = Resources.Load<Sprite>("textures/itemicons/texSyringeIcon");
+            stimmedBuff.buffColor = Color.red;
+            stimmedBuff.canStack = false;
+            stimmedBuff.isDebuff = false;
+            BuffAPI.Add(new CustomBuff(stimmedBuff));
 
             //need to InstantiateClone because letting the prefabprefab wake up breaks some effects (animation curve components)
             var beaconPrefabPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, EquipmentRestock").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
@@ -78,7 +84,7 @@ namespace ThinkInvisible.Admiral {
             wardDecayer.lifetime = skillLifetime - CaptainBeaconDecayer.lifetimeDropAdjust; //ward appears after drop
             wardDecayer.silent = true;
             var eqprestWard = chwPrefab.AddComponent<BuffWard>();
-            eqprestWard.buffType = stimmedBuffIndex;
+            eqprestWard.buffDef = stimmedBuff;
             eqprestWard.buffDuration = 1f;
             eqprestWard.radius = 10f;
             eqprestWard.interval = 1f;
@@ -112,7 +118,7 @@ namespace ThinkInvisible.Admiral {
         }
 
         private void On_SkillDefFixedUpdate(On.RoR2.Skills.SkillDef.orig_OnFixedUpdate orig, RoR2.Skills.SkillDef self, GenericSkill skillSlot) {
-            if(skillSlot.characterBody.HasBuff(stimmedBuffIndex))
+            if(skillSlot.characterBody.HasBuff(stimmedBuff))
                 skillSlot.RunRecharge(Time.fixedDeltaTime * rechargeRate);
             orig(self, skillSlot);
         }
