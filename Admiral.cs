@@ -13,7 +13,7 @@ namespace ThinkInvisible.Admiral {
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
     [BepInPlugin(ModGuid, ModName, ModVer)]
-    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(R2API.Networking.NetworkingAPI), nameof(EffectAPI), nameof(ProjectileAPI))]
+    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(R2API.Networking.NetworkingAPI), nameof(EffectAPI), nameof(ProjectileAPI), nameof(UnlockableAPI))]
     public class AdmiralPlugin:BaseUnityPlugin {
         public const string ModVer = "2.3.0";
         public const string ModName = "Admiral";
