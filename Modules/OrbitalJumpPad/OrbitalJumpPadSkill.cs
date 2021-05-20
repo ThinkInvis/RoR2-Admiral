@@ -116,11 +116,38 @@ namespace ThinkInvisible.Admiral {
             LoadoutAPI.AddSkillDef(callSkillDef);
         }
 
+        private void ProjectileExplosion_DetonateServer(On.RoR2.Projectile.ProjectileExplosion.orig_DetonateServer orig, ProjectileExplosion self) {
+            orig(self);
+            if(!NetworkServer.active) return;
+            if(self.GetComponent<OrbitalJumpPad1ImpactEventFlag>()) {
+                var owner = self.GetComponent<ProjectileController>().owner;
+                if(!owner) return;
+                var ojph = owner.GetComponent<OrbitalJumpPadDeployTracker>();
+                if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadDeployTracker>();
+                var nobj = GameObject.Instantiate(jumpPadPrefabBase, self.transform.position, self.transform.rotation);
+                if(ojph.prevPadBase) GameObject.Destroy(ojph.prevPadBase);
+                ojph.prevPadBase = ojph.lastPadBase;
+                ojph.lastPadBase = nobj;
+                NetworkServer.Spawn(nobj);
+            } else if(self.GetComponent<OrbitalJumpPad2ImpactEventFlag>()) {
+                var owner = self.GetComponent<ProjectileController>().owner;
+                if(!owner) return;
+                var ojph = owner.GetComponent<OrbitalJumpPadDeployTracker>();
+                if(!ojph || !ojph.lastPadBase) return;
+                var jtraj = CalculateJumpPadTrajectory(ojph.lastPadBase.transform.position, self.transform.position, 5f);
+                if(!float.IsNaN(jtraj.Item1.y)) {
+                    new MsgSetJumpPadTarget(ojph.lastPadBase, jtraj.Item1, self.transform.position).Send(R2API.Networking.NetworkDestination.Clients);
+                    ojph.lastPadBase.GetComponent<ChestBehavior>().Open();
+                } else
+                    GameObject.Destroy(ojph.lastPadBase);
+            }
+        }
+
         public override void Install() {
             base.Install();
 
-            On.RoR2.Projectile.ProjectileImpactExplosion.OnProjectileImpact += ProjectileImpactExplosion_DetonateServer;
             On.RoR2.JumpVolume.OnTriggerStay += JumpVolume_OnTriggerStay;
+            On.RoR2.Projectile.ProjectileExplosion.DetonateServer += ProjectileExplosion_DetonateServer;
 
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
             csdf.AddVariant(setupSkillDef, unlockable);
@@ -129,8 +156,8 @@ namespace ThinkInvisible.Admiral {
         public override void Uninstall() {
             base.Uninstall();
 
-            On.RoR2.Projectile.ProjectileImpactExplosion.OnProjectileImpact -= ProjectileImpactExplosion_DetonateServer;
             On.RoR2.JumpVolume.OnTriggerStay -= JumpVolume_OnTriggerStay;
+            On.RoR2.Projectile.ProjectileExplosion.DetonateServer -= ProjectileExplosion_DetonateServer;
 
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
             csdf.RemoveVariant(setupSkillDef);
@@ -244,33 +271,6 @@ namespace ThinkInvisible.Admiral {
             iexp.lifetime = 0.5f;
             origPrefab.AddComponent<OrbitalJumpPad2ImpactEventFlag>();
             return origPrefab;
-        }
-
-        private void ProjectileImpactExplosion_DetonateServer(On.RoR2.Projectile.ProjectileImpactExplosion.orig_OnProjectileImpact orig, ProjectileImpactExplosion self, ProjectileImpactInfo info) {
-            orig(self, info);
-            if(!NetworkServer.active) return;
-            if(self.GetComponent<OrbitalJumpPad1ImpactEventFlag>()) {
-                var owner = self.GetComponent<ProjectileController>().owner;
-                if(!owner) return;
-                var ojph = owner.GetComponent<OrbitalJumpPadDeployTracker>();
-                if(!ojph) ojph = owner.AddComponent<OrbitalJumpPadDeployTracker>();
-                var nobj = GameObject.Instantiate(jumpPadPrefabBase, self.transform.position, self.transform.rotation);
-                if(ojph.prevPadBase) GameObject.Destroy(ojph.prevPadBase);
-                ojph.prevPadBase = ojph.lastPadBase;
-                ojph.lastPadBase = nobj;
-                NetworkServer.Spawn(nobj);
-            } else if(self.GetComponent<OrbitalJumpPad2ImpactEventFlag>()) {
-                var owner = self.GetComponent<ProjectileController>().owner;
-                if(!owner) return;
-                var ojph = owner.GetComponent<OrbitalJumpPadDeployTracker>();
-                if(!ojph || !ojph.lastPadBase) return;
-                var jtraj = CalculateJumpPadTrajectory(ojph.lastPadBase.transform.position, self.transform.position, 5f);
-                if(!float.IsNaN(jtraj.Item1.y)) {
-                    new MsgSetJumpPadTarget(ojph.lastPadBase, jtraj.Item1, self.transform.position).Send(R2API.Networking.NetworkDestination.Clients);
-                    ojph.lastPadBase.GetComponent<ChestBehavior>().Open();
-                } else
-                    GameObject.Destroy(ojph.lastPadBase);
-            }
         }
         
         private void JumpVolume_OnTriggerStay(On.RoR2.JumpVolume.orig_OnTriggerStay orig, JumpVolume self, Collider other) {
