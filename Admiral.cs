@@ -13,13 +13,14 @@ namespace ThinkInvisible.Admiral {
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
     [BepInPlugin(ModGuid, ModName, ModVer)]
-    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PlayerAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(UnlockablesAPI), nameof(R2API.Networking.NetworkingAPI), nameof(EffectAPI))]
+    [R2APISubmoduleDependency(nameof(LanguageAPI), nameof(ResourcesAPI), nameof(PrefabAPI), nameof(BuffAPI), nameof(LoadoutAPI), nameof(R2API.Networking.NetworkingAPI), nameof(EffectAPI))]
     public class AdmiralPlugin:BaseUnityPlugin {
         public const string ModVer = "2.3.0";
         public const string ModName = "Admiral";
         public const string ModGuid = "com.ThinkInvisible.Admiral";
         
         internal static BepInEx.Logging.ManualLogSource logger;
+        internal static AssetBundle resources;
 
         internal static ConfigFile cfgFile;
 
@@ -30,9 +31,7 @@ namespace ThinkInvisible.Admiral {
             cfgFile = new ConfigFile(Path.Combine(Paths.ConfigPath, ModGuid + ".cfg"), true);
 
             using(var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Admiral.admiral_assets")) {
-                var bundle = AssetBundle.LoadFromStream(stream);
-                var provider = new AssetBundleResourcesProvider("@Admiral", bundle);
-                ResourcesAPI.AddProvider(provider);
+                resources = AssetBundle.LoadFromStream(stream);
             }
             
             allModules = T2Module.InitModules(new T2Module.ModInfo {
