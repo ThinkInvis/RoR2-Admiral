@@ -1,5 +1,9 @@
 ﻿# Admiral Changelog
 
+**2.3.1**
+
+- Maintenance for RoR2 updates: Anniversary through PC Patch v1.1.1.4.
+
 **2.3.0**
 
 - Implements changes from TILER2 3.0.0.

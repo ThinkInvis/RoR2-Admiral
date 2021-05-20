@@ -119,6 +119,10 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.3.1**
+
+- Maintenance for RoR2 updates: Anniversary through PC Patch v1.1.1.4.
+
 **2.3.0**
 
 - Implements changes from TILER2 3.0.0.
@@ -135,7 +139,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 **2.2.1**
 
 - Charging Valiant Blaster now completely prevents sprinting (whether through an autosprint mod or mashing the sprint key).
-
-**2.2.0**
-
-- Added variant Primary skill + unlock achievement: Valiant Blaster!
