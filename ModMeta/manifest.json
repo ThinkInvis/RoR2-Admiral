@@ -6,6 +6,6 @@
   "dependencies": [
     "bbepis-BepInExPack-5.4.9",
     "tristanmcpherson-R2API-3.0.30",
-    "ThinkInvis-TILER2-3.0.6"
+    "ThinkInvis-TILER2-4.0.6"
   ]
 }
