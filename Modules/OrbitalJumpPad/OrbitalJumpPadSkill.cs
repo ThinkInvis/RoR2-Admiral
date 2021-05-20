@@ -74,13 +74,11 @@ namespace ThinkInvisible.Admiral {
             setupSkillDef.baseRechargeInterval = skillRecharge;
             setupSkillDef.baseMaxStock = 1;
             setupSkillDef.rechargeStock = 1;
-            setupSkillDef.isBullets = false;
-            setupSkillDef.shootDelay = 0f;
             setupSkillDef.beginSkillCooldownOnSkillEnd = true;
             setupSkillDef.requiredStock = 1;
             setupSkillDef.stockToConsume = 1;
             setupSkillDef.isCombatSkill = false;
-            setupSkillDef.noSprint = true;
+            setupSkillDef.cancelSprintingOnActivation = true;
             setupSkillDef.canceledFromSprinting = true;
             setupSkillDef.mustKeyPress = true;
             setupSkillDef.fullRestockOnAssign = true;
@@ -88,7 +86,7 @@ namespace ThinkInvisible.Admiral {
             setupSkillDef.skillName = namestr;
             setupSkillDef.skillNameToken = nametoken;
             setupSkillDef.skillDescriptionToken = desctoken;
-            setupSkillDef.icon = Resources.Load<Sprite>("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
+            setupSkillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
 
             LoadoutAPI.AddSkillDef(setupSkillDef);
 
@@ -100,13 +98,11 @@ namespace ThinkInvisible.Admiral {
             callSkillDef.baseRechargeInterval = 0f;
             callSkillDef.baseMaxStock = 2;
             callSkillDef.rechargeStock = 0;
-            callSkillDef.isBullets = false;
-            callSkillDef.shootDelay = 0.3f;
             callSkillDef.beginSkillCooldownOnSkillEnd = true;
             callSkillDef.requiredStock = 1;
             callSkillDef.stockToConsume = 1;
             callSkillDef.isCombatSkill = false;
-            callSkillDef.noSprint = true;
+            callSkillDef.cancelSprintingOnActivation = true;
             callSkillDef.canceledFromSprinting = true;
             callSkillDef.mustKeyPress = true;
             callSkillDef.fullRestockOnAssign = true;
@@ -115,7 +111,7 @@ namespace ThinkInvisible.Admiral {
             callSkillDef.skillName = namestr;
             callSkillDef.skillNameToken = nametoken;
             callSkillDef.skillDescriptionToken = desctoken;
-            callSkillDef.icon = Resources.Load<Sprite>("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
+            callSkillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
 
             LoadoutAPI.AddSkillDef(callSkillDef);
         }

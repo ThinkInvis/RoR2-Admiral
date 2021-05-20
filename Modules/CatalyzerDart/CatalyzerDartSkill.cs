@@ -61,13 +61,11 @@ namespace ThinkInvisible.Admiral {
             skillDef.baseRechargeInterval = skillRecharge;
             skillDef.baseMaxStock = 1;
             skillDef.rechargeStock = 1;
-            skillDef.isBullets = false;
-            skillDef.shootDelay = 0.3f;
             skillDef.beginSkillCooldownOnSkillEnd = false;
             skillDef.requiredStock = 1;
             skillDef.stockToConsume = 1;
             skillDef.isCombatSkill = true;
-            skillDef.noSprint = true;
+            skillDef.cancelSprintingOnActivation = true;
             skillDef.canceledFromSprinting = false;
             skillDef.mustKeyPress = false;
             skillDef.fullRestockOnAssign = true;
@@ -76,7 +74,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillName = namestr;
             skillDef.skillNameToken = nametoken;
             skillDef.skillDescriptionToken = desctoken;
-            skillDef.icon = Resources.Load<Sprite>("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralCatalyzerSkill.png");
+            skillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralCatalyzerSkill.png");
 
             LoadoutAPI.AddSkillDef(skillDef);
 
