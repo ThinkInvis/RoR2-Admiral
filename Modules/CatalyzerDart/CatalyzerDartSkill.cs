@@ -74,7 +74,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillName = namestr;
             skillDef.skillNameToken = nametoken;
             skillDef.skillDescriptionToken = desctoken;
-            skillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("@Admiral:Assets/Admiral/Textures/Icons/icon_AdmiralCatalyzerSkill.png");
+            skillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralCatalyzerSkill.png");
 
             LoadoutAPI.AddSkillDef(skillDef);
 
