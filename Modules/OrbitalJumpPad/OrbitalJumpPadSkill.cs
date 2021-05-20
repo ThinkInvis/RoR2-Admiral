@@ -119,7 +119,7 @@ namespace ThinkInvisible.Admiral {
         public override void Install() {
             base.Install();
 
-            On.RoR2.Projectile.ProjectileImpactExplosion.DetonateServer += ProjectileImpactExplosion_DetonateServer;
+            On.RoR2.Projectile.ProjectileImpactExplosion.OnProjectileImpact += ProjectileImpactExplosion_DetonateServer;
             On.RoR2.JumpVolume.OnTriggerStay += JumpVolume_OnTriggerStay;
 
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
@@ -129,7 +129,7 @@ namespace ThinkInvisible.Admiral {
         public override void Uninstall() {
             base.Uninstall();
 
-            On.RoR2.Projectile.ProjectileImpactExplosion.DetonateServer -= ProjectileImpactExplosion_DetonateServer;
+            On.RoR2.Projectile.ProjectileImpactExplosion.OnProjectileImpact -= ProjectileImpactExplosion_DetonateServer;
             On.RoR2.JumpVolume.OnTriggerStay -= JumpVolume_OnTriggerStay;
 
             var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
@@ -246,8 +246,8 @@ namespace ThinkInvisible.Admiral {
             return origPrefab;
         }
 
-        private void ProjectileImpactExplosion_DetonateServer(On.RoR2.Projectile.ProjectileImpactExplosion.orig_DetonateServer orig, ProjectileImpactExplosion self) {
-            orig(self);
+        private void ProjectileImpactExplosion_DetonateServer(On.RoR2.Projectile.ProjectileImpactExplosion.orig_OnProjectileImpact orig, ProjectileImpactExplosion self, ProjectileImpactInfo info) {
+            orig(self, info);
             if(!NetworkServer.active) return;
             if(self.GetComponent<OrbitalJumpPad1ImpactEventFlag>()) {
                 var owner = self.GetComponent<ProjectileController>().owner;
