@@ -10,11 +10,11 @@ using RoR2.Skills;
 namespace ThinkInvisible.Admiral {
     public class BeaconRebalance : T2Module<BeaconRebalance> {
         [AutoConfig("Fractional influence of cooldown reduction, e.g. Alien Head and unknown cooldown sources from other mods, on temporary beacons (0 = no effect, 1 = full effect).",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
+            AutoConfigFlags.DeferUntilNextStage | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
         public float beaconCDRInfluence {get; private set;} = 0.5f;
 
         [AutoConfig("Fractional influence of restock, e.g. Bandolier, on temporary beacons (0 = no effect, 1 = full effect).",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
+            AutoConfigFlags.DeferUntilNextStage | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
         public float beaconRestockInfluence { get; private set; } = 0.5f;
 
         public override string enabledConfigDescription => "Changes all Beacon skills to have cooldown and lifetime, and replaces some variants which are incompatible with this model.";
