@@ -109,6 +109,7 @@ Configurable:
 
 ## Issues/TODO
 
+- Causes a stray explosion sound during game startup.
 - Loadout selection of new skills is not remembered between launches of the game.
 - Valiant Blaster needs unique firing animations.
 - Catalyzer Dart could do with some visual changes.
@@ -118,6 +119,12 @@ Configurable:
 ## Changelog
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
+
+**2.3.2**
+
+- BeaconRebalance CDR resistance no longer prevents beacons from recharging normally when ramped all the way up.
+- BeaconRebalance now provides separate config options for CDR and restock resistance.
+- Some BeaconRebalance config options are no longer flagged as DeferForever and can be changed while the game is running.
 
 **2.3.1**
 
@@ -135,7 +142,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 
 - Implements changes from TILER2 2.2.3.
 	- Beacon: Special Order will no longer select items which are in FakeInventory.blacklist.
-
-**2.2.1**
-
-- Charging Valiant Blaster now completely prevents sprinting (whether through an autosprint mod or mashing the sprint key).

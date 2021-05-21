@@ -1,5 +1,11 @@
 ﻿# Admiral Changelog
 
+**2.3.2**
+
+- BeaconRebalance CDR resistance no longer prevents beacons from recharging normally when ramped all the way up.
+- BeaconRebalance now provides separate config options for CDR and restock resistance.
+- Some BeaconRebalance config options are no longer flagged as DeferForever and can be changed while the game is running.
+
 **2.3.1**
 
 - Maintenance for RoR2 updates: Anniversary through PC Patch v1.1.1.4.
