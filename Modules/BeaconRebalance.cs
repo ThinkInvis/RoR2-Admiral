@@ -9,10 +9,14 @@ using RoR2.Skills;
 
 namespace ThinkInvisible.Admiral {
     public class BeaconRebalance : T2Module<BeaconRebalance> {
-        [AutoConfig("Fractional influence of cooldown reduction/restock on temporary beacons (0 = no effect, 1 = full effect).",
+        [AutoConfig("Fractional influence of cooldown reduction, e.g. Alien Head and unknown cooldown sources from other mods, on temporary beacons (0 = no effect, 1 = full effect).",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
         public float beaconCDRInfluence {get; private set;} = 0.5f;
-        
+
+        [AutoConfig("Fractional influence of restock, e.g. Bandolier, on temporary beacons (0 = no effect, 1 = full effect).",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
+        public float beaconRestockInfluence { get; private set; } = 0.5f;
+
         public override string enabledConfigDescription => "Changes all Beacon skills to have cooldown and lifetime, and replaces some variants which are incompatible with this model.";
         public override AutoConfigUpdateActionTypes enabledConfigUpdateActionTypes => AutoConfigUpdateActionTypes.InvalidateLanguage;
         public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferUntilNextStage;
@@ -67,21 +71,21 @@ namespace ThinkInvisible.Admiral {
             return SkillIsTemporaryBeacon(skill.skillDef);
         }
 
+        bool isNormalRechargeRunning = false;
         private void On_GSFixedUpdate(On.RoR2.GenericSkill.orig_FixedUpdate orig, GenericSkill self) {
-            if(SkillIsTemporaryBeacon(self))
-                self.RunRecharge(Time.fixedDeltaTime*(1f / beaconCDRInfluence - 1f));
+            isNormalRechargeRunning = true;
             orig(self);
+            isNormalRechargeRunning = false;
         }
 
         private void On_GSRunRecharge(On.RoR2.GenericSkill.orig_RunRecharge orig, GenericSkill self, float dt) {
-            if(SkillIsTemporaryBeacon(self))
-                orig(self,dt*beaconCDRInfluence);
-            else
-                orig(self,dt);
+            if(SkillIsTemporaryBeacon(self) && !isNormalRechargeRunning)
+                dt *= beaconCDRInfluence;
+            orig(self,dt);
         }
 
         private void On_GSAddOneStock(On.RoR2.GenericSkill.orig_AddOneStock orig, GenericSkill self) {
-            if(SkillIsTemporaryBeacon(self)) self.rechargeStopwatch += self.finalRechargeInterval * beaconCDRInfluence;
+            if(SkillIsTemporaryBeacon(self)) self.rechargeStopwatch += self.finalRechargeInterval * beaconRestockInfluence;
             else orig(self);
         }
 
