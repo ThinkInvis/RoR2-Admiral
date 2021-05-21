@@ -86,6 +86,8 @@ namespace ThinkInvisible.Admiral {
             projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunProjectile");
             ProjectileAPI.Add(projectilePrefab);
 
+            GameObject.Destroy(projPfbPfb);
+
 
 
             skillDef = ScriptableObject.CreateInstance<SkillDef>();

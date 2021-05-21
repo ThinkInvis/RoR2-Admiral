@@ -45,6 +45,7 @@ namespace ThinkInvisible.Admiral {
             projPfbPfb.AddComponent<MalevolentCleanseOnHit>();
             projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainCatalyzerProjectile");
             ProjectileAPI.Add(projectilePrefab);
+            GameObject.Destroy(projPfbPfb);
 
             var nametoken = "ADMIRAL_CATALYZER_SKILL_NAME";
             var desctoken = "ADMIRAL_CATALYZER_SKILL_DESC";
