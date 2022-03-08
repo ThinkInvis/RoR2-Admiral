@@ -115,7 +115,7 @@ namespace ThinkInvisible.Admiral {
 
             ContentAddition.AddSkillDef(skillDef);
 
-            unlockable = UnlockableAPI.AddUnlockable<AdmiralSKGunAchievement>(false);
+            unlockable = UnlockableAPI.AddUnlockable<AdmiralSKGunAchievement>();
             LanguageAPI.Add("ADMIRAL_SKGUN_ACHIEVEMENT_NAME", "Captain: Well-Seasoned");
             LanguageAPI.Add("ADMIRAL_SKGUN_ACHIEVEMENT_DESCRIPTION", "As Captain, hit with Vulcan Shotgun 600 TOTAL times.");
 

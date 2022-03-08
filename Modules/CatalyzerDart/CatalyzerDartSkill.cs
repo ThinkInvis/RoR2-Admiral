@@ -79,7 +79,7 @@ namespace ThinkInvisible.Admiral {
 
             ContentAddition.AddSkillDef(skillDef);
 
-            unlockable = UnlockableAPI.AddUnlockable<AdmiralCatalyzerAchievement>(false);
+            unlockable = UnlockableAPI.AddUnlockable<AdmiralCatalyzerAchievement>();
             LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_NAME", "Captain: Hoist By Their Own Petard");
             LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, kill 6 other enemies by Shocking the same one.");
         }

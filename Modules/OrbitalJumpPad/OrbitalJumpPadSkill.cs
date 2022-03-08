@@ -45,7 +45,7 @@ namespace ThinkInvisible.Admiral {
 
             R2API.Networking.NetworkingAPI.RegisterMessageType<MsgSetJumpPadTarget>();
 
-            unlockable = UnlockableAPI.AddUnlockable<AdmiralJumpPadAchievement>(false);
+            unlockable = UnlockableAPI.AddUnlockable<AdmiralJumpPadAchievement>();
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Captain: Damn The Torpedoes");
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
 
@@ -88,7 +88,7 @@ namespace ThinkInvisible.Admiral {
             setupSkillDef.skillDescriptionToken = desctoken;
             setupSkillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
 
-            LoadoutAPI.AddSkillDef(setupSkillDef);
+            ContentAddition.AddSkillDef(setupSkillDef);
 
             callSkillDef = ScriptableObject.CreateInstance<SkillDef>();
 
@@ -113,7 +113,7 @@ namespace ThinkInvisible.Admiral {
             callSkillDef.skillDescriptionToken = desctoken;
             callSkillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralJumpPadSkill.png");
 
-            LoadoutAPI.AddSkillDef(callSkillDef);
+            ContentAddition.AddSkillDef(callSkillDef);
         }
 
         private void ProjectileExplosion_DetonateServer(On.RoR2.Projectile.ProjectileExplosion.orig_DetonateServer orig, ProjectileExplosion self) {
