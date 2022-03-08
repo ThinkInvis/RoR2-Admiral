@@ -25,7 +25,7 @@ namespace ThinkInvisible.Admiral {
 
         public override void SetupAttributes() {
             base.SetupAttributes();
-            muzzleFlashPrefab = Resources.Load<GameObject>("prefabs/effects/muzzleflashes/MuzzleflashSupplyDrop, Healing");
+            muzzleFlashPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/effects/muzzleflashes/MuzzleflashSupplyDrop, Healing");
         }
 
         public override void InstallLanguage() {

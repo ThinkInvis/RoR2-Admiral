@@ -23,7 +23,7 @@ namespace ThinkInvisible.Admiral {
             }
             if(stopwatch >= lifetime + lifetimeDropAdjust) {
                 if(!silent) {
-                    EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXEngiTurretDeath"),
+                    EffectManager.SpawnEffect(LegacyResourcesAPI.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXEngiTurretDeath"),
                         new EffectData {
                             origin = transform.position,
                             scale = 5f

@@ -39,7 +39,7 @@ namespace ThinkInvisible.Admiral {
 
             var fireCatalyzerState = ContentAddition.AddEntityState<EntStateFireCatalyzer>(out _);
 
-            var projPfbPfb = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainTazer"));
+            var projPfbPfb = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/CaptainTazer"));
             projPfbPfb.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;
             projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 1f;
             projPfbPfb.AddComponent<MalevolentCleanseOnHit>();
@@ -88,7 +88,7 @@ namespace ThinkInvisible.Admiral {
             base.Install();
 
             //todo: unlockable dependent on whether shock module is loaded
-            Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSecondarySkillFamily").AddVariant(skillDef, unlockable);
+            LegacyResourcesAPI.Load<SkillFamily>("skilldefs/captainbody/CaptainSecondarySkillFamily").AddVariant(skillDef, unlockable);
 
             RoR2.GlobalEventManager.onServerDamageDealt += GlobalEventManager_onServerDamageDealt;
             On.EntityStates.Captain.Weapon.FireTazer.Fire += FireTazer_Fire;    
@@ -97,7 +97,7 @@ namespace ThinkInvisible.Admiral {
         public override void Uninstall() {
             base.Uninstall();
 
-            Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSecondarySkillFamily").RemoveVariant(skillDef);
+            LegacyResourcesAPI.Load<SkillFamily>("skilldefs/captainbody/CaptainSecondarySkillFamily").RemoveVariant(skillDef);
         }
 
         private void FireTazer_Fire(On.EntityStates.Captain.Weapon.FireTazer.orig_Fire orig, FireTazer self) {

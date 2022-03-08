@@ -38,10 +38,10 @@ namespace ThinkInvisible.Admiral {
 
             var callSupplyDropRejuvenatorState = ContentAddition.AddEntityState<EntStateCallSupplyDropRejuvenator>(out _);
             var rejuvenatorMainState = ContentAddition.AddEntityState<EntStateRejuvenatorMainState>(out _);
-            skillFamily1 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop1SkillFamily");
-            skillFamily2 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
+            skillFamily1 = LegacyResourcesAPI.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop1SkillFamily");
+            skillFamily2 = LegacyResourcesAPI.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
 
-            origSkillDef = Resources.Load<SkillDef>("skilldefs/captainbody/CallSupplyDropEquipmentRestock");
+            origSkillDef = LegacyResourcesAPI.Load<SkillDef>("skilldefs/captainbody/CallSupplyDropEquipmentRestock");
             skillDef = SkillUtil.CloneSkillDef(origSkillDef);
 
             skillDef.rechargeStock = 1;
@@ -59,14 +59,14 @@ namespace ThinkInvisible.Admiral {
 
             stimmedBuff = ScriptableObject.CreateInstance<BuffDef>();
             stimmedBuff.name = "Stimmed";
-            stimmedBuff.iconSprite = Resources.Load<Sprite>("textures/itemicons/texSyringeIcon");
+            stimmedBuff.iconSprite = LegacyResourcesAPI.Load<Sprite>("textures/itemicons/texSyringeIcon");
             stimmedBuff.buffColor = Color.red;
             stimmedBuff.canStack = false;
             stimmedBuff.isDebuff = false;
             ContentAddition.AddBuffDef(stimmedBuff);
 
             //need to InstantiateClone because letting the prefabprefab wake up breaks some effects (animation curve components)
-            var beaconPrefabPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, EquipmentRestock").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
+            var beaconPrefabPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, EquipmentRestock").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
             beaconPrefabPrefab.GetComponent<ProxyInteraction>().enabled = false;
             beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
@@ -76,7 +76,7 @@ namespace ThinkInvisible.Admiral {
             GameObject.Destroy(beaconPrefabPrefab);
 
             //Cobble together an indicator ring from the healing ward prefab
-            var chwPrefab = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainHealingWard"));
+            var chwPrefab = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainHealingWard"));
             chwPrefab.GetComponent<HealingWard>().enabled = false;
             var indic = chwPrefab.transform.Find("Indicator");
             var wardDecayer = chwPrefab.AddComponent<CaptainBeaconDecayer>();
@@ -91,7 +91,7 @@ namespace ThinkInvisible.Admiral {
 
             indic.Find("IndicatorRing").GetComponent<MeshRenderer>().material.SetColor("_TintColor", new Color(1f, 0.5f, 0f, 1f));
             var chwHsPsRen = indic.Find("HealingSymbols").GetComponent<ParticleSystemRenderer>();
-            chwHsPsRen.material.SetTexture("_MainTex", Resources.Load<Texture>("textures/bufficons/texBuffTeslaIcon"));
+            chwHsPsRen.material.SetTexture("_MainTex", LegacyResourcesAPI.Load<Texture>("textures/bufficons/texBuffTeslaIcon"));
             chwHsPsRen.material.SetColor("_TintColor", new Color(2f, 0.05f, 0f, 1f));
             chwHsPsRen.trailMaterial.SetColor("_TintColor", new Color(2f, 0.05f, 0f, 1f));
 

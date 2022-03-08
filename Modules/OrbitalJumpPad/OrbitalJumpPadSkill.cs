@@ -49,14 +49,14 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_NAME", "Captain: Damn The Torpedoes");
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
 
-            var jppBase = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
+            var jppBase = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
             jumpPadPrefabBase = PrefabAPI.InstantiateClone(ModifyJumpPadPrefab(jppBase), "CaptainJumpPad", true);
 
-            var jppProj1 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
+            var jppProj1 = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
             jumpPadPrefabProj1 = PrefabAPI.InstantiateClone(ModifyAirstrike1Prefab(jppProj1), "CaptainJumpPadProjectile1", true);
             ContentAddition.AddProjectile(jumpPadPrefabProj1);
 
-            var jppProj2 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
+            var jppProj2 = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
             jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(ModifyAirstrike2Prefab(jppProj2), "CaptainJumpPadProjectile2", true);
             ContentAddition.AddProjectile(jumpPadPrefabProj2);
 
@@ -149,7 +149,7 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.JumpVolume.OnTriggerStay += JumpVolume_OnTriggerStay;
             On.RoR2.Projectile.ProjectileExplosion.DetonateServer += ProjectileExplosion_DetonateServer;
 
-            var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
+            var csdf = LegacyResourcesAPI.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
             csdf.AddVariant(setupSkillDef, unlockable);
         }
 
@@ -159,7 +159,7 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.JumpVolume.OnTriggerStay -= JumpVolume_OnTriggerStay;
             On.RoR2.Projectile.ProjectileExplosion.DetonateServer -= ProjectileExplosion_DetonateServer;
 
-            var csdf = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
+            var csdf = LegacyResourcesAPI.Load<SkillFamily>("skilldefs/captainbody/CaptainUtilitySkillFamily");
             csdf.RemoveVariant(setupSkillDef);
         }
         
@@ -229,9 +229,9 @@ namespace ThinkInvisible.Admiral {
 
             //add LineRenderer
             var lineRen = jvolTsf.gameObject.AddComponent<LineRenderer>();
-            //var lineRenMtlSnagFrom = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainHealingWard"));
+            //var lineRenMtlSnagFrom = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainHealingWard"));
             //lineRen.material = lineRenMtlSnagFrom.transform.Find("Indicator").Find("IndicatorRing").gameObject.GetComponent<MeshRenderer>().material;
-            lineRen.material = UnityEngine.Object.Instantiate(Resources.Load<Material>("materials/matBlueprintsOk"));
+            lineRen.material = UnityEngine.Object.Instantiate(LegacyResourcesAPI.Load<Material>("materials/matBlueprintsOk"));
             //GameObject.Destroy(lineRenMtlSnagFrom);
             lineRen.material.SetColor("_TintColor", new Color(2f, 0.2f, 10f, 3f));
             lineRen.positionCount = 32;

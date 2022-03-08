@@ -34,10 +34,10 @@ namespace ThinkInvisible.Admiral {
             var callDropEntState = ContentAddition.AddEntityState<EntStateCallSupplyDropShocking>(out _);
             var mainEntState = ContentAddition.AddEntityState<EntStateShockingMainState>(out _);
 
-            skillFamily1 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop1SkillFamily");
-            skillFamily2 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
+            skillFamily1 = LegacyResourcesAPI.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop1SkillFamily");
+            skillFamily2 = LegacyResourcesAPI.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
 
-            origSkillDef = Resources.Load<SkillDef>("skilldefs/captainbody/CallSupplyDropShocking");
+            origSkillDef = LegacyResourcesAPI.Load<SkillDef>("skilldefs/captainbody/CallSupplyDropShocking");
             skillDef = SkillUtil.CloneSkillDef(origSkillDef);
 
             skillDef.rechargeStock = 1;
@@ -53,7 +53,7 @@ namespace ThinkInvisible.Admiral {
 
             ContentAddition.AddSkillDef(skillDef);
 
-            var beaconPrefabPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Shocking").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
+            var beaconPrefabPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Shocking").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
             beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
