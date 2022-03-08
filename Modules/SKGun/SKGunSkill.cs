@@ -41,8 +41,8 @@ namespace ThinkInvisible.Admiral {
         public override void SetupAttributes() {
             base.SetupAttributes();
             
-            LoadoutAPI.AddSkill(typeof(EntStateChargeSKGun));
-            LoadoutAPI.AddSkill(typeof(EntStateFireSKGun));
+            var chargeEntState = ContentAddition.AddEntityState<EntStateChargeSKGun>(out _);
+            var fireEntState = ContentAddition.AddEntityState<EntStateFireSKGun>(out _);
 
             var nametoken = "ADMIRAL_SKGUN_SKILL_NAME";
             var desctoken = "ADMIRAL_SKGUN_SKILL_DESC";
@@ -93,7 +93,7 @@ namespace ThinkInvisible.Admiral {
             skillDef = ScriptableObject.CreateInstance<SkillDef>();
 
             skillDef.activationStateMachineName = "Weapon";
-            skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateChargeSKGun>();
+            skillDef.activationState = chargeEntState;
             skillDef.interruptPriority = InterruptPriority.Skill;
             skillDef.baseRechargeInterval = recoveryTime;
             skillDef.baseMaxStock = 3;
@@ -113,7 +113,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillDescriptionToken = desctoken;
             skillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralSKGunSkill.png");
 
-            LoadoutAPI.AddSkillDef(skillDef);
+            ContentAddition.AddSkillDef(skillDef);
 
             unlockable = UnlockableAPI.AddUnlockable<AdmiralSKGunAchievement>(false);
             LanguageAPI.Add("ADMIRAL_SKGUN_ACHIEVEMENT_NAME", "Captain: Well-Seasoned");

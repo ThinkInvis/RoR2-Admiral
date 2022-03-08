@@ -27,8 +27,8 @@ namespace ThinkInvisible.Admiral {
         public override void SetupAttributes() {
             base.SetupAttributes();
 
-            LoadoutAPI.AddSkill(typeof(EntStateCallSupplyDropHealing));
-            LoadoutAPI.AddSkill(typeof(EntStateHealingMainState));
+            var callDropEntState = ContentAddition.AddEntityState<EntStateCallSupplyDropHealing>(out _);
+            var mainEntState = ContentAddition.AddEntityState<EntStateHealingMainState>(out _);
 
             skillFamily1 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop1SkillFamily");
             skillFamily2 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
@@ -41,19 +41,19 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillName = "AdmiralSupplyDropHealing";
             skillDef.skillNameToken = "ADMIRAL_SUPPLY_HEALING_NAME";
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_HEALING_DESCRIPTION";
-            skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallSupplyDropHealing>();
+            skillDef.activationState = callDropEntState;
 
             LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Healing");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
                 "<style=cIsUtility>Temporary beacon</style>. <style=cIsHealing>Heal</style> all nearby allies for <style=cIsHealing>10%</style> of their <style=cIsHealing>maximum health</style> every second.");
 
-            LoadoutAPI.AddSkillDef(skillDef);
+            ContentAddition.AddSkillDef(skillDef);
 
             var beaconPrefabPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Healing").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
             beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
-            beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = LoadoutAPI.StateTypeOf<EntStateHealingMainState>();
+            beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = mainEntState;
             beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Healing", true);
             GameObject.Destroy(beaconPrefabPrefab);
         }

@@ -55,8 +55,8 @@ namespace ThinkInvisible.Admiral {
         public override void SetupAttributes() {
             base.SetupAttributes();
             
-            LoadoutAPI.AddSkill(typeof(EntStateCallSupplyDropSpecialOrder));
-            LoadoutAPI.AddSkill(typeof(EntStateSpecialOrderMainState));
+            var callDropEntState = ContentAddition.AddEntityState<EntStateCallSupplyDropSpecialOrder>(out _);
+            var mainEntState = ContentAddition.AddEntityState<EntStateSpecialOrderMainState>(out _);
 
             skillFamily1 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop1SkillFamily");
             skillFamily2 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
@@ -69,20 +69,20 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillName = "AdmiralSupplyDropSpecialOrder";
             skillDef.skillNameToken = "ADMIRAL_SUPPLY_SPECIALORDER_NAME";
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_SPECIALORDER_DESCRIPTION";
-            skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallSupplyDropSpecialOrder>();
+            skillDef.activationState = callDropEntState;
             skillDef.icon = origSkillDef.icon;
 
             LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Special Order");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
                 "<style=cIsUtility>Temporary beacon</style>. Requisition a pack of <style=cIsUtility>random, disposable items</style> from your trusty quartermaster. All allies standing near the beacon receive these items until it runs out of energy.");
 
-            LoadoutAPI.AddSkillDef(skillDef);
+            ContentAddition.AddSkillDef(skillDef);
 
             var beaconPrefabPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Hacking").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
             beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
-            beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = LoadoutAPI.StateTypeOf<EntStateSpecialOrderMainState>();
+            beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = mainEntState;
 
             beaconPrefabPrefab.AddComponent<Inventory>();
 

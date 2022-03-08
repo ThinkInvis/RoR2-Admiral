@@ -37,7 +37,7 @@ namespace ThinkInvisible.Admiral {
         public override void SetupAttributes() {
             base.SetupAttributes();
 
-            LoadoutAPI.AddSkill(typeof(EntStateFireCatalyzer));
+            var fireCatalyzerState = ContentAddition.AddEntityState<EntStateFireCatalyzer>(out _);
 
             var projPfbPfb = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainTazer"));
             projPfbPfb.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;
@@ -57,7 +57,7 @@ namespace ThinkInvisible.Admiral {
             skillDef = ScriptableObject.CreateInstance<SkillDef>();
 
             skillDef.activationStateMachineName = "Weapon";
-            skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateFireCatalyzer>();
+            skillDef.activationState = fireCatalyzerState;
             skillDef.interruptPriority = InterruptPriority.Skill;
             skillDef.baseRechargeInterval = skillRecharge;
             skillDef.baseMaxStock = 1;
@@ -77,7 +77,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillDescriptionToken = desctoken;
             skillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralCatalyzerSkill.png");
 
-            LoadoutAPI.AddSkillDef(skillDef);
+            ContentAddition.AddSkillDef(skillDef);
 
             unlockable = UnlockableAPI.AddUnlockable<AdmiralCatalyzerAchievement>(false);
             LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_NAME", "Captain: Hoist By Their Own Petard");

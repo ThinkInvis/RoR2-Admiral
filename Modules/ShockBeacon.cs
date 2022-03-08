@@ -31,8 +31,8 @@ namespace ThinkInvisible.Admiral {
         public override void SetupAttributes() {
             base.SetupAttributes();
             
-            LoadoutAPI.AddSkill(typeof(EntStateCallSupplyDropShocking));
-            LoadoutAPI.AddSkill(typeof(EntStateShockingMainState));
+            var callDropEntState = ContentAddition.AddEntityState<EntStateCallSupplyDropShocking>(out _);
+            var mainEntState = ContentAddition.AddEntityState<EntStateShockingMainState>(out _);
 
             skillFamily1 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop1SkillFamily");
             skillFamily2 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
@@ -45,19 +45,19 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillName = "AdmiralSupplyDropShocking";
             skillDef.skillNameToken = "ADMIRAL_SUPPLY_SHOCKING_NAME";
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_SHOCKING_DESCRIPTION";
-            skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallSupplyDropShocking>();
+            skillDef.activationState = callDropEntState;
 
             LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Shocking");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
                 "<style=cIsUtility>Temporary beacon</style>. <style=cIsDamage>Shock</style> all nearby enemies rapidly for a short time.");
 
-            LoadoutAPI.AddSkillDef(skillDef);
+            ContentAddition.AddSkillDef(skillDef);
 
             var beaconPrefabPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, Shocking").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
             beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
-            beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = LoadoutAPI.StateTypeOf<EntStateShockingMainState>();
+            beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = mainEntState;
             beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Shocking", true);
             GameObject.Destroy(beaconPrefabPrefab);
         }

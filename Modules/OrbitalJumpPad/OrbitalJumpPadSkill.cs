@@ -40,8 +40,8 @@ namespace ThinkInvisible.Admiral {
         public override void SetupAttributes() {
             base.SetupAttributes();
             
-            LoadoutAPI.AddSkill(typeof(EntStateCallJumpPad));
-            LoadoutAPI.AddSkill(typeof(EntStateSetupJumpPad));
+            var callEntState = ContentAddition.AddEntityState<EntStateCallJumpPad>(out _);
+            var setupEntState = ContentAddition.AddEntityState<EntStateSetupJumpPad>(out _);
 
             R2API.Networking.NetworkingAPI.RegisterMessageType<MsgSetJumpPadTarget>();
 
@@ -54,11 +54,11 @@ namespace ThinkInvisible.Admiral {
 
             var jppProj1 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
             jumpPadPrefabProj1 = PrefabAPI.InstantiateClone(ModifyAirstrike1Prefab(jppProj1), "CaptainJumpPadProjectile1", true);
-            ProjectileAPI.Add(jumpPadPrefabProj1);
+            ContentAddition.AddProjectile(jumpPadPrefabProj1);
 
             var jppProj2 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
             jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(ModifyAirstrike2Prefab(jppProj2), "CaptainJumpPadProjectile2", true);
-            ProjectileAPI.Add(jumpPadPrefabProj2);
+            ContentAddition.AddProjectile(jumpPadPrefabProj2);
 
             var nametoken = "ADMIRAL_JUMPPAD_SKILL_NAME";
             var desctoken = "ADMIRAL_JUMPPAD_SKILL_DESC";
@@ -69,7 +69,7 @@ namespace ThinkInvisible.Admiral {
             setupSkillDef = ScriptableObject.CreateInstance<SkillDef>();
 
             setupSkillDef.activationStateMachineName = "Skillswap";
-            setupSkillDef.activationState = LoadoutAPI.StateTypeOf<EntStateSetupJumpPad>();
+            setupSkillDef.activationState = setupEntState;
             setupSkillDef.interruptPriority = EntityStates.InterruptPriority.Skill;
             setupSkillDef.baseRechargeInterval = skillRecharge;
             setupSkillDef.baseMaxStock = 1;
@@ -93,7 +93,7 @@ namespace ThinkInvisible.Admiral {
             callSkillDef = ScriptableObject.CreateInstance<SkillDef>();
 
             callSkillDef.activationStateMachineName = "Weapon";
-            callSkillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallJumpPad>();
+            callSkillDef.activationState = callEntState;
             callSkillDef.interruptPriority = EntityStates.InterruptPriority.PrioritySkill;
             callSkillDef.baseRechargeInterval = 0f;
             callSkillDef.baseMaxStock = 2;

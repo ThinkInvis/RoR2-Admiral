@@ -36,9 +36,8 @@ namespace ThinkInvisible.Admiral {
         public override void SetupAttributes() {
             base.SetupAttributes();
 
-            LoadoutAPI.AddSkill(typeof(EntStateCallSupplyDropRejuvenator));
-            LoadoutAPI.AddSkill(typeof(EntStateRejuvenatorMainState));
-
+            var callSupplyDropRejuvenatorState = ContentAddition.AddEntityState<EntStateCallSupplyDropRejuvenator>(out _);
+            var rejuvenatorMainState = ContentAddition.AddEntityState<EntStateRejuvenatorMainState>(out _);
             skillFamily1 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop1SkillFamily");
             skillFamily2 = Resources.Load<SkillFamily>("skilldefs/captainbody/CaptainSupplyDrop2SkillFamily");
 
@@ -50,13 +49,13 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillName = "AdmiralSupplyDropRejuvenator";
             skillDef.skillNameToken = "ADMIRAL_SUPPLY_REJUVENATOR_NAME";
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_REJUVENATOR_DESCRIPTION";
-            skillDef.activationState = LoadoutAPI.StateTypeOf<EntStateCallSupplyDropRejuvenator>();
+            skillDef.activationState = callSupplyDropRejuvenatorState;
 
             LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Rejuvenator");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
                 "<style=cIsUtility>Temporary beacon</style>. <style=cIsUtility>Buff</style> all nearby allies with <style=cIsUtility>+50% skill recharge rate</style>.");
 
-            LoadoutAPI.AddSkillDef(skillDef);
+            ContentAddition.AddSkillDef(skillDef);
 
             stimmedBuff = ScriptableObject.CreateInstance<BuffDef>();
             stimmedBuff.name = "Stimmed";
@@ -72,7 +71,7 @@ namespace ThinkInvisible.Admiral {
             beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
-            beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = LoadoutAPI.StateTypeOf<EntStateRejuvenatorMainState>();
+            beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = rejuvenatorMainState;
             beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Rejuvenator", true);
             GameObject.Destroy(beaconPrefabPrefab);
 
