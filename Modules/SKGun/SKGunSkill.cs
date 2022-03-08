@@ -64,10 +64,10 @@ namespace ThinkInvisible.Admiral {
             foreach(Transform c in eff.transform) {
                 c.localScale *= 12f/8f;
             }
-            EffectAPI.AddEffect(eff);
+            ContentAddition.AddEffect(eff);
             projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect = eff;
             chargedProjectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunChargedProjectile", true);
-            ProjectileAPI.Add(chargedProjectilePrefab);
+            ContentAddition.AddProjectile(chargedProjectilePrefab);
 
             projPfbPfb.GetComponent<ProjectileSimple>().desiredForwardSpeed = 35f;
             projPfbPfb.GetComponent<SphereCollider>().radius = 0.25f;
@@ -76,7 +76,7 @@ namespace ThinkInvisible.Admiral {
             foreach(Transform c in eff.transform) {
                 c.localScale *= 5f/8f;
             }
-            EffectAPI.AddEffect(eff);
+            ContentAddition.AddEffect(eff);
             projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect = eff;
             var ghost = PrefabAPI.InstantiateClone(projPfbPfb.GetComponent<ProjectileController>().ghostPrefab, "CaptainSkGunProjectileGhost", false);
             GameObject.Destroy(ghost.transform.Find("Mesh").GetComponent<ObjectScaleCurve>());
@@ -84,7 +84,7 @@ namespace ThinkInvisible.Admiral {
             ghost.transform.Find("Spit, World").localScale = Vector3.one * 0.5f;
             projPfbPfb.GetComponent<ProjectileController>().ghostPrefab = ghost;
             projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunProjectile", true);
-            ProjectileAPI.Add(projectilePrefab);
+            ContentAddition.AddProjectile(projectilePrefab);
 
             GameObject.Destroy(projPfbPfb);
 
@@ -127,7 +127,7 @@ namespace ThinkInvisible.Admiral {
             slowSkillDebuff.iconSprite = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralHeavyWeaponDebuff.png");
             slowSkillDebuff.isDebuff = true;
             slowSkillDebuff.name = "AdmiralHeavyWeaponDebuff";
-            BuffAPI.Add(new CustomBuff(slowSkillDebuff));
+            ContentAddition.AddBuffDef(slowSkillDebuff);
         }
 
         public override void Install() {

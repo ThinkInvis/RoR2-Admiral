@@ -64,7 +64,7 @@ namespace ThinkInvisible.Admiral {
             stimmedBuff.buffColor = Color.red;
             stimmedBuff.canStack = false;
             stimmedBuff.isDebuff = false;
-            BuffAPI.Add(new CustomBuff(stimmedBuff));
+            ContentAddition.AddBuffDef(stimmedBuff);
 
             //need to InstantiateClone because letting the prefabprefab wake up breaks some effects (animation curve components)
             var beaconPrefabPrefab = Resources.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, EquipmentRestock").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
