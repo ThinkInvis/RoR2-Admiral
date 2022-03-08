@@ -2,7 +2,10 @@
 
 **2.3.3**
 
-- Fixed an incompatibility with R2API 3.0.43.
+- Compatibility update for Risk of Rain 2 Expansion 1 (SotV).
+- Updated R2API dependency to 4.0.11 (fixing an ancient incompatibility with R2API 3.0.43 in the process).
+- Updated BepInEx dependency to 5.4.1902.
+- Updated TILER2 dependency to 5.0.2.
 
 **2.3.2**
 

@@ -120,6 +120,13 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.3.3**
+
+- Compatibility update for Risk of Rain 2 Expansion 1 (SotV).
+- Updated R2API dependency to 4.0.11 (fixing an ancient incompatibility with R2API 3.0.43 in the process).
+- Updated BepInEx dependency to 5.4.1902.
+- Updated TILER2 dependency to 5.0.2.
+
 **2.3.2**
 
 - BeaconRebalance CDR resistance no longer prevents beacons from recharging normally when ramped all the way up.
@@ -137,8 +144,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 **2.2.3**
 
 - Added a missing R2API submodule dependency.
-
-**2.2.2**
-
-- Implements changes from TILER2 2.2.3.
-	- Beacon: Special Order will no longer select items which are in FakeInventory.blacklist.
