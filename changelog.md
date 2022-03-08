@@ -1,5 +1,9 @@
 ﻿# Admiral Changelog
 
+**2.3.3**
+
+- Fixed an incompatibility with R2API 3.0.43.
+
 **2.3.2**
 
 - BeaconRebalance CDR resistance no longer prevents beacons from recharging normally when ramped all the way up.

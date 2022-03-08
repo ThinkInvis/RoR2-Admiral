@@ -93,7 +93,7 @@ namespace ThinkInvisible.Admiral {
             rngInd.GetChild(0).localScale /= 1.5f;
             itemWard.rangeIndicator = rngInd;
 
-            beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, SpecialOrder");
+            beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, SpecialOrder", true);
             GameObject.Destroy(beaconPrefabPrefab);
         }
 

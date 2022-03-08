@@ -73,7 +73,7 @@ namespace ThinkInvisible.Admiral {
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
             beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = LoadoutAPI.StateTypeOf<EntStateRejuvenatorMainState>();
-            beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Rejuvenator");
+            beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Rejuvenator", true);
             GameObject.Destroy(beaconPrefabPrefab);
 
             //Cobble together an indicator ring from the healing ward prefab
@@ -99,7 +99,7 @@ namespace ThinkInvisible.Admiral {
             var chwFlashPsMain = indic.Find("Flashes").GetComponent<ParticleSystem>().main;
             chwFlashPsMain.startColor = new Color(0.5f, 0.25f, 0f, 1f);
             
-            rejuvWardPrefab = chwPrefab.InstantiateClone("CaptainRejuvWard");
+            rejuvWardPrefab = chwPrefab.InstantiateClone("CaptainRejuvWard", true);
             GameObject.Destroy(chwPrefab);
         }
 

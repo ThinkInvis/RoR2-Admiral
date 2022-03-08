@@ -66,7 +66,7 @@ namespace ThinkInvisible.Admiral {
             }
             EffectAPI.AddEffect(eff);
             projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect = eff;
-            chargedProjectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunChargedProjectile");
+            chargedProjectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunChargedProjectile", true);
             ProjectileAPI.Add(chargedProjectilePrefab);
 
             projPfbPfb.GetComponent<ProjectileSimple>().desiredForwardSpeed = 35f;
@@ -83,7 +83,7 @@ namespace ThinkInvisible.Admiral {
             ghost.transform.Find("Mesh").localScale = Vector3.one * 2f;
             ghost.transform.Find("Spit, World").localScale = Vector3.one * 0.5f;
             projPfbPfb.GetComponent<ProjectileController>().ghostPrefab = ghost;
-            projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunProjectile");
+            projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunProjectile", true);
             ProjectileAPI.Add(projectilePrefab);
 
             GameObject.Destroy(projPfbPfb);

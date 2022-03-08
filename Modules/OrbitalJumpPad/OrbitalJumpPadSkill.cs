@@ -50,14 +50,14 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add("ADMIRAL_JUMPPAD_ACHIEVEMENT_DESCRIPTION", "As Captain, nail a very speedy target with an Orbital Probe.");
 
             var jppBase = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
-            jumpPadPrefabBase = PrefabAPI.InstantiateClone(ModifyJumpPadPrefab(jppBase), "CaptainJumpPad");
+            jumpPadPrefabBase = PrefabAPI.InstantiateClone(ModifyJumpPadPrefab(jppBase), "CaptainJumpPad", true);
 
             var jppProj1 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
-            jumpPadPrefabProj1 = PrefabAPI.InstantiateClone(ModifyAirstrike1Prefab(jppProj1), "CaptainJumpPadProjectile1");
+            jumpPadPrefabProj1 = PrefabAPI.InstantiateClone(ModifyAirstrike1Prefab(jppProj1), "CaptainJumpPadProjectile1", true);
             ProjectileAPI.Add(jumpPadPrefabProj1);
 
             var jppProj2 = GameObject.Instantiate(Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
-            jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(ModifyAirstrike2Prefab(jppProj2), "CaptainJumpPadProjectile2");
+            jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(ModifyAirstrike2Prefab(jppProj2), "CaptainJumpPadProjectile2", true);
             ProjectileAPI.Add(jumpPadPrefabProj2);
 
             var nametoken = "ADMIRAL_JUMPPAD_SKILL_NAME";

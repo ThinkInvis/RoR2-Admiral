@@ -54,7 +54,7 @@ namespace ThinkInvisible.Admiral {
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
             beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = LoadoutAPI.StateTypeOf<EntStateHealingMainState>();
-            beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Healing");
+            beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Healing", true);
             GameObject.Destroy(beaconPrefabPrefab);
         }
 

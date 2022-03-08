@@ -58,7 +58,7 @@ namespace ThinkInvisible.Admiral {
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
             beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = LoadoutAPI.StateTypeOf<EntStateShockingMainState>();
-            beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Shocking");
+            beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Shocking", true);
             GameObject.Destroy(beaconPrefabPrefab);
         }
 
