@@ -16,18 +16,18 @@ namespace ThinkInvisible.Admiral {
 
         [AutoConfig("Cooldown of Orbital Jump Pad.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float skillRecharge {get; private set;} = 30f;
+        public float skillRecharge {get; private set;} = 40f;
 
         [AutoConfig("Maximum range of both Orbital Jump Pad terminals.",
             AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float skillRange {get; private set;} = 100f;
+        public float skillRange {get; private set;} = 80f;
 
         [AutoConfig("If true, arcs previewing Orbital Jump Pad trajectory will appear.")]
         public bool showArcs {get; private set;} = true;
 
         [AutoConfig("If true, Orbital Jump Pad will have a base stock of two and recharge two at once.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
-        public bool doubleStock { get; private set; } = false;
+        public bool doubleStock { get; private set; } = true;
 
         public override string enabledConfigDescription => "Adds the Orbital Jump Pad utility skill variant.";
         public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferForever;
