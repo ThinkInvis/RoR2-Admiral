@@ -11,23 +11,23 @@ using System.Linq;
 
 namespace ThinkInvisible.Admiral {
     public class HackBeacon : T2Module<HackBeacon> {
-        [AutoConfig("Lifetime of the Beacon: Special Order deployable.",
+        [AutoConfig("Lifetime of the T.Beacon: Special Order deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
-        [AutoConfig("Cooldown of Beacon: Special Order.",
+        [AutoConfig("Cooldown of T.Beacon: Special Order.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;
 
-        [AutoConfig("Radius of the Item Ward emitted by Beacon: Special Order.",
+        [AutoConfig("Radius of the Item Ward emitted by T.Beacon: Special Order.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float wardRadius {get; private set;} = 10f;
         
-        [AutoConfig("Items provided by Beacon: Special Order on the first stage.",
+        [AutoConfig("Items provided by T.Beacon: Special Order on the first stage.",
             AutoConfigFlags.None, 0, int.MaxValue)]
         public int baseItems {get; private set;} = 5;
         
-        [AutoConfig("Items provided by Beacon: Special Order per stage cleared.",
+        [AutoConfig("Items provided by T.Beacon: Special Order per stage cleared.",
             AutoConfigFlags.None, 0, int.MaxValue)]
         public int itemsPerStage {get; private set;} = 1;
 
@@ -43,7 +43,7 @@ namespace ThinkInvisible.Admiral {
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float itemTier3Chance {get; private set;} = 0.01f;
         
-        public override string enabledConfigDescription => "Contains config for the Beacon: Hacking submodule of Modules.BeaconRebalance.";
+        public override string enabledConfigDescription => "Contains config for the T.Beacon: Special Order submodule of Modules.BeaconRebalance. Replaces Beacon: Hacking.";
         public override bool managedEnable => false;
 
         private SkillFamily skillFamily1;
@@ -72,7 +72,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.activationState = callDropEntState;
             skillDef.icon = origSkillDef.icon;
 
-            LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Special Order");
+            LanguageAPI.Add(skillDef.skillNameToken, "T.Beacon: Special Order");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
                 "<style=cIsUtility>Temporary beacon</style>. Requisition a pack of <style=cIsUtility>random, disposable items</style> from your trusty quartermaster. All allies standing near the beacon receive these items until it runs out of energy.");
 

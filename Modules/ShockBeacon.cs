@@ -7,19 +7,19 @@ using TILER2;
 
 namespace ThinkInvisible.Admiral {
     public class ShockBeacon : T2Module<ShockBeacon> {
-        [AutoConfig("Lifetime of the Beacon: Shocking deployable.",
+        [AutoConfig("Lifetime of the T.Beacon: Shocking deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 8f;
 
-        [AutoConfig("Cooldown of Beacon: Shocking.",
+        [AutoConfig("Cooldown of T.Beacon: Shocking.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 24f;
         
-        [AutoConfig("Fire rate of Beacon: Shocking.",
+        [AutoConfig("Fire rate of T.Beacon: Shocking.",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float shockRate {get; private set;} = 0.95f;
         
-        public override string enabledConfigDescription => "Contains config for the Beacon: Shocking submodule of Modules.BeaconRebalance.";
+        public override string enabledConfigDescription => "Contains config for the T.Beacon: Shocking submodule of Modules.BeaconRebalance. Replaces Beacon: Shocking.";
         public override bool managedEnable => false;
 
         private SkillFamily skillFamily1;
@@ -47,7 +47,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_SHOCKING_DESCRIPTION";
             skillDef.activationState = callDropEntState;
 
-            LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Shocking");
+            LanguageAPI.Add(skillDef.skillNameToken, "T.Beacon: Shocking");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
                 "<style=cIsUtility>Temporary beacon</style>. <style=cIsDamage>Shock</style> all nearby enemies rapidly for a short time.");
 

@@ -7,15 +7,15 @@ using TILER2;
 
 namespace ThinkInvisible.Admiral {
     public class HealBeacon : T2Module<HealBeacon> {
-        [AutoConfig("Lifetime of the Beacon: Healing deployable.",
+        [AutoConfig("Lifetime of the T.Beacon: Healing deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
-        [AutoConfig("Cooldown of Beacon: Healing.",
+        [AutoConfig("Cooldown of T.Beacon: Healing.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;
 
-        public override string enabledConfigDescription => "Contains config for the Beacon: Healing submodule of Modules.BeaconRebalance.";
+        public override string enabledConfigDescription => "Contains config for the T.Beacon: Healing submodule of Modules.BeaconRebalance. Replaces Beacon: Healing.";
         public override bool managedEnable => false;
 
         private SkillFamily skillFamily1;
@@ -43,7 +43,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_HEALING_DESCRIPTION";
             skillDef.activationState = callDropEntState;
 
-            LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Healing");
+            LanguageAPI.Add(skillDef.skillNameToken, "T.Beacon: Healing");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
                 "<style=cIsUtility>Temporary beacon</style>. <style=cIsHealing>Heal</style> all nearby allies for <style=cIsHealing>10%</style> of their <style=cIsHealing>maximum health</style> every second.");
 

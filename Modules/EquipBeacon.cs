@@ -9,11 +9,11 @@ using static TILER2.SkillUtil;
 
 namespace ThinkInvisible.Admiral {
     public class EquipBeacon : T2Module<EquipBeacon> {
-        [AutoConfig("Lifetime of the Beacon: Rejuvenator deployable.",
+        [AutoConfig("Lifetime of the T.Beacon: Rejuvenator deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
-        [AutoConfig("Cooldown of Beacon: Rejuvenator.",
+        [AutoConfig("Cooldown of T.Beacon: Rejuvenator.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 50f;
 
@@ -21,7 +21,7 @@ namespace ThinkInvisible.Admiral {
             AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float rechargeRate {get; private set;} = 0.5f;
 
-        public override string enabledConfigDescription => "Contains config for the Beacon: Resupply submodule of Modules.BeaconRebalance.";
+        public override string enabledConfigDescription => "Contains config for the T.Beacon: Resupply submodule of Modules.BeaconRebalance. Replaces Beacon: Equipment.";
         public override bool managedEnable => false;
 
         private GameObject rejuvWardPrefab;
@@ -51,7 +51,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.skillDescriptionToken = "ADMIRAL_SUPPLY_REJUVENATOR_DESCRIPTION";
             skillDef.activationState = callSupplyDropRejuvenatorState;
 
-            LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Rejuvenator");
+            LanguageAPI.Add(skillDef.skillNameToken, "T.Beacon: Rejuvenator");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
                 "<style=cIsUtility>Temporary beacon</style>. <style=cIsUtility>Buff</style> all nearby allies with <style=cIsUtility>+50% skill recharge rate</style>.");
 

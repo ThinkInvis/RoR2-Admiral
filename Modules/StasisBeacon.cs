@@ -9,15 +9,15 @@ using static TILER2.SkillUtil;
 
 namespace ThinkInvisible.Admiral {
     public class StasisBeacon : T2Module<StasisBeacon> {
-        [AutoConfig("Lifetime of the Beacon: Stasis deployable.",
+        [AutoConfig("Lifetime of the T.Beacon: Stasis deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 15f;
 
-        [AutoConfig("Cooldown of Beacon: Stasis.",
+        [AutoConfig("Cooldown of T.Beacon: Stasis.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;
 
-        public override string enabledConfigDescription => "Contains config for the Beacon: Stasis submodule of Modules.BeaconRebalance.";
+        public override string enabledConfigDescription => "Contains config for the T.Beacon: Stasis submodule of Modules.BeaconRebalance. Does not replace a vanilla beacon.";
         public override bool managedEnable => false;
 
         private const float _STASIS_INTERVAL = 2f;
@@ -49,7 +49,7 @@ namespace ThinkInvisible.Admiral {
             skillDef.icon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralHeavyWeaponDebuff.png");
             skillDef.activationState = callDropState;
 
-            LanguageAPI.Add(skillDef.skillNameToken, "Beacon: Stasis");
+            LanguageAPI.Add(skillDef.skillNameToken, "T.Beacon: Stasis");
             LanguageAPI.Add(skillDef.skillDescriptionToken,
                 "<style=cIsUtility>Temporary beacon</style>. <style=cIsUtility>Time-freeze</style> all nearby enemies, preventing them from <style=cIsUtility>moving, dealing damage, or taking damage</style>.");
 
