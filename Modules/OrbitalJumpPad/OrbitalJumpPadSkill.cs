@@ -68,7 +68,8 @@ namespace ThinkInvisible.Admiral {
             var desctoken = "ADMIRAL_JUMPPAD_SKILL_DESC";
             var namestr = "Orbital Jump Pad";
             LanguageAPI.Add(nametoken, namestr);
-            LanguageAPI.Add(desctoken, "Request an Orbital Jump Pad from the <style=cIsUtility>UES Safe Travels</style>. Fire once to set the jump pad, then again to set its target (both within <style=cIsUtility>100 m</style>).");
+            //TODO: update this with config
+            LanguageAPI.Add(desctoken, "Request an Orbital Jump Pad from the <style=cIsUtility>UES Safe Travels</style>. Fire once to set the jump pad, then again to set its target (both within <style=cIsUtility>80 m</style>).");
             
             setupSkillDef = ScriptableObject.CreateInstance<SkillDef>();
 
