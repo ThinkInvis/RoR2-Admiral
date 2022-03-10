@@ -17,6 +17,11 @@ namespace ThinkInvisible.Admiral {
             AutoConfigFlags.DeferUntilNextStage | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
         public float beaconRestockInfluence { get; private set; } = 0.5f;
 
+        [AutoConfig("If false, the original beacon skills will not be replaced; temporary beacons will instead be provided as alternates.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
+        public bool removeOriginals { get; private set; } = true;
+
+
         public override string enabledConfigDescription => "Changes all Beacon skills to have cooldown and lifetime, and replaces some variants which are incompatible with this model.";
         public override AutoConfigUpdateActionTypes enabledConfigUpdateActionTypes => AutoConfigUpdateActionTypes.InvalidateLanguage;
         public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferUntilNextStage;
@@ -36,6 +41,7 @@ namespace ThinkInvisible.Admiral {
         public override void Install() {
             base.Install();
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides += IL_CSDCUpdateSkillOverrides;
+            On.RoR2.CaptainSupplyDropController.SetSkillOverride += On_CSDCSetSkillOverride;
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval += On_GSCalculateFinalRechargeInterval;
             On.RoR2.GenericSkill.RecalculateMaxStock += On_GSRecalculateMaxStock;
             On.RoR2.GenericSkill.AddOneStock += On_GSAddOneStock;
@@ -51,6 +57,7 @@ namespace ThinkInvisible.Admiral {
         public override void Uninstall() {
             base.Uninstall();
             IL.RoR2.CaptainSupplyDropController.UpdateSkillOverrides -= IL_CSDCUpdateSkillOverrides;
+            On.RoR2.CaptainSupplyDropController.SetSkillOverride -= On_CSDCSetSkillOverride;
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval -= On_GSCalculateFinalRechargeInterval;
             On.RoR2.GenericSkill.RecalculateMaxStock -= On_GSRecalculateMaxStock;
             On.RoR2.GenericSkill.AddOneStock -= On_GSAddOneStock;
@@ -101,6 +108,11 @@ namespace ThinkInvisible.Admiral {
             var retv = orig(self);
             if(SkillIsTemporaryBeacon(self)) return self.baseRechargeInterval * (1 - beaconCDRInfluence) + retv * beaconCDRInfluence;
             return retv;
+        }
+
+        private void On_CSDCSetSkillOverride(On.RoR2.CaptainSupplyDropController.orig_SetSkillOverride orig, CaptainSupplyDropController self, ref SkillDef currentSkillDef, SkillDef newSkillDef, GenericSkill component) {
+            if(SkillIsTemporaryBeacon(currentSkillDef)) return;
+            orig(self, ref currentSkillDef, newSkillDef, component);
         }
 
         private void IL_CSDCUpdateSkillOverrides(ILContext il) {

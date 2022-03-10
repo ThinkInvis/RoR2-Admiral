@@ -104,15 +104,25 @@ namespace ThinkInvisible.Admiral {
 
         public override void Install() {
             base.Install();
-            skillFamily1.ReplaceVariant(origSkillDef, skillDef);
-            skillFamily2.ReplaceVariant(origSkillDef, skillDef);
+            if(BeaconRebalance.instance.removeOriginals) {
+                skillFamily1.ReplaceVariant(origSkillDef, skillDef);
+                skillFamily2.ReplaceVariant(origSkillDef, skillDef);
+            } else {
+                skillFamily1.AddVariant(skillDef);
+                skillFamily2.AddVariant(skillDef);
+            }
             On.RoR2.Skills.SkillDef.OnFixedUpdate += On_SkillDefFixedUpdate;
         }
 
         public override void Uninstall() {
             base.Uninstall();
-            skillFamily1.ReplaceVariant(skillDef, origSkillDef);
-            skillFamily2.ReplaceVariant(skillDef, origSkillDef);
+            if(BeaconRebalance.instance.removeOriginals) {
+                skillFamily1.ReplaceVariant(skillDef, origSkillDef);
+                skillFamily2.ReplaceVariant(skillDef, origSkillDef);
+            } else {
+                skillFamily1.RemoveVariant(skillDef);
+                skillFamily2.RemoveVariant(skillDef);
+            }
             On.RoR2.Skills.SkillDef.OnFixedUpdate -= On_SkillDefFixedUpdate;
         }
 
