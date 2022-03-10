@@ -11,7 +11,7 @@ namespace ThinkInvisible.Admiral {
     public class StasisBeacon : T2Module<StasisBeacon> {
         [AutoConfig("Lifetime of the Beacon: Stasis deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float skillLifetime {get; private set;} = 10f;
+        public float skillLifetime {get; private set;} = 15f;
 
         [AutoConfig("Cooldown of Beacon: Stasis.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
@@ -19,6 +19,8 @@ namespace ThinkInvisible.Admiral {
 
         public override string enabledConfigDescription => "Contains config for the Beacon: Stasis submodule of Modules.BeaconRebalance.";
         public override bool managedEnable => false;
+
+        private const float _STASIS_INTERVAL = 2f;
 
         private GameObject stasisWardPrefab;
 
@@ -81,9 +83,9 @@ namespace ThinkInvisible.Admiral {
             var eqprestWard = chwPrefab.AddComponent<BuffWard>();
             eqprestWard.invertTeamFilter = true;
             eqprestWard.buffDef = stasisDebuff;
-            eqprestWard.buffDuration = 1f;
-            eqprestWard.radius = 10f;
-            eqprestWard.interval = 1f;
+            eqprestWard.buffDuration = _STASIS_INTERVAL;
+            eqprestWard.radius = 15f;
+            eqprestWard.interval = _STASIS_INTERVAL;
             eqprestWard.rangeIndicator = indic;
 
             indic.Find("IndicatorRing").GetComponent<MeshRenderer>().material.SetColor("_TintColor", new Color(0.5f, 0.5f, 1f, 1f));
@@ -123,8 +125,8 @@ namespace ThinkInvisible.Admiral {
             if(buffType == StasisBeacon.instance.stasisDebuff.buffIndex) {
                 var sSOHComponent = self.GetComponent<SetStateOnHurt>();
                 if(sSOHComponent) {
-                    sSOHComponent.SetFrozen(1f);
                 }
+                    sSOHComponent.SetFrozen(_STASIS_INTERVAL);
             }
         }
 
