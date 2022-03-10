@@ -45,6 +45,7 @@ namespace ThinkInvisible.Admiral {
             HackBeacon.instance.Install();
             HealBeacon.instance.Install();
             ShockBeacon.instance.Install();
+            StasisBeacon.instance.Install();
         }
 
         public override void Uninstall() {
@@ -59,13 +60,15 @@ namespace ThinkInvisible.Admiral {
             HackBeacon.instance.Uninstall();
             HealBeacon.instance.Uninstall();
             ShockBeacon.instance.Uninstall();
+            StasisBeacon.instance.Uninstall();
         }
         
         private bool SkillIsTemporaryBeacon(SkillDef skillDef) {
             return skillDef == EquipBeacon.instance.skillDef
                 || skillDef == HackBeacon.instance.skillDef
                 || skillDef == HealBeacon.instance.skillDef
-                || skillDef == ShockBeacon.instance.skillDef;
+                || skillDef == ShockBeacon.instance.skillDef
+                || skillDef == StasisBeacon.instance.skillDef;
         }
         private bool SkillIsTemporaryBeacon(GenericSkill skill) {
             return SkillIsTemporaryBeacon(skill.skillDef);
