@@ -121,13 +121,14 @@ namespace ThinkInvisible.Admiral {
         }
 
         private static void CharacterBody_AddBuff_BuffIndex(On.RoR2.CharacterBody.orig_AddBuff_BuffIndex orig, CharacterBody self, BuffIndex buffType) {
-            orig(self, buffType);
             if(buffType == StasisBeacon.instance.stasisDebuff.buffIndex) {
                 var sSOHComponent = self.GetComponent<SetStateOnHurt>();
                 if(sSOHComponent) {
-                }
+                    if(!sSOHComponent.canBeFrozen) return;
                     sSOHComponent.SetFrozen(_STASIS_INTERVAL);
+                } else return;
             }
+            orig(self, buffType);
         }
 
         private static void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo) {
