@@ -25,6 +25,10 @@ namespace ThinkInvisible.Admiral {
         [AutoConfig("If true, arcs previewing Orbital Jump Pad trajectory will appear.")]
         public bool showArcs {get; private set;} = true;
 
+        [AutoConfig("If true, Orbital Jump Pad will have a base stock of two and recharge two at once.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
+        public bool doubleStock { get; private set; } = false;
+
         public override string enabledConfigDescription => "Adds the Orbital Jump Pad utility skill variant.";
         public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferForever;
 
@@ -72,8 +76,8 @@ namespace ThinkInvisible.Admiral {
             setupSkillDef.activationState = setupEntState;
             setupSkillDef.interruptPriority = EntityStates.InterruptPriority.Skill;
             setupSkillDef.baseRechargeInterval = skillRecharge;
-            setupSkillDef.baseMaxStock = 1;
-            setupSkillDef.rechargeStock = 1;
+            setupSkillDef.baseMaxStock = doubleStock ? 2 : 1;
+            setupSkillDef.rechargeStock = doubleStock ? 2 : 1;
             setupSkillDef.beginSkillCooldownOnSkillEnd = true;
             setupSkillDef.requiredStock = 1;
             setupSkillDef.stockToConsume = 1;
