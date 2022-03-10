@@ -54,14 +54,15 @@ Configurable:
 
 ### Orbital Jump Pad
 
-A new Utility skill variant (same slot as Orbital Probe). Summons a jump pad and its target within a limited range, displaying a preview of the jump's trajectory. Anyone, friend or foe, can trigger the jump pad within its lifetime. Stepping onto an Orbital Jump Pad provides fall damage protection until landing or hitting something.
+A new Utility skill variant (same slot as Orbital Probe). Summons a jump pad and its target within a limited range, displaying a preview of the jump's trajectory. Anyone, friend or foe, can trigger the jump pad within its lifetime. Stepping onto an Orbital Jump Pad provides fall damage protection until landing or hitting something. Provides 2 stock at a time to allow for a return path or extra mobility as needed -- choose wisely.
 
 Unlock by near-directly hitting a fast-moving target with an Orbital Probe.
 
 Configurable:
-- Cooldown of the Orbital Jump Pad skill. Defaults to 30 sec.
+- Cooldown of the Orbital Jump Pad skill. Defaults to 50 sec.
 - Lifetime of jump pads. Defaults to 20 sec.
-- Maximum range of the Orbital Jump Pad skill. Defaults to 100 m.
+- Maximum range of the Orbital Jump Pad skill. Defaults to 80 m.
+- Whether to have 2 base stock and recharge, versus 1. Defaults to enabled.
 - Whether to show trajectory previews (clientside). Defaults to enabled.
 
 ### Beacon Rebalance
@@ -70,6 +71,7 @@ Makes beacons no longer limited to one use per stage. Instead, they have individ
 
 Configurable:
 - Strength of cooldown reduction resistance. Defaults to 50%.
+- Whether to keep vanilla beacons available. Defaults to disabled.
 
 #### Beacon: Healing
 
@@ -107,6 +109,15 @@ Configurable:
 - Number of items provided per additional stage cleared. Defaults to 1.
 - Rarity of the items provided. Defaults to identical to a basic chest, sans equipment (80 common : 20 uncommon : 1 rare).
 
+#### Beacon: Stasis
+
+New skill which does not replace a vanilla Beacon. Beacon: Stasis time-freezes all nearby enemies, preventing them from moving, falling, dealing damage, or taking damage. Does not work on enemies with freeze resistance.
+
+Configurable:
+- Cannot be individually disabled.
+- Cooldown and lifetime. Defaults to 15 sec, 40 sec.
+- Radius of the stasis zone. Defaults to 15 m.
+
 ## Issues/TODO
 
 - Causes a stray explosion sound during game startup.
@@ -114,11 +125,21 @@ Configurable:
 - Valiant Blaster needs unique firing animations.
 - Catalyzer Dart could do with some visual changes.
 - Trying to find a way to allow canceling beacon/probe by recasting the skill.
+- T.Beacon: Stasis uses placeholder icons, and is a little loud + too close to freeze VFX.
 - See the GitHub repo for more!
 
 ## Changelog
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
+
+**2.4.0**
+
+- Temporary beacons now have a default-disabled config to prevent them from replacing vanilla skills, with which they can now coexist.
+- All temporary beacon skills are now named T.Beacon instead of Beacon to differentiate them from vanilla skills.
+- Added T.Beacon: Stasis, which time-freezes enemies temporarily (no movement incl. falling, no damage in or out).
+- Experimental balance change: Orbital Jump Pad now has 2 base stock, double restock, 30 --> 50 sec cooldown, 100 --> 80 m range.
+	- Added a config option to revert the 2 stock/double restock portion of this change.
+- Updated TILER2 dependency to 5.0.3.
 
 **2.3.3**
 
@@ -140,7 +161,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 **2.3.0**
 
 - Implements changes from TILER2 3.0.0.
-
-**2.2.3**
-
-- Added a missing R2API submodule dependency.

@@ -1,5 +1,14 @@
 ﻿# Admiral Changelog
 
+**2.4.0**
+
+- Temporary beacons now have a default-disabled config to prevent them from replacing vanilla skills, with which they can now coexist.
+- All temporary beacon skills are now named T.Beacon instead of Beacon to differentiate them from vanilla skills.
+- Added T.Beacon: Stasis, which time-freezes enemies temporarily (no movement incl. falling, no damage in or out).
+- Experimental balance change: Orbital Jump Pad now has 2 base stock, double restock, 30 --> 50 sec cooldown, 100 --> 80 m range.
+	- Added a config option to revert the 2 stock/double restock portion of this change.
+- Updated TILER2 dependency to 5.0.3.
+
 **2.3.3**
 
 - Compatibility update for Risk of Rain 2 Expansion 1 (SotV).
