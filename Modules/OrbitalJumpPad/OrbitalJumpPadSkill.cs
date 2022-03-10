@@ -16,7 +16,7 @@ namespace ThinkInvisible.Admiral {
 
         [AutoConfig("Cooldown of Orbital Jump Pad.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
-        public float skillRecharge {get; private set;} = 40f;
+        public float skillRecharge {get; private set;} = 50f;
 
         [AutoConfig("Maximum range of both Orbital Jump Pad terminals.",
             AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
