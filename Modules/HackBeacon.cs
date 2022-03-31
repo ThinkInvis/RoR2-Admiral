@@ -25,11 +25,11 @@ namespace ThinkInvisible.Admiral {
         
         [AutoConfig("Items provided by T.Beacon: Special Order on the first stage.",
             AutoConfigFlags.None, 0, int.MaxValue)]
-        public int baseItems {get; private set;} = 5;
+        public int baseItems {get; private set;} = 6;
         
         [AutoConfig("Items provided by T.Beacon: Special Order per stage cleared.",
             AutoConfigFlags.None, 0, int.MaxValue)]
-        public int itemsPerStage {get; private set;} = 1;
+        public int itemsPerStage {get; private set;} = 3;
 
         [AutoConfig("Selection weight for white items (defaults to identical to T1 chest).",
             AutoConfigFlags.None, 0f, float.MaxValue)]
