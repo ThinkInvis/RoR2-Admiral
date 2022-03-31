@@ -46,7 +46,6 @@ namespace ThinkInvisible.Admiral {
 
         public void Start() {
             T2Module.SetupAll_PluginStart(allModules);
-            RoR2.Language.CCLanguageReload(new RoR2.ConCommandArgs());
         }
     }
 }
