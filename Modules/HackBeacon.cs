@@ -42,7 +42,11 @@ namespace ThinkInvisible.Admiral {
         [AutoConfig("Selection weight for red items (defaults to identical to T1 chest).",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float itemTier3Chance {get; private set;} = 0.01f;
-        
+
+        [AutoConfig("If true, items will be evenly split between the 3 categories (Damage, Healing, Utility & Uncategorized).",
+            AutoConfigFlags.None)]
+        public bool splitDHU { get; private set; } = true;
+
         public override string enabledConfigDescription => "Contains config for the T.Beacon: Special Order submodule of Modules.BeaconRebalance. Replaces Beacon: Hacking.";
         public override bool managedEnable => false;
 
@@ -138,14 +142,60 @@ namespace ThinkInvisible.Admiral {
 
                 var itemWard = outer.gameObject.GetComponent<ItemWard>();
 
-                WeightedSelection<List<PickupIndex>> itemSelection = new WeightedSelection<List<PickupIndex>>(8);
-                itemSelection.AddChoice(Run.instance.availableTier1DropList.Where(x => !FakeInventory.blacklist.Contains(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(x).itemIndex))).ToList(), HackBeacon.instance.itemTier1Chance);
-                itemSelection.AddChoice(Run.instance.availableTier2DropList.Where(x => !FakeInventory.blacklist.Contains(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(x).itemIndex))).ToList(), HackBeacon.instance.itemTier2Chance);
-                itemSelection.AddChoice(Run.instance.availableTier3DropList.Where(x => !FakeInventory.blacklist.Contains(ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(x).itemIndex))).ToList(), HackBeacon.instance.itemTier3Chance);
-                for(int i = 0; i < HackBeacon.instance.baseItems + HackBeacon.instance.itemsPerStage * Run.instance.stageClearCount; i++) {
-                    var list = itemSelection.Evaluate(Run.instance.treasureRng.nextNormalizedFloat);
-                    var pickup = Run.instance.treasureRng.NextElementUniform(list);
-                    itemWard.ServerAddItem(PickupCatalog.GetPickupDef(pickup).itemIndex);
+                var tier1Items = Run.instance.availableTier1DropList
+                    .Select(x => ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(x).itemIndex))
+                    .Where(x => !FakeInventory.blacklist.Contains(x))
+                    .ToList();
+                var tier2Items = Run.instance.availableTier2DropList
+                    .Select(x => ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(x).itemIndex))
+                    .Where(x => !FakeInventory.blacklist.Contains(x))
+                    .ToList();
+                var tier3Items = Run.instance.availableTier3DropList
+                    .Select(x => ItemCatalog.GetItemDef(PickupCatalog.GetPickupDef(x).itemIndex))
+                    .Where(x => !FakeInventory.blacklist.Contains(x))
+                    .ToList();
+
+                if(HackBeacon.instance.splitDHU) {
+                    var itemSelectionD = new WeightedSelection<List<ItemDef>>(8);
+                    itemSelectionD.AddChoice(tier1Items.Where(x => x.ContainsTag(ItemTag.Damage)).ToList(), HackBeacon.instance.itemTier1Chance);
+                    itemSelectionD.AddChoice(tier2Items.Where(x => x.ContainsTag(ItemTag.Damage)).ToList(), HackBeacon.instance.itemTier2Chance);
+                    itemSelectionD.AddChoice(tier3Items.Where(x => x.ContainsTag(ItemTag.Damage)).ToList(), HackBeacon.instance.itemTier3Chance);
+
+                    var itemSelectionH = new WeightedSelection<List<ItemDef>>(8);
+                    itemSelectionH.AddChoice(tier1Items.Where(x => x.ContainsTag(ItemTag.Healing)).ToList(), HackBeacon.instance.itemTier1Chance);
+                    itemSelectionH.AddChoice(tier2Items.Where(x => x.ContainsTag(ItemTag.Healing)).ToList(), HackBeacon.instance.itemTier2Chance);
+                    itemSelectionH.AddChoice(tier3Items.Where(x => x.ContainsTag(ItemTag.Healing)).ToList(), HackBeacon.instance.itemTier3Chance);
+
+                    var itemSelectionU = new WeightedSelection<List<ItemDef>>(8);
+                    itemSelectionU.AddChoice(tier1Items.Where(x => x.DoesNotContainTag(ItemTag.Damage) && x.DoesNotContainTag(ItemTag.Healing)).ToList(), HackBeacon.instance.itemTier1Chance);
+                    itemSelectionU.AddChoice(tier2Items.Where(x => x.DoesNotContainTag(ItemTag.Damage) && x.DoesNotContainTag(ItemTag.Healing)).ToList(), HackBeacon.instance.itemTier2Chance);
+                    itemSelectionU.AddChoice(tier3Items.Where(x => x.DoesNotContainTag(ItemTag.Damage) && x.DoesNotContainTag(ItemTag.Healing)).ToList(), HackBeacon.instance.itemTier3Chance);
+
+                    int startWhich = HackBeacon.instance.rng.RangeInt(0, 3);
+
+                    for(int i = 0; i < HackBeacon.instance.baseItems + HackBeacon.instance.itemsPerStage * Run.instance.stageClearCount; i++) {
+                        var subind = (i + startWhich) % 3;
+                        WeightedSelection<List<ItemDef>> which;
+                        if(subind == 0)
+                            which = itemSelectionD;
+                        else if(subind == 1)
+                            which = itemSelectionH;
+                        else
+                            which = itemSelectionU;
+                        var list = which.Evaluate(Run.instance.treasureRng.nextNormalizedFloat);
+                        var item = Run.instance.treasureRng.NextElementUniform(list);
+                        itemWard.ServerAddItem(item.itemIndex);
+                    }
+                } else {
+                    var itemSelection = new WeightedSelection<List<ItemDef>>(8);
+                    itemSelection.AddChoice(tier1Items, HackBeacon.instance.itemTier1Chance);
+                    itemSelection.AddChoice(tier2Items, HackBeacon.instance.itemTier2Chance);
+                    itemSelection.AddChoice(tier3Items, HackBeacon.instance.itemTier3Chance);
+                    for(int i = 0; i < HackBeacon.instance.baseItems + HackBeacon.instance.itemsPerStage * Run.instance.stageClearCount; i++) {
+                        var list = itemSelection.Evaluate(Run.instance.treasureRng.nextNormalizedFloat);
+                        var item = Run.instance.treasureRng.NextElementUniform(list);
+                        itemWard.ServerAddItem(item.itemIndex);
+                    }
                 }
             }
 
