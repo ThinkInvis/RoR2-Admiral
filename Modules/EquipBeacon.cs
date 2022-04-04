@@ -9,7 +9,7 @@ using static TILER2.SkillUtil;
 
 namespace ThinkInvisible.Admiral {
     public class EquipBeacon : T2Module<EquipBeacon> {
-        [AutoConfig("Lifetime of the T.Beacon: Rejuvenator deployable.",
+        [AutoConfig("Lifetime of the T.Beacon: Rejuvenator deployable and buff.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
@@ -20,6 +20,14 @@ namespace ThinkInvisible.Admiral {
         [AutoConfig("Additional fraction of skill recharge rate to provide from the Stimmed buff.",
             AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float rechargeRate {get; private set;} = 0.5f;
+
+        [AutoConfig("If true, buff is granted by interacting with the beacon and consuming a once-per-player charge. If false, buff is granted continuously in an area.",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
+        public bool useInteractable { get; private set; } = true;
+
+        [AutoConfig("If true and UseInteractable is true, only 3 charges will be provided for all players to share. If false, the beacon will have unlimited charges instead, but players who already have the buff will still not be able to stack or renew it (effectively limiting uses to once per player per beacon cooldown).",
+            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
+        public bool interactableLimited { get; private set; } = false;
 
         public override string enabledConfigDescription => "Contains config for the T.Beacon: Resupply submodule of Modules.BeaconRebalance. Replaces Beacon: Equipment.";
         public override bool managedEnable => false;
@@ -65,13 +73,21 @@ namespace ThinkInvisible.Admiral {
             stimmedBuff.isDebuff = false;
             ContentAddition.AddBuffDef(stimmedBuff);
 
+            LanguageAPI.Add("ADMIRAL_SUPPLY_REJUVENATOR_CONTEXT", "Take stim charge");
+
             //need to InstantiateClone because letting the prefabprefab wake up breaks some effects (animation curve components)
             var beaconPrefabPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/captainsupplydrops/CaptainSupplyDrop, EquipmentRestock").InstantiateClone("TempSetup, BeaconPrefabPrefab", false);
-            beaconPrefabPrefab.GetComponent<ProxyInteraction>().enabled = false;
-            beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
+
             var eqprestDecayer = beaconPrefabPrefab.AddComponent<CaptainBeaconDecayer>();
             eqprestDecayer.lifetime = skillLifetime;
+
+            if(!useInteractable) {
+                beaconPrefabPrefab.GetComponent<ProxyInteraction>().enabled = false;
+                beaconPrefabPrefab.GetComponent<GenericEnergyComponent>().enabled = true;
+            }
+
             beaconPrefabPrefab.GetComponent<EntityStateMachine>().mainStateType = rejuvenatorMainState;
+
             beaconPrefab = beaconPrefabPrefab.InstantiateClone("AdmiralSupplyDrop, Rejuvenator", true);
             GameObject.Destroy(beaconPrefabPrefab);
 
@@ -144,16 +160,39 @@ namespace ThinkInvisible.Admiral {
             public override void OnEnter() {
                 base.OnEnter();
                 if(!NetworkServer.active) return;
-			    var buffZoneInstance = UnityEngine.Object.Instantiate<GameObject>(EquipBeacon.instance.rejuvWardPrefab, outer.commonComponents.transform.position, outer.commonComponents.transform.rotation);
-			    buffZoneInstance.GetComponent<TeamFilter>().teamIndex = teamFilter.teamIndex;
-			    NetworkServer.Spawn(buffZoneInstance);
+                if(!EquipBeacon.instance.useInteractable) {
+			        var buffZoneInstance = UnityEngine.Object.Instantiate<GameObject>(EquipBeacon.instance.rejuvWardPrefab, outer.commonComponents.transform.position, outer.commonComponents.transform.rotation);
+			        buffZoneInstance.GetComponent<TeamFilter>().teamIndex = teamFilter.teamIndex;
+			        NetworkServer.Spawn(buffZoneInstance);
+                }
+            }
+
+            public override void OnInteractionBegin(Interactor activator) {
+                if(!activator) return;
+                var abody = activator.GetComponent<CharacterBody>();
+                if(!abody || abody.HasBuff(EquipBeacon.instance.stimmedBuff)) return;
+                if(EquipBeacon.instance.interactableLimited) energyComponent.TakeEnergy(activationCost);
+                abody.AddTimedBuff(EquipBeacon.instance.stimmedBuff, EquipBeacon.instance.skillLifetime);
             }
 
             public override Interactability GetInteractability(Interactor activator) {
-                return Interactability.Disabled;
+                if(!EquipBeacon.instance.useInteractable)
+                    return Interactability.Disabled;
+                if(!activator) return Interactability.Disabled;
+                var abody = activator.GetComponent<CharacterBody>();
+                if(!abody) return Interactability.Disabled;
+                if(EquipBeacon.instance.interactableLimited && activationCost >= energyComponent.energy)
+                    return Interactability.ConditionsNotMet;
+                if(abody.HasBuff(EquipBeacon.instance.stimmedBuff))
+                    return Interactability.ConditionsNotMet;
+                return Interactability.Available;
             }
 
-            public override bool shouldShowEnergy => true;
+            public override string GetContextString(Interactor activator) {
+                return Language.GetString("ADMIRAL_SUPPLY_REJUVENATOR_CONTEXT");
+            }
+
+            public override bool shouldShowEnergy => EquipBeacon.instance.useInteractable && EquipBeacon.instance.interactableLimited;
         }
     }
 }
