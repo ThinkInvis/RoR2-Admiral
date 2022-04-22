@@ -382,7 +382,7 @@ namespace ThinkInvisible.Admiral {
 
     #region Achievement handling
 
-    [RegisterAchievement("Admiral_JumpPadSkill", "Admiral_JumpPadSkillUnlockable", "CompleteMainEnding")]
+    [RegisterAchievement("Admiral_OrbitalJumpPadSkill", "Admiral_OrbitalJumpPadSkillUnlockable", "CompleteMainEnding")]
     public class AdmiralJumpPadAchievement : RoR2.Achievements.BaseAchievement {
         public override bool wantsBodyCallbacks => true;
 
