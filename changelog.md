@@ -1,5 +1,22 @@
 ﻿# Admiral Changelog
 
+**2.5.0**
+
+- Balance pass.
+	- Beacon: Special Order:
+		- Now provides 6 items + 3 per stage by default (was 5 items + 1 per stage).
+		- Now evenly distributes its item selection by category (damage/healing/utility). Can be disabled in config.
+	- Beacon: Rejuvenator:
+		- Is now an interactable with unlimited non-renewable-per-player charges. Can be configured back to old behavior, or to have a limited number of shared charges.
+	- Valiant Blaster:
+		- Nerfed charge shot damage (2400% --> 1800%).
+- Fixed causing an extraneous language reload during game load.
+- Added Risk Of Options integration to all config entries.
+- Fixed achievements/unlockables (now uses new vanilla system instead of R2API.UnlockableAPI).
+- Updated for latest RoR2 version.
+- Updated R2API dependency to 4.3.5 (still outdated, but less so).
+- Updated TILER2 dependency to 7.0.1.
+
 **2.4.0**
 
 - Temporary beacons now have a default-disabled config to prevent them from replacing vanilla skills, with which they can now coexist.

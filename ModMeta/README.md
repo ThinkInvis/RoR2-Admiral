@@ -33,7 +33,7 @@ Configurable:
 
 ### Valiant Blaster
 
-A new Primary skill variant (same slot as Vulcan Shotgun). Rapidly fires a combo of up to 3 slow-moving explosive orbs for 1x500%, 1x500%, and 1x800% damage. Fully-charged shots move faster, have much larger blast radius, and deal 1x2400% damage. Firing a 3rd or charged shot will push you backwards, then force a stand-still reload. Waiting for the combo to timeout performs a faster, mobile reload.
+A new Primary skill variant (same slot as Vulcan Shotgun). Rapidly fires a combo of up to 3 slow-moving explosive orbs for 1x500%, 1x500%, and 1x800% damage. Fully-charged shots move faster, have much larger blast radius, and deal 1x1800% damage. Firing a 3rd or charged shot will push you backwards, then force a stand-still reload. Waiting for the combo to timeout performs a faster, mobile reload.
 
 Unlock by getting 600 TOTAL hits with Vulcan Shotgun.
 
@@ -90,24 +90,27 @@ Configurable:
 
 #### Beacon: Resupply
 
-REPLACED with Beacon: Rejuvenator. Beacon: Rejuvenator gives all allies standing nearby the new Stimmed buff, which provides +50% skill recharge rate. Will also recharge beacons, so Rejuvenator's own cooldown is higher to compensate.
+REPLACED with Beacon: Rejuvenator. Beacon: Rejuvenator can be interacted with to gain the new non-renewable Stimmed buff, which provides +50% skill recharge rate. Will also recharge beacons, so Rejuvenator's own cooldown is higher to compensate.
 
 Configurable:
 - Cannot be individually disabled.
 - Cooldown and lifetime. Defaults to 20 sec, 50 sec.
 - Additional skill recharge rate provided by Stimmed. Defaults to 50%.
+- Option to revert to old behavior of being a buff ward instead of an interactable dispenser.
+- Option to limit number of shared charges to 3 (infinite by default).
 
 #### Beacon: Hacking
 
-REPLACED with Beacon: Special Order. Beacon: Special Order gives all allies standing nearby a set of temporary items rolled on the basic chest table, starting with 5 and increasing by 1 for every stage cleared. These items cannot be used in 3D Printers nor in Scrappers, and they're removed when the beacon breaks down or when you leave its range.
+REPLACED with Beacon: Special Order. Beacon: Special Order gives all allies standing nearby a set of temporary items rolled on the basic category chest tables, starting with 6 and increasing by 3 for every stage cleared. These items cannot be used in 3D Printers nor in Scrappers, and they're removed when the beacon breaks down or when you leave its range.
 
 Configurable:
 - Cannot be individually disabled.
 - Cooldown and lifetime. Defaults to 20 sec, 40 sec.
 - Radius of the ItemWard. Defaults to 10 m.
-- Number of items provided on the first stage. Defaults to 5.
-- Number of items provided per additional stage cleared. Defaults to 1.
+- Number of items provided on the first stage. Defaults to 6.
+- Number of items provided per additional stage cleared. Defaults to 3.
 - Rarity of the items provided. Defaults to identical to a basic chest, sans equipment (80 common : 20 uncommon : 1 rare).
+- Whether to try to evenly distribute items across Damage/Healing/Utility categories.
 
 #### Beacon: Stasis
 
@@ -131,6 +134,23 @@ Configurable:
 ## Changelog
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
+
+**2.5.0**
+
+- Balance pass.
+	- Beacon: Special Order:
+		- Now provides 6 items + 3 per stage by default (was 5 items + 1 per stage).
+		- Now evenly distributes its item selection by category (damage/healing/utility). Can be disabled in config.
+	- Beacon: Rejuvenator:
+		- Is now an interactable with unlimited non-renewable-per-player charges. Can be configured back to old behavior, or to have a limited number of shared charges.
+	- Valiant Blaster:
+		- Nerfed charge shot damage (2400% --> 1800%).
+- Fixed causing an extraneous language reload during game load.
+- Added Risk Of Options integration to all config entries.
+- Fixed achievements/unlockables (now uses new vanilla system instead of R2API.UnlockableAPI).
+- Updated for latest RoR2 version.
+- Updated R2API dependency to 4.3.5 (still outdated, but less so).
+- Updated TILER2 dependency to 7.0.1.
 
 **2.4.0**
 
@@ -157,7 +177,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 **2.3.1**
 
 - Maintenance for RoR2 updates: Anniversary through PC Patch v1.1.1.4.
-
-**2.3.0**
-
-- Implements changes from TILER2 3.0.0.
