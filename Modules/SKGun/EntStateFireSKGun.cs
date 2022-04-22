@@ -66,7 +66,7 @@ namespace ThinkInvisible.Admiral {
             ProjectileManager.instance.FireProjectile(isCharged ? SKGunSkill.instance.chargedProjectilePrefab : SKGunSkill.instance.projectilePrefab,
                 aimRay.origin, Util.QuaternionSafeLookRotation(aimRay.direction),
                 gameObject,
-                damageStat * (isCharged ? 24f : (usedAllAmmo ? 8f : 5f)),
+                damageStat * (isCharged ? 18f : (usedAllAmmo ? 8f : 5f)),
                 isCharged ? 2f : 10f, Util.CheckRoll(critStat, characterBody.master));
         }
 

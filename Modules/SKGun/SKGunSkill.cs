@@ -51,7 +51,7 @@ namespace ThinkInvisible.Admiral {
             var namestr = "Valiant Blaster";
             LanguageAPI.Add(nametoken, namestr);
             //todo: update this from config
-            LanguageAPI.Add(desctoken, "Fire a rapid combo of up to 3 slow-moving explosive orbs for <style=cIsDamage>1x500%, 1x500%, and 1x800% damage</style>. <style=cIsUtility>Fully charge</style> to fire a faster, heavier round for <style=cIsDamage>1x2400% damage</style>. Must <style=cDeath>stand still to reload</style> after firing a 3rd or charged shot -- cancel the combo to stay mobile.");
+            LanguageAPI.Add(desctoken, "Fire a rapid combo of up to 3 slow-moving explosive orbs for <style=cIsDamage>1x500%, 1x500%, and 1x800% damage</style>. <style=cIsUtility>Fully charge</style> to fire a faster, heavier round for <style=cIsDamage>1x1800% damage</style>. Must <style=cDeath>stand still to reload</style> after firing a 3rd or charged shot -- cancel the combo to stay mobile.");
             
             var projPfbPfb = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/VagrantCannon"));
             projPfbPfb.GetComponent<ProjectileSimple>().desiredForwardSpeed = 150f;
