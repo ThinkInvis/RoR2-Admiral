@@ -82,9 +82,15 @@ namespace ThinkInvisible.Admiral {
 
             ContentAddition.AddSkillDef(skillDef);
 
-            unlockable = UnlockableAPI.AddUnlockable<AdmiralCatalyzerAchievement>();
-            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_NAME", "Captain: Hoist By Their Own Petard");
-            LanguageAPI.Add("ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION", "As Captain, kill 6 other enemies by Shocking the same one.");
+            var achiNameToken = $"ACHIEVEMENT_ADMIRAL_{name.ToUpper(System.Globalization.CultureInfo.InvariantCulture)}_NAME";
+            var achiDescToken = $"ACHIEVEMENT_ADMIRAL_{name.ToUpper(System.Globalization.CultureInfo.InvariantCulture)}_DESCRIPTION";
+            unlockable = ScriptableObject.CreateInstance<UnlockableDef>();
+            unlockable.cachedName = $"Admiral_{name}Unlockable";
+            unlockable.sortScore = 200;
+            unlockable.achievementIcon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralCatalyzerSkill.png");
+            ContentAddition.AddUnlockableDef(unlockable);
+            LanguageAPI.Add(achiNameToken, "Captain: Hoist By Their Own Petard");
+            LanguageAPI.Add(achiDescToken, "As Captain, kill 6 other enemies by Shocking the same one.");
         }
 
         public override void Install() {
@@ -146,23 +152,9 @@ namespace ThinkInvisible.Admiral {
         }
     }
 
-    public class AdmiralCatalyzerAchievement : RoR2.Achievements.BaseAchievement, IModdedUnlockableDataProvider {
-        public string AchievementIdentifier => "ADMIRAL_CATALYZER_ACHIEVEMENT_ID";
-        public string UnlockableIdentifier => "ADMIRAL_CATALYZER_UNLOCKABLE_ID";
-        public string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
-        public string AchievementNameToken => "ADMIRAL_CATALYZER_ACHIEVEMENT_NAME";
-        public string AchievementDescToken => "ADMIRAL_CATALYZER_ACHIEVEMENT_DESCRIPTION";
-        public string UnlockableNameToken => "ADMIRAL_CATALYZER_SKILL_NAME";
-
+    [RegisterAchievement("Admiral_CatalyzerDartSkill", "Admiral_CatalyzerDartSkillUnlockable", "CompleteMainEnding")]
+    public class AdmiralCatalyzerAchievement : RoR2.Achievements.BaseAchievement {
         public override bool wantsBodyCallbacks => true;
-
-        public Sprite Sprite => AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralCatalyzerSkill.png");
-
-        public System.Func<string> GetHowToUnlock => () => Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", new[] {
-            Language.GetString(AchievementNameToken), Language.GetString(AchievementDescToken)});
-
-        public System.Func<string> GetUnlocked => () => Language.GetStringFormatted("UNLOCKED_FORMAT", new[] {
-            Language.GetString(AchievementNameToken), Language.GetString(AchievementDescToken)});
 
         public override BodyIndex LookUpRequiredBodyIndex() {
             return BodyCatalog.FindBodyIndex("CaptainBody");

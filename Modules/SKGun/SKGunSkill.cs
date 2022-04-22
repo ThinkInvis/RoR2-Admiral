@@ -117,9 +117,15 @@ namespace ThinkInvisible.Admiral {
 
             ContentAddition.AddSkillDef(skillDef);
 
-            unlockable = UnlockableAPI.AddUnlockable<AdmiralSKGunAchievement>();
-            LanguageAPI.Add("ADMIRAL_SKGUN_ACHIEVEMENT_NAME", "Captain: Well-Seasoned");
-            LanguageAPI.Add("ADMIRAL_SKGUN_ACHIEVEMENT_DESCRIPTION", "As Captain, hit with Vulcan Shotgun 600 TOTAL times.");
+            var achiNameToken = $"ACHIEVEMENT_ADMIRAL_{name.ToUpper(System.Globalization.CultureInfo.InvariantCulture)}_NAME";
+            var achiDescToken = $"ACHIEVEMENT_ADMIRAL_{name.ToUpper(System.Globalization.CultureInfo.InvariantCulture)}_DESCRIPTION";
+            unlockable = ScriptableObject.CreateInstance<UnlockableDef>();
+            unlockable.cachedName = $"Admiral_{name}Unlockable";
+            unlockable.sortScore = 200;
+            unlockable.achievementIcon = AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralSKGunSkill.png");
+            ContentAddition.AddUnlockableDef(unlockable);
+            LanguageAPI.Add(achiNameToken, "Captain: Well-Seasoned");
+            LanguageAPI.Add(achiDescToken, "As Captain, hit with Vulcan Shotgun 600 TOTAL times.");
 
             shotgunKillsStatDef = RoR2.Stats.StatDef.Register("admiralSKGunAchievementProgress", RoR2.Stats.StatRecordType.Sum, RoR2.Stats.StatDataType.ULong, 0);
 
@@ -159,22 +165,8 @@ namespace ThinkInvisible.Admiral {
         }
     }
 
-    public class AdmiralSKGunAchievement : RoR2.Achievements.BaseAchievement, IModdedUnlockableDataProvider {
-        public string AchievementIdentifier => "ADMIRAL_SKGUN_ACHIEVEMENT_ID";
-        public string UnlockableIdentifier => "ADMIRAL_SKGUN_UNLOCKABLE_ID";
-        public string PrerequisiteUnlockableIdentifier => "CompleteMainEnding";
-        public string AchievementNameToken => "ADMIRAL_SKGUN_ACHIEVEMENT_NAME";
-        public string AchievementDescToken => "ADMIRAL_SKGUN_ACHIEVEMENT_DESCRIPTION";
-        public string UnlockableNameToken => "ADMIRAL_SKGUN_SKILL_NAME";
-
-        public Sprite Sprite => AdmiralPlugin.resources.LoadAsset<Sprite>("Assets/Admiral/Textures/Icons/icon_AdmiralSKGunSkill.png");
-
-        public System.Func<string> GetHowToUnlock => () => Language.GetStringFormatted("UNLOCK_VIA_ACHIEVEMENT_FORMAT", new[] {
-            Language.GetString(AchievementNameToken), Language.GetString(AchievementDescToken)});
-
-        public System.Func<string> GetUnlocked => () => Language.GetStringFormatted("UNLOCKED_FORMAT", new[] {
-            Language.GetString(AchievementNameToken), Language.GetString(AchievementDescToken)});
-
+    [RegisterAchievement("Admiral_SKGunSkill", "Admiral_SKGunSkillUnlockable", "CompleteMainEnding")]
+    public class AdmiralSKGunAchievement : RoR2.Achievements.BaseAchievement {
         public override bool wantsBodyCallbacks => true;
 
         public override BodyIndex LookUpRequiredBodyIndex() {
