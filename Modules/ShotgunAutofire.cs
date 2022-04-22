@@ -3,10 +3,12 @@ using TILER2;
 
 namespace ThinkInvisible.Admiral {
     public class ShotgunAutofire : T2Module<ShotgunAutofire> {
+        [AutoConfigRoOSlider("{0:N2} s", 0f, 10f)]
         [AutoConfig("Time, in fraction of total charge time, to wait before autofiring Vulcan Shotgun after reaching full charge.",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float fireDelayDynamic {get; private set;} = 0.2f;
 
+        [AutoConfigRoOSlider("{0:N2} s", 0f, 10f)]
         [AutoConfig("Absolute minimum time, in seconds, to wait before autofiring Vulcan Shotgun after reaching full charge.",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float fireDelayFixed {get; private set;} = 0f;

@@ -4,6 +4,7 @@ using TILER2;
 
 namespace ThinkInvisible.Admiral {
     public class ShotgunRebalance : T2Module<ShotgunRebalance> {
+        [AutoConfigRoOIntSlider("{0:N0}", 1, 30)]
         [AutoConfig("Pellet count for Vulcan Shotgun.",
             AutoConfigFlags.PreventNetMismatch, 1, int.MaxValue)]
         public int pelletCount {get; private set;} = 6;

@@ -7,14 +7,17 @@ using TILER2;
 
 namespace ThinkInvisible.Admiral {
     public class ShockBeacon : T2Module<ShockBeacon> {
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Lifetime of the T.Beacon: Shocking deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 8f;
 
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of T.Beacon: Shocking.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 24f;
-        
+
+        [AutoConfigRoOSlider("{0:N2} s", 0f, 30f)]
         [AutoConfig("Fire rate of T.Beacon: Shocking.",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float shockRate {get; private set;} = 0.95f;

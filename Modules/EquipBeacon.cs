@@ -9,22 +9,27 @@ using static TILER2.SkillUtil;
 
 namespace ThinkInvisible.Admiral {
     public class EquipBeacon : T2Module<EquipBeacon> {
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Lifetime of the T.Beacon: Rejuvenator deployable and buff.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of T.Beacon: Rejuvenator.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 50f;
 
+        [AutoConfigRoOSlider("{0:P0}", 0f, 5f)]
         [AutoConfig("Additional fraction of skill recharge rate to provide from the Stimmed buff.",
             AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float rechargeRate {get; private set;} = 0.5f;
 
+        [AutoConfigRoOCheckbox()]
         [AutoConfig("If true, buff is granted by interacting with the beacon and consuming a once-per-player charge. If false, buff is granted continuously in an area.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
         public bool useInteractable { get; private set; } = true;
 
+        [AutoConfigRoOCheckbox()]
         [AutoConfig("If true and UseInteractable is true, only 3 charges will be provided for all players to share. If false, the beacon will have unlimited charges instead, but players who already have the buff will still not be able to stack or renew it (effectively limiting uses to once per player per beacon cooldown).",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
         public bool interactableLimited { get; private set; } = false;

@@ -11,14 +11,17 @@ using UnityEngine;
 
 namespace ThinkInvisible.Admiral {
     public class CatalyzerDartSkill : T2Module<CatalyzerDartSkill> {
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of Catalyzer Dart.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 8f;
 
+        [AutoConfigRoOSlider("{0:P0}", 0f, 10f)]
         [AutoConfig("Fraction of remaining DoT damage dealt by malevolent cleanses.",
             AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float evilCleanseDoTDamage {get; private set;} = 3f;
 
+        [AutoConfigRoOSlider("{0:P0}", 0f, 20f)]
         [AutoConfig("Fraction of base damage dealt per non-DoT debuff by malevolent cleanses.",
             AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float evilCleanseNonDoTDamage {get; private set;} = 5f;

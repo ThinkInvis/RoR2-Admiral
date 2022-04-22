@@ -11,38 +11,47 @@ using System.Linq;
 
 namespace ThinkInvisible.Admiral {
     public class HackBeacon : T2Module<HackBeacon> {
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Lifetime of the T.Beacon: Special Order deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of T.Beacon: Special Order.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;
 
+        [AutoConfigRoOSlider("{0:N0} m", 0f, 100f)]
         [AutoConfig("Radius of the Item Ward emitted by T.Beacon: Special Order.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float wardRadius {get; private set;} = 10f;
         
+        [AutoConfigRoOIntSlider("{0:N0}", 0, 30)]
         [AutoConfig("Items provided by T.Beacon: Special Order on the first stage.",
             AutoConfigFlags.None, 0, int.MaxValue)]
         public int baseItems {get; private set;} = 6;
-        
+
+        [AutoConfigRoOIntSlider("{0:N0}", 0, 30)]
         [AutoConfig("Items provided by T.Beacon: Special Order per stage cleared.",
             AutoConfigFlags.None, 0, int.MaxValue)]
         public int itemsPerStage {get; private set;} = 3;
 
+        [AutoConfigRoOSlider("{0:N3}", 0f, 2f)]
         [AutoConfig("Selection weight for white items (defaults to identical to T1 chest).",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float itemTier1Chance {get; private set;} = 0.8f;
 
+        [AutoConfigRoOSlider("{0:N3}", 0f, 2f)]
         [AutoConfig("Selection weight for green items (defaults to identical to T1 chest).",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float itemTier2Chance {get; private set;} = 0.2f;
 
+        [AutoConfigRoOSlider("{0:N3}", 0f, 2f)]
         [AutoConfig("Selection weight for red items (defaults to identical to T1 chest).",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float itemTier3Chance {get; private set;} = 0.01f;
 
+        [AutoConfigRoOCheckbox()]
         [AutoConfig("If true, items will be evenly split between the 3 categories (Damage, Healing, Utility & Uncategorized).",
             AutoConfigFlags.None)]
         public bool splitDHU { get; private set; } = true;

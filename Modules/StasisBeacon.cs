@@ -9,10 +9,12 @@ using static TILER2.SkillUtil;
 
 namespace ThinkInvisible.Admiral {
     public class StasisBeacon : T2Module<StasisBeacon> {
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Lifetime of the T.Beacon: Stasis deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 15f;
 
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of T.Beacon: Stasis.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;

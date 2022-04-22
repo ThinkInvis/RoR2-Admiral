@@ -9,14 +9,17 @@ using RoR2.Skills;
 
 namespace ThinkInvisible.Admiral {
     public class BeaconRebalance : T2Module<BeaconRebalance> {
+        [AutoConfigRoOSlider("{0:P0}", 0f, 1f)]
         [AutoConfig("Fractional influence of cooldown reduction, e.g. Alien Head and unknown cooldown sources from other mods, on temporary beacons (0 = no effect, 1 = full effect).",
             AutoConfigFlags.DeferUntilNextStage | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
         public float beaconCDRInfluence {get; private set;} = 0.5f;
 
+        [AutoConfigRoOSlider("{0:P0}", 0f, 1f)]
         [AutoConfig("Fractional influence of restock, e.g. Bandolier, on temporary beacons (0 = no effect, 1 = full effect).",
             AutoConfigFlags.DeferUntilNextStage | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
         public float beaconRestockInfluence { get; private set; } = 0.5f;
 
+        [AutoConfigRoOCheckbox()]
         [AutoConfig("If false, the original beacon skills will not be replaced; temporary beacons will instead be provided as alternates.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
         public bool removeOriginals { get; private set; } = true;

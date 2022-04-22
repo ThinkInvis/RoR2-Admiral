@@ -10,21 +10,26 @@ using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
     public class OrbitalJumpPadSkill : T2Module<OrbitalJumpPadSkill> {
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Lifetime of the Orbital Jump Pad deployable.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
+        [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of Orbital Jump Pad.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 50f;
 
+        [AutoConfigRoOSlider("{0:N0} m", 0f, 300f)]
         [AutoConfig("Maximum range of both Orbital Jump Pad terminals.",
             AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
         public float skillRange {get; private set;} = 80f;
 
+        [AutoConfigRoOCheckbox()]
         [AutoConfig("If true, arcs previewing Orbital Jump Pad trajectory will appear.")]
         public bool showArcs {get; private set;} = true;
 
+        [AutoConfigRoOCheckbox()]
         [AutoConfig("If true, Orbital Jump Pad will have a base stock of two and recharge two at once.",
             AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
         public bool doubleStock { get; private set; } = true;

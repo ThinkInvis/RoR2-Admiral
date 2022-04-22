@@ -17,10 +17,12 @@ namespace ThinkInvisible.Admiral {
         public const float recoveryTime = 0.5f;
         public const float fullReloadTime = 1.25f;
 
+        [AutoConfigRoOCheckbox()]
         [AutoConfig("If false, Valiant Blaster reload rate will not increase with attack speed.",
             AutoConfigFlags.PreventNetMismatch)]
         public bool attackSpeedAffectsReload {get; private set;} = true;
 
+        [AutoConfigRoOSlider("{0:N2} s", 0f, 5f)]
         [AutoConfig("Minimum time required to fully charge Valiant Blaster (does not affect base charge time, only attack speed scaling).",
             AutoConfigFlags.PreventNetMismatch)]
         public float minChargeTime {get; private set;} = 0.5f;

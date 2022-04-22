@@ -15,22 +15,27 @@ namespace ThinkInvisible.Admiral {
     }
 
     public class ShockStatusTweaks : T2Module<ShockStatusTweaks> {
+        [AutoConfigRoOSlider("{0:P2}", 0f, 1f)]
         [AutoConfig("Chance per frame to shock a nearby ally.",
             AutoConfigFlags.None, 0f, 1f)]
         public float shockChance {get; private set;} = 0.033f;
 
+        [AutoConfigRoOSlider("{0:P1}", 0f, 2f)]
         [AutoConfig("Percentage of attacker max health dealt in damage per shock orb.",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float shockDamageFrac {get; private set;} = 0.02f;
-        
+
+        [AutoConfigRoOSlider("{0:N0} m", 0f, 100f)]
         [AutoConfig("Range within which Shocked can damage allies.",
             AutoConfigFlags.None, 0f, float.MaxValue)]
         public float shockRadius {get; private set;} = 15f;
 
+        [AutoConfigRoOSlider("{0:P0}", 0f, 1f)]
         [AutoConfig("Proc coefficient of Shocked arcs.",
             AutoConfigFlags.None, 0f, 1f)]
         public float shockProcCoef {get; private set;} = 0.1f;
 
+        [AutoConfigRoOCheckbox()]
         [AutoConfig("If true, the damage threshold for breaking an enemy out of Shocked will be increased to ridiculous levels.",
             AutoConfigFlags.PreventNetMismatch)]
         public bool doThresholdTweak {get; private set;} = true;
