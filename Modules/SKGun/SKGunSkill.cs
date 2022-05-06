@@ -75,7 +75,9 @@ namespace ThinkInvisible.Admiral {
                     return projPfbPfb;
                 });
 
-            chargedProjectilePrefab = MiscUtil.ModifyVanillaPrefab(
+            ContentAddition.AddProjectile(chargedProjectilePrefab);
+
+            projectilePrefab = MiscUtil.ModifyVanillaPrefab(
                 "RoR2/Base/Vagrant/VagrantCannon.prefab",
                 "CaptainSkGunProjectile", true,
                 (projPfbPfb) => {
