@@ -135,6 +135,12 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.5.1**
+
+- Prefab setup is now more mod-compatible in many instances (prefabs will no longer awaken during plugin load).
+- Updated R2API dependency to 4.3.21.
+- Updated TILER2 dependency to 7.1.0.
+
 **2.5.0**
 
 - Balance pass.
@@ -173,7 +179,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 - BeaconRebalance CDR resistance no longer prevents beacons from recharging normally when ramped all the way up.
 - BeaconRebalance now provides separate config options for CDR and restock resistance.
 - Some BeaconRebalance config options are no longer flagged as DeferForever and can be changed while the game is running.
-
-**2.3.1**
-
-- Maintenance for RoR2 updates: Anniversary through PC Patch v1.1.1.4.

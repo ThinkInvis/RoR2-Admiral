@@ -1,5 +1,11 @@
 ﻿# Admiral Changelog
 
+**2.5.1**
+
+- Prefab setup is now more mod-compatible in many instances (prefabs will no longer awaken during plugin load).
+- Updated R2API dependency to 4.3.21.
+- Updated TILER2 dependency to 7.1.0.
+
 **2.5.0**
 
 - Balance pass.
