@@ -77,7 +77,7 @@ namespace ThinkInvisible.Admiral {
             ContentAddition.AddProjectile(jumpPadPrefabProj1);
 
             jumpPadPrefabProj2 = MiscUtil.ModifyVanillaPrefab(
-                "RoR2/Base/Captain/CaptainAirstrikeProjectile2.prefab",
+                "RoR2/Base/Captain/CaptainAirstrikeProjectile1.prefab",
                 "CaptainJumpPadProjectile2", true,
                 ModifyAirstrike2Prefab);
             ContentAddition.AddProjectile(jumpPadPrefabProj2);
