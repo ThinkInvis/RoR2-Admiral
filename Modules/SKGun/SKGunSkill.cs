@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TILER2;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace ThinkInvisible.Admiral {
     public class SKGunSkill : T2Module<SKGunSkill> {
@@ -52,45 +53,55 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add(nametoken, namestr);
             //todo: update this from config
             LanguageAPI.Add(desctoken, "Fire a rapid combo of up to 3 slow-moving explosive orbs for <style=cIsDamage>1x500%, 1x500%, and 1x800% damage</style>. <style=cIsUtility>Fully charge</style> to fire a faster, heavier round for <style=cIsDamage>1x1800% damage</style>. Must <style=cDeath>stand still to reload</style> after firing a 3rd or charged shot -- cancel the combo to stay mobile.");
-            
-            var projPfbPfb = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/VagrantCannon"));
-            projPfbPfb.GetComponent<ProjectileSimple>().desiredForwardSpeed = 150f;
-            projPfbPfb.GetComponent<ProjectileSimple>().lifetime = 3f;
-            projPfbPfb.GetComponent<ProjectileSimple>().enableVelocityOverLifetime = false;
-            projPfbPfb.GetComponent<SphereCollider>().radius = 0.5f;
-            projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 12f;
-            projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastDamageCoefficient = 1f;
-            projPfbPfb.GetComponent<ProjectileImpactExplosion>().lifetime = 3f;
-            projPfbPfb.GetComponent<ProjectileImpactExplosion>().bonusBlastForce = Vector3.zero;
-            var eff = PrefabAPI.InstantiateClone(projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect, "CaptainSkGunChargedImpactEffect", false);
-            foreach(Transform c in eff.transform) {
-                c.localScale *= 12f/8f;
-            }
-            ContentAddition.AddEffect(eff);
-            projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect = eff;
-            chargedProjectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunChargedProjectile", true);
-            ContentAddition.AddProjectile(chargedProjectilePrefab);
 
-            projPfbPfb.GetComponent<ProjectileSimple>().desiredForwardSpeed = 35f;
-            projPfbPfb.GetComponent<SphereCollider>().radius = 0.25f;
-            projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 5f;
-            eff = PrefabAPI.InstantiateClone(projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect, "CaptainSkGunImpactEffect", false);
-            foreach(Transform c in eff.transform) {
-                c.localScale *= 5f/8f;
-            }
-            ContentAddition.AddEffect(eff);
-            projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect = eff;
-            var ghost = PrefabAPI.InstantiateClone(projPfbPfb.GetComponent<ProjectileController>().ghostPrefab, "CaptainSkGunProjectileGhost", false);
-            GameObject.Destroy(ghost.transform.Find("Mesh").GetComponent<ObjectScaleCurve>());
-            ghost.transform.Find("Mesh").localScale = Vector3.one * 2f;
-            ghost.transform.Find("Spit, World").localScale = Vector3.one * 0.5f;
-            projPfbPfb.GetComponent<ProjectileController>().ghostPrefab = ghost;
-            projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainSkGunProjectile", true);
+            chargedProjectilePrefab = MiscUtil.ModifyVanillaPrefab(
+                "RoR2/Base/Vagrant/VagrantCannon.prefab",
+                "CaptainSkGunChargedProjectile", true,
+                (projPfbPfb) => {
+                    projPfbPfb.GetComponent<ProjectileSimple>().desiredForwardSpeed = 150f;
+                    projPfbPfb.GetComponent<ProjectileSimple>().lifetime = 3f;
+                    projPfbPfb.GetComponent<ProjectileSimple>().enableVelocityOverLifetime = false;
+                    projPfbPfb.GetComponent<SphereCollider>().radius = 0.5f;
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 12f;
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastDamageCoefficient = 1f;
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().lifetime = 3f;
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().bonusBlastForce = Vector3.zero;
+                    var eff = PrefabAPI.InstantiateClone(projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect, "CaptainSkGunChargedImpactEffect", false);
+                    foreach(Transform c in eff.transform) {
+                        c.localScale *= 12f / 8f;
+                    }
+                    ContentAddition.AddEffect(eff);
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect = eff;
+                    return projPfbPfb;
+                });
+
+            chargedProjectilePrefab = MiscUtil.ModifyVanillaPrefab(
+                "RoR2/Base/Vagrant/VagrantCannon.prefab",
+                "CaptainSkGunProjectile", true,
+                (projPfbPfb) => {
+                    projPfbPfb.GetComponent<ProjectileSimple>().desiredForwardSpeed = 35f;
+                    projPfbPfb.GetComponent<ProjectileSimple>().lifetime = 3f;
+                    projPfbPfb.GetComponent<ProjectileSimple>().enableVelocityOverLifetime = false;
+                    projPfbPfb.GetComponent<SphereCollider>().radius = 0.25f;
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 5f;
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastDamageCoefficient = 1f;
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().lifetime = 3f;
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().bonusBlastForce = Vector3.zero;
+                    var eff = PrefabAPI.InstantiateClone(projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect, "CaptainSkGunImpactEffect", false);
+                    foreach(Transform c in eff.transform) {
+                        c.localScale *= 5f / 8f;
+                    }
+                    ContentAddition.AddEffect(eff);
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect = eff;
+                    var ghost = PrefabAPI.InstantiateClone(projPfbPfb.GetComponent<ProjectileController>().ghostPrefab, "CaptainSkGunProjectileGhost", false);
+                    GameObject.Destroy(ghost.transform.Find("Mesh").GetComponent<ObjectScaleCurve>());
+                    ghost.transform.Find("Mesh").localScale = Vector3.one * 2f;
+                    ghost.transform.Find("Spit, World").localScale = Vector3.one * 0.5f;
+                    projPfbPfb.GetComponent<ProjectileController>().ghostPrefab = ghost;
+                    return projPfbPfb;
+                });
+
             ContentAddition.AddProjectile(projectilePrefab);
-
-            GameObject.Destroy(projPfbPfb);
-
-
 
             skillDef = ScriptableObject.CreateInstance<SkillDef>();
 

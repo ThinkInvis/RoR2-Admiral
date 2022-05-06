@@ -6,6 +6,7 @@ using RoR2.Skills;
 using System.Collections.Generic;
 using TILER2;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
@@ -64,15 +65,21 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add(achiNameToken, "Captain: Damn The Torpedoes");
             LanguageAPI.Add(achiDescToken, "As Captain, nail a very speedy target with an Orbital Probe.");
 
-            var jppBase = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/networkedobjects/HumanFan"));
-            jumpPadPrefabBase = PrefabAPI.InstantiateClone(ModifyJumpPadPrefab(jppBase), "CaptainJumpPad", true);
+            jumpPadPrefabBase = MiscUtil.ModifyVanillaPrefab(
+                "RoR2/Base/frozenwall/HumanFan.prefab",
+                "CaptainJumpPad", true,
+                ModifyJumpPadPrefab);
 
-            var jppProj1 = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
-            jumpPadPrefabProj1 = PrefabAPI.InstantiateClone(ModifyAirstrike1Prefab(jppProj1), "CaptainJumpPadProjectile1", true);
+            jumpPadPrefabProj1 = MiscUtil.ModifyVanillaPrefab(
+                "RoR2/Base/Captain/CaptainAirstrikeProjectile1.prefab",
+                "CaptainJumpPadProjectile1", true,
+                ModifyAirstrike1Prefab);
             ContentAddition.AddProjectile(jumpPadPrefabProj1);
 
-            var jppProj2 = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeProjectile1"));
-            jumpPadPrefabProj2 = PrefabAPI.InstantiateClone(ModifyAirstrike2Prefab(jppProj2), "CaptainJumpPadProjectile2", true);
+            jumpPadPrefabProj2 = MiscUtil.ModifyVanillaPrefab(
+                "RoR2/Base/Captain/CaptainAirstrikeProjectile2.prefab",
+                "CaptainJumpPadProjectile2", true,
+                ModifyAirstrike2Prefab);
             ContentAddition.AddProjectile(jumpPadPrefabProj2);
 
             var nametoken = "ADMIRAL_JUMPPAD_SKILL_NAME";

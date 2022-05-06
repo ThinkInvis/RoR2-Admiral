@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using TILER2;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace ThinkInvisible.Admiral {
     public class CatalyzerDartSkill : T2Module<CatalyzerDartSkill> {
@@ -42,13 +43,17 @@ namespace ThinkInvisible.Admiral {
 
             var fireCatalyzerState = ContentAddition.AddEntityState<EntStateFireCatalyzer>(out _);
 
-            var projPfbPfb = GameObject.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/CaptainTazer"));
-            projPfbPfb.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;
-            projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 1f;
-            projPfbPfb.AddComponent<MalevolentCleanseOnHit>();
-            projectilePrefab = PrefabAPI.InstantiateClone(projPfbPfb, "CaptainCatalyzerProjectile", true);
+            projectilePrefab = MiscUtil.ModifyVanillaPrefab(
+                "RoR2/Base/Captain/CaptainTazer.prefab",
+                "CaptainCatalyzerProjectile", true,
+                (projPfbPfb) => {
+                    projPfbPfb.GetComponent<ProjectileDamage>().damageType = DamageType.Generic;
+                    projPfbPfb.GetComponent<ProjectileImpactExplosion>().blastRadius = 1f;
+                    projPfbPfb.AddComponent<MalevolentCleanseOnHit>();
+                    return projPfbPfb;
+                });
+
             ContentAddition.AddProjectile(projectilePrefab);
-            GameObject.Destroy(projPfbPfb);
 
             var nametoken = "ADMIRAL_CATALYZER_SKILL_NAME";
             var desctoken = "ADMIRAL_CATALYZER_SKILL_DESC";
