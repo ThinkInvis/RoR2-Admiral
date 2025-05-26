@@ -66,7 +66,7 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add(achiDescToken, "As Captain, nail a very speedy target with an Orbital Probe.");
 
             jumpPadPrefabBase = MiscUtil.ModifyVanillaPrefab(
-                "RoR2/Base/frozenwall/HumanFan.prefab",
+                "RoR2/Base/frozenwall/FW_HumanFan.prefab",
                 "CaptainJumpPad", true,
                 ModifyJumpPadPrefab);
 
