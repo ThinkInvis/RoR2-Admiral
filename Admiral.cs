@@ -14,7 +14,7 @@ namespace ThinkInvisible.Admiral {
     [BepInDependency(TILER2Plugin.ModGuid, TILER2Plugin.ModVer)]
     [BepInPlugin(ModGuid, ModName, ModVer)]
     public class AdmiralPlugin:BaseUnityPlugin {
-        public const string ModVer = "2.5.1";
+        public const string ModVer = "2.5.2";
         public const string ModName = "Admiral";
         public const string ModGuid = "com.ThinkInvisible.Admiral";
         

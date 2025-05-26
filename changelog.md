@@ -1,5 +1,10 @@
 ﻿# Admiral Changelog
 
+**2.5.2**
+
+- Recompiled, remapped signatures, and updated dependencies for recent vanilla updates.
+- All achievements now have Lunar Coin rewards.
+
 **2.5.1**
 
 - Prefab setup is now more mod-compatible in many instances (prefabs will no longer awaken during plugin load).

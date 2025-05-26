@@ -135,6 +135,11 @@ Configurable:
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
 
+**2.5.2**
+
+- Recompiled, remapped signatures, and updated dependencies for recent vanilla updates.
+- All achievements now have Lunar Coin rewards.
+
 **2.5.1**
 
 - Prefab setup is now more mod-compatible in many instances (prefabs will no longer awaken during plugin load).
@@ -173,9 +178,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 - Updated R2API dependency to 4.0.11 (fixing an ancient incompatibility with R2API 3.0.43 in the process).
 - Updated BepInEx dependency to 5.4.1902.
 - Updated TILER2 dependency to 5.0.2.
-
-**2.3.2**
-
-- BeaconRebalance CDR resistance no longer prevents beacons from recharging normally when ramped all the way up.
-- BeaconRebalance now provides separate config options for CDR and restock resistance.
-- Some BeaconRebalance config options are no longer flagged as DeferForever and can be changed while the game is running.
