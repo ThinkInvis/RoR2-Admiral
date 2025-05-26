@@ -147,10 +147,10 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.Skills.SkillDef.OnFixedUpdate -= On_SkillDefFixedUpdate;
         }
 
-        private void On_SkillDefFixedUpdate(On.RoR2.Skills.SkillDef.orig_OnFixedUpdate orig, RoR2.Skills.SkillDef self, GenericSkill skillSlot) {
+        private void On_SkillDefFixedUpdate(On.RoR2.Skills.SkillDef.orig_OnFixedUpdate orig, RoR2.Skills.SkillDef self, GenericSkill skillSlot, float deltaTime) {
             if(skillSlot.characterBody.HasBuff(stimmedBuff))
-                skillSlot.RunRecharge(Time.fixedDeltaTime * rechargeRate);
-            orig(self, skillSlot);
+                skillSlot.RunRecharge(deltaTime * rechargeRate);
+            orig(self, skillSlot, deltaTime);
         }
 
         public class EntStateCallSupplyDropRejuvenator : EntityStates.Captain.Weapon.CallSupplyDropEquipmentRestock {
