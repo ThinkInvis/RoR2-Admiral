@@ -157,7 +157,7 @@ namespace ThinkInvisible.Admiral {
         }
     }
 
-    [RegisterAchievement("Admiral_CatalyzerDartSkill", "Admiral_CatalyzerDartSkillUnlockable", "CompleteMainEnding")]
+    [RegisterAchievement("Admiral_CatalyzerDartSkill", "Admiral_CatalyzerDartSkillUnlockable", "CompleteMainEnding", 3u)]
     public class AdmiralCatalyzerAchievement : RoR2.Achievements.BaseAchievement {
         public override bool wantsBodyCallbacks => true;
 

@@ -178,7 +178,7 @@ namespace ThinkInvisible.Admiral {
         }
     }
 
-    [RegisterAchievement("Admiral_SKGunSkill", "Admiral_SKGunSkillUnlockable", "CompleteMainEnding")]
+    [RegisterAchievement("Admiral_SKGunSkill", "Admiral_SKGunSkillUnlockable", "CompleteMainEnding", 1u)]
     public class AdmiralSKGunAchievement : RoR2.Achievements.BaseAchievement {
         public override bool wantsBodyCallbacks => true;
 
