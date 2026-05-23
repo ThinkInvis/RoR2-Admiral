@@ -1,8 +1,7 @@
 ﻿using RoR2;
-using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class CancelOrbitalSkills : T2Module<CancelOrbitalSkills> {
+    public class CancelOrbitalSkills : Module<CancelOrbitalSkills> {
         public override string enabledConfigDescription => "Allows orbital skills to be cancelled by reactivating the skill.";
 
         public override void Install() {

@@ -2,10 +2,9 @@
 using R2API.Utils;
 using MonoMod.RuntimeDetour;
 using RoR2.Skills;
-using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class OrbitalSkillsAnywhere : T2Module<OrbitalSkillsAnywhere> {
+    public class OrbitalSkillsAnywhere : Module<OrbitalSkillsAnywhere> {
         Hook CUOSHook;
         public override void SetupBehavior() {
             base.SetupBehavior();

@@ -3,18 +3,17 @@ using RoR2.Skills;
 using RoR2;
 using R2API;
 using EntityStates.CaptainSupplyDrop;
-using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class ShockBeacon : T2Module<ShockBeacon> {
+    public class ShockBeacon : Module<ShockBeacon> {
         [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Lifetime of the T.Beacon: Shocking deployable.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.DeferForever, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 8f;
 
         [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of T.Beacon: Shocking.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.DeferForever, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 24f;
 
         [AutoConfigRoOSlider("{0:N2} s", 0f, 30f)]

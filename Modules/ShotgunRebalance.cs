@@ -1,12 +1,11 @@
 ﻿using R2API;
 using RoR2;
-using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class ShotgunRebalance : T2Module<ShotgunRebalance> {
+    public class ShotgunRebalance : Module<ShotgunRebalance> {
         [AutoConfigRoOIntSlider("{0:N0}", 1, 30)]
         [AutoConfig("Pellet count for Vulcan Shotgun.",
-            AutoConfigFlags.PreventNetMismatch, 1, int.MaxValue)]
+            AutoConfigFlags.None, 1, int.MaxValue)]
         public int pelletCount {get; private set;} = 6;
 
         public override bool managedEnable => true;

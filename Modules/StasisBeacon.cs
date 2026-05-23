@@ -4,19 +4,18 @@ using RoR2;
 using R2API;
 using EntityStates.CaptainSupplyDrop;
 using UnityEngine.Networking;
-using TILER2;
-using static TILER2.SkillUtil;
+using static ThinkInvisible.Admiral.SkillUtil;
 
 namespace ThinkInvisible.Admiral {
-    public class StasisBeacon : T2Module<StasisBeacon> {
+    public class StasisBeacon : Module<StasisBeacon> {
         [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Lifetime of the T.Beacon: Stasis deployable.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.DeferForever, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 15f;
 
         [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of T.Beacon: Stasis.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.DeferForever, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;
 
         public override string enabledConfigDescription => "Contains config for the T.Beacon: Stasis submodule of Modules.BeaconRebalance. Does not replace a vanilla beacon.";

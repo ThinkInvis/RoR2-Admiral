@@ -1,7 +1,6 @@
 ﻿using RoR2;
 using System.Collections.Generic;
 using RoR2.Orbs;
-using TILER2;
 using UnityEngine.Networking;
 using MonoMod.Cil;
 using Mono.Cecil.Cil;
@@ -14,7 +13,7 @@ namespace ThinkInvisible.Admiral {
         public GameObject shockVictim;
     }
 
-    public class ShockStatusTweaks : T2Module<ShockStatusTweaks> {
+    public class ShockStatusTweaks : Module<ShockStatusTweaks> {
         [AutoConfigRoOSlider("{0:P2}", 0f, 1f)]
         [AutoConfig("Chance per frame to shock a nearby ally.",
             AutoConfigFlags.None, 0f, 1f)]
@@ -37,7 +36,7 @@ namespace ThinkInvisible.Admiral {
 
         [AutoConfigRoOCheckbox()]
         [AutoConfig("If true, the damage threshold for breaking an enemy out of Shocked will be increased to ridiculous levels.",
-            AutoConfigFlags.PreventNetMismatch)]
+            AutoConfigFlags.None)]
         public bool doThresholdTweak {get; private set;} = true;
 
         public override string enabledConfigDescription => "Removes the health threshold from the Shocked status and causes it to deal AoE damage based on victim max health.";

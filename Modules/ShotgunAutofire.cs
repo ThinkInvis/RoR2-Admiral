@@ -1,8 +1,7 @@
 ﻿using RoR2;
-using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class ShotgunAutofire : T2Module<ShotgunAutofire> {
+    public class ShotgunAutofire : Module<ShotgunAutofire> {
         [AutoConfigRoOSlider("{0:N2} s", 0f, 10f)]
         [AutoConfig("Time, in fraction of total charge time, to wait before autofiring Vulcan Shotgun after reaching full charge.",
             AutoConfigFlags.None, 0f, float.MaxValue)]

@@ -9,27 +9,26 @@ using RoR2.Skills;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TILER2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace ThinkInvisible.Admiral {
-    public class SKGunSkill : T2Module<SKGunSkill> {
+    public class SKGunSkill : Module<SKGunSkill> {
         public const float recoveryTime = 0.5f;
         public const float fullReloadTime = 1.25f;
 
         [AutoConfigRoOCheckbox()]
         [AutoConfig("If false, Valiant Blaster reload rate will not increase with attack speed.",
-            AutoConfigFlags.PreventNetMismatch)]
+            AutoConfigFlags.None)]
         public bool attackSpeedAffectsReload {get; private set;} = true;
 
         [AutoConfigRoOSlider("{0:N2} s", 0f, 5f)]
         [AutoConfig("Minimum time required to fully charge Valiant Blaster (does not affect base charge time, only attack speed scaling).",
-            AutoConfigFlags.PreventNetMismatch)]
+            AutoConfigFlags.None)]
         public float minChargeTime {get; private set;} = 0.5f;
 
         public override string enabledConfigDescription => "Adds the Valiant Blaster primary skill variant.";
-        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferForever;
+        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.DeferForever;
 
         internal BuffDef slowSkillDebuff;
 
@@ -54,7 +53,7 @@ namespace ThinkInvisible.Admiral {
             //todo: update this from config
             LanguageAPI.Add(desctoken, "Fire a rapid combo of up to 3 slow-moving explosive orbs for <style=cIsDamage>1x500%, 1x500%, and 1x800% damage</style>. <style=cIsUtility>Fully charge</style> to fire a faster, heavier round for <style=cIsDamage>1x1800% damage</style>. Must <style=cDeath>stand still to reload</style> after firing a 3rd or charged shot -- cancel the combo to stay mobile.");
 
-            chargedProjectilePrefab = MiscUtil.ModifyVanillaPrefab(
+            chargedProjectilePrefab = CommonCode.ModifyVanillaPrefab(
                 "RoR2/Base/Vagrant/VagrantCannon.prefab",
                 "CaptainSkGunChargedProjectile", true,
                 (projPfbPfb) => {
@@ -77,7 +76,7 @@ namespace ThinkInvisible.Admiral {
 
             ContentAddition.AddProjectile(chargedProjectilePrefab);
 
-            projectilePrefab = MiscUtil.ModifyVanillaPrefab(
+            projectilePrefab = CommonCode.ModifyVanillaPrefab(
                 "RoR2/Base/Vagrant/VagrantCannon.prefab",
                 "CaptainSkGunProjectile", true,
                 (projPfbPfb) => {

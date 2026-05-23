@@ -6,29 +6,28 @@ using RoR2.Projectile;
 using RoR2.Skills;
 using System;
 using System.Collections.Generic;
-using TILER2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace ThinkInvisible.Admiral {
-    public class CatalyzerDartSkill : T2Module<CatalyzerDartSkill> {
+    public class CatalyzerDartSkill : Module<CatalyzerDartSkill> {
         [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of Catalyzer Dart.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.DeferForever, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 8f;
 
         [AutoConfigRoOSlider("{0:P0}", 0f, 10f)]
         [AutoConfig("Fraction of remaining DoT damage dealt by malevolent cleanses.",
-            AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float evilCleanseDoTDamage {get; private set;} = 3f;
 
         [AutoConfigRoOSlider("{0:P0}", 0f, 20f)]
         [AutoConfig("Fraction of base damage dealt per non-DoT debuff by malevolent cleanses.",
-            AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float evilCleanseNonDoTDamage {get; private set;} = 5f;
 
         public override string enabledConfigDescription => "Adds the Catalyzer Dart secondary skill variant.";
-        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferForever;
+        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.DeferForever;
 
         internal UnlockableDef unlockable;
 
@@ -43,7 +42,7 @@ namespace ThinkInvisible.Admiral {
 
             var fireCatalyzerState = ContentAddition.AddEntityState<EntStateFireCatalyzer>(out _);
 
-            projectilePrefab = MiscUtil.ModifyVanillaPrefab(
+            projectilePrefab = CommonCode.ModifyVanillaPrefab(
                 "RoR2/Base/Captain/CaptainTazer.prefab",
                 "CaptainCatalyzerProjectile", true,
                 (projPfbPfb) => {

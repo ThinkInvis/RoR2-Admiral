@@ -3,31 +3,30 @@ using MonoMod.Cil;
 using UnityEngine;
 using System;
 using Mono.Cecil.Cil;
-using TILER2;
 using R2API;
 using RoR2.Skills;
 
 namespace ThinkInvisible.Admiral {
-    public class BeaconRebalance : T2Module<BeaconRebalance> {
+    public class BeaconRebalance : Module<BeaconRebalance> {
         [AutoConfigRoOSlider("{0:P0}", 0f, 1f)]
         [AutoConfig("Fractional influence of cooldown reduction, e.g. Alien Head and unknown cooldown sources from other mods, on temporary beacons (0 = no effect, 1 = full effect).",
-            AutoConfigFlags.DeferUntilNextStage | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
+            AutoConfigFlags.DeferUntilNextStage, 0f, 1f)]
         public float beaconCDRInfluence {get; private set;} = 0.5f;
 
         [AutoConfigRoOSlider("{0:P0}", 0f, 1f)]
         [AutoConfig("Fractional influence of restock, e.g. Bandolier, on temporary beacons (0 = no effect, 1 = full effect).",
-            AutoConfigFlags.DeferUntilNextStage | AutoConfigFlags.PreventNetMismatch, 0f, 1f)]
+            AutoConfigFlags.DeferUntilNextStage, 0f, 1f)]
         public float beaconRestockInfluence { get; private set; } = 0.5f;
 
         [AutoConfigRoOCheckbox()]
         [AutoConfig("If false, the original beacon skills will not be replaced; temporary beacons will instead be provided as alternates.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
+            AutoConfigFlags.DeferForever)]
         public bool removeOriginals { get; private set; } = true;
 
 
         public override string enabledConfigDescription => "Changes all Beacon skills to have cooldown and lifetime, and replaces some variants which are incompatible with this model.";
         public override AutoConfigUpdateActionTypes enabledConfigUpdateActionTypes => AutoConfigUpdateActionTypes.InvalidateLanguage;
-        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferUntilNextStage;
+        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.DeferUntilNextStage;
 
         internal GameObject muzzleFlashPrefab;
 
@@ -51,7 +50,6 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.GenericSkill.RunRecharge += On_GSRunRecharge;
             On.RoR2.GenericSkill.FixedUpdate += On_GSFixedUpdate;
             EquipBeacon.instance.Install();
-            HackBeacon.instance.Install();
             HealBeacon.instance.Install();
             ShockBeacon.instance.Install();
             StasisBeacon.instance.Install();
@@ -67,7 +65,6 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.GenericSkill.RunRecharge -= On_GSRunRecharge;
             On.RoR2.GenericSkill.FixedUpdate -= On_GSFixedUpdate;
             EquipBeacon.instance.Uninstall();
-            HackBeacon.instance.Uninstall();
             HealBeacon.instance.Uninstall();
             ShockBeacon.instance.Uninstall();
             StasisBeacon.instance.Uninstall();
@@ -75,7 +72,6 @@ namespace ThinkInvisible.Admiral {
         
         private bool SkillIsTemporaryBeacon(SkillDef skillDef) {
             return skillDef == EquipBeacon.instance.skillDef
-                || skillDef == HackBeacon.instance.skillDef
                 || skillDef == HealBeacon.instance.skillDef
                 || skillDef == ShockBeacon.instance.skillDef
                 || skillDef == StasisBeacon.instance.skillDef;
@@ -137,7 +133,7 @@ namespace ThinkInvisible.Admiral {
                     return 3;
                 });
             } else {
-                AdmiralPlugin.logger.LogError("BeaconRebalance/CSDCUpdateSkillOverrides: Failed to apply IL patch (target instructions not found)");
+                AdmiralPlugin._logger.LogError("BeaconRebalance/CSDCUpdateSkillOverrides: Failed to apply IL patch (target instructions not found)");
             }
         }
     }

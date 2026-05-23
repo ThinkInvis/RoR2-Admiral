@@ -4,26 +4,25 @@ using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
 using System.Collections.Generic;
-using TILER2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 
 namespace ThinkInvisible.Admiral {
-    public class OrbitalJumpPadSkill : T2Module<OrbitalJumpPadSkill> {
+    public class OrbitalJumpPadSkill : Module<OrbitalJumpPadSkill> {
         [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Lifetime of the Orbital Jump Pad deployable.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.DeferForever, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
         [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of Orbital Jump Pad.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.DeferForever, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 50f;
 
         [AutoConfigRoOSlider("{0:N0} m", 0f, 300f)]
         [AutoConfig("Maximum range of both Orbital Jump Pad terminals.",
-            AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.None, 0f, float.MaxValue)]
         public float skillRange {get; private set;} = 80f;
 
         [AutoConfigRoOCheckbox()]
@@ -32,11 +31,11 @@ namespace ThinkInvisible.Admiral {
 
         [AutoConfigRoOCheckbox()]
         [AutoConfig("If true, Orbital Jump Pad will have a base stock of two and recharge two at once.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch)]
+            AutoConfigFlags.DeferForever)]
         public bool doubleStock { get; private set; } = true;
 
         public override string enabledConfigDescription => "Adds the Orbital Jump Pad utility skill variant.";
-        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.PreventNetMismatch | AutoConfigFlags.DeferForever;
+        public override AutoConfigFlags enabledConfigFlags => AutoConfigFlags.DeferForever;
 
         internal SkillDef setupSkillDef;
         internal SkillDef callSkillDef;
@@ -65,18 +64,18 @@ namespace ThinkInvisible.Admiral {
             LanguageAPI.Add(achiNameToken, "Captain: Damn The Torpedoes");
             LanguageAPI.Add(achiDescToken, "As Captain, nail a very speedy target with an Orbital Probe.");
 
-            jumpPadPrefabBase = MiscUtil.ModifyVanillaPrefab(
+            jumpPadPrefabBase = CommonCode.ModifyVanillaPrefab(
                 "RoR2/Base/frozenwall/FW_HumanFan.prefab",
                 "CaptainJumpPad", true,
                 ModifyJumpPadPrefab);
 
-            jumpPadPrefabProj1 = MiscUtil.ModifyVanillaPrefab(
+            jumpPadPrefabProj1 = CommonCode.ModifyVanillaPrefab(
                 "RoR2/Base/Captain/CaptainAirstrikeProjectile1.prefab",
                 "CaptainJumpPadProjectile1", true,
                 ModifyAirstrike1Prefab);
             ContentAddition.AddProjectile(jumpPadPrefabProj1);
 
-            jumpPadPrefabProj2 = MiscUtil.ModifyVanillaPrefab(
+            jumpPadPrefabProj2 = CommonCode.ModifyVanillaPrefab(
                 "RoR2/Base/Captain/CaptainAirstrikeProjectile1.prefab",
                 "CaptainJumpPadProjectile2", true,
                 ModifyAirstrike2Prefab);
@@ -260,7 +259,7 @@ namespace ThinkInvisible.Admiral {
             lineRen.positionCount = 32;
             List<Keyframe> kfmArr = new List<Keyframe>();
             for(int i = 0; i < lineRen.positionCount; i++) {
-                kfmArr.Add(new Keyframe(i/32f, (1f-MiscUtil.Wrap(i/8f,0f,1f))*0.875f));
+                kfmArr.Add(new Keyframe(i/32f, (1f- CommonCode.Wrap(i/8f,0f,1f))*0.875f));
             }
             lineRen.widthCurve = new AnimationCurve{keys=kfmArr.ToArray()};
             //lineRen.startColor = new Color(0.25f, 0.01f, 2f, 0.4f);

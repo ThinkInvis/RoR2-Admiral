@@ -3,18 +3,17 @@ using RoR2.Skills;
 using RoR2;
 using R2API;
 using EntityStates.CaptainSupplyDrop;
-using TILER2;
 
 namespace ThinkInvisible.Admiral {
-    public class HealBeacon : T2Module<HealBeacon> {
+    public class HealBeacon : Module<HealBeacon> {
         [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Lifetime of the T.Beacon: Healing deployable.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.DeferForever, 0f, float.MaxValue)]
         public float skillLifetime {get; private set;} = 20f;
 
         [AutoConfigRoOSlider("{0:N0} s", 0f, 120f)]
         [AutoConfig("Cooldown of T.Beacon: Healing.",
-            AutoConfigFlags.DeferForever | AutoConfigFlags.PreventNetMismatch, 0f, float.MaxValue)]
+            AutoConfigFlags.DeferForever, 0f, float.MaxValue)]
         public float skillRecharge {get; private set;} = 40f;
 
         public override string enabledConfigDescription => "Contains config for the T.Beacon: Healing submodule of Modules.BeaconRebalance. Replaces Beacon: Healing.";

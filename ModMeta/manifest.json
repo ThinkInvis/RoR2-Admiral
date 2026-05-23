@@ -1,6 +1,6 @@
 {
   "name": "Admiral",
-  "version_number": "2.5.2",
+  "version_number": "3.0.0",
   "website_url": "https://github.com/ThinkInvis/RoR2-Admiral",
   "description": "A character overhaul, because the Captain's due for a promotion.",
   "dependencies": [
@@ -9,7 +9,6 @@
     "RiskofThunder-R2API_ContentManagement-1.0.9",
     "RiskofThunder-R2API_Language-1.0.1",
     "RiskofThunder-R2API_Networking-1.0.3",
-    "RiskofThunder-R2API_Prefab-1.0.4",
-    "ThinkInvis-TILER2-7.4.3"
+    "RiskofThunder-R2API_Prefab-1.0.4"
   ]
 }
