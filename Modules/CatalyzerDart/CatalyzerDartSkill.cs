@@ -151,7 +151,7 @@ namespace ThinkInvisible.Admiral {
                     procCoefficient = 0f
                 });
 
-                Util.CleanseBody(obj.victimBody, true, false, true, true, false, false);
+                CleanseSystem.CleanseBodyServer(obj.victimBody, true, false, true, true, false, false);
             }
         }
     }
