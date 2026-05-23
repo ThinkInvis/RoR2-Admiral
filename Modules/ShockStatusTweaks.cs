@@ -78,7 +78,7 @@ namespace ThinkInvisible.Admiral {
         private void On_ShockStateOnEnter(On.EntityStates.ShockState.orig_OnEnter orig, EntityStates.ShockState self) {
             orig(self);
             if(doThresholdTweak)
-                EntityStates.ShockState.healthFractionToForceExit = 100f;
+                self.healthFractionToForceExit = 100f;
         }
 
         private void On_ShockStateFixedUpdate(On.EntityStates.ShockState.orig_FixedUpdate orig, EntityStates.ShockState self) {
