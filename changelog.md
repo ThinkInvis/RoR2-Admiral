@@ -1,5 +1,15 @@
 ﻿# Admiral Changelog
 
+**3.0.0**
+
+- Patched for recent game and R2API updates.
+- Removed content (BREAKING):
+	- Temporary Beacon: Special Order.
+- 🦀 TILER2 is gone 🦀 (BREAKING)
+	- Module system and utility code were migrated to this project.
+	- Net config sync is no longer available.
+	- Config file polling is no longer available.
+
 **2.5.2**
 
 - Recompiled, remapped signatures, and updated dependencies for recent vanilla updates.

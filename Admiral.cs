@@ -12,7 +12,7 @@ namespace ThinkInvisible.Admiral {
     [BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInPlugin(ModGuid, ModName, ModVer)]
     public class AdmiralPlugin:BaseUnityPlugin {
-        public const string ModVer = "2.5.2";
+        public const string ModVer = "3.0.0";
         public const string ModName = "Admiral";
         public const string ModGuid = "com.ThinkInvisible.Admiral";
         

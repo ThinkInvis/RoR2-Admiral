@@ -99,19 +99,6 @@ Configurable:
 - Option to revert to old behavior of being a buff ward instead of an interactable dispenser.
 - Option to limit number of shared charges to 3 (infinite by default).
 
-#### Beacon: Hacking
-
-REPLACED with Beacon: Special Order. Beacon: Special Order gives all allies standing nearby a set of temporary items rolled on the basic category chest tables, starting with 6 and increasing by 3 for every stage cleared. These items cannot be used in 3D Printers nor in Scrappers, and they're removed when the beacon breaks down or when you leave its range.
-
-Configurable:
-- Cannot be individually disabled.
-- Cooldown and lifetime. Defaults to 20 sec, 40 sec.
-- Radius of the ItemWard. Defaults to 10 m.
-- Number of items provided on the first stage. Defaults to 6.
-- Number of items provided per additional stage cleared. Defaults to 3.
-- Rarity of the items provided. Defaults to identical to a basic chest, sans equipment (80 common : 20 uncommon : 1 rare).
-- Whether to try to evenly distribute items across Damage/Healing/Utility categories.
-
 #### Beacon: Stasis
 
 New skill which does not replace a vanilla Beacon. Beacon: Stasis time-freezes all nearby enemies, preventing them from moving, falling, dealing damage, or taking damage. Does not work on enemies with freeze resistance.
@@ -134,6 +121,16 @@ Configurable:
 ## Changelog
 
 The 5 latest updates are listed below. For a full changelog, see: https://github.com/ThinkInvis/RoR2-Admiral/blob/master/changelog.md
+
+**3.0.0**
+
+- Patched for recent game and R2API updates.
+- Removed content (BREAKING):
+	- Temporary Beacon: Special Order.
+- 🦀 TILER2 is gone 🦀 (BREAKING)
+	- Module system and utility code were migrated to this project.
+	- Net config sync is no longer available.
+	- Config file polling is no longer available.
 
 **2.5.2**
 
@@ -171,10 +168,3 @@ The 5 latest updates are listed below. For a full changelog, see: https://github
 - Experimental balance change: Orbital Jump Pad now has 2 base stock, double restock, 30 --> 50 sec cooldown, 100 --> 80 m range.
 	- Added a config option to revert the 2 stock/double restock portion of this change.
 - Updated TILER2 dependency to 5.0.3.
-
-**2.3.3**
-
-- Compatibility update for Risk of Rain 2 Expansion 1 (SotV).
-- Updated R2API dependency to 4.0.11 (fixing an ancient incompatibility with R2API 3.0.43 in the process).
-- Updated BepInEx dependency to 5.4.1902.
-- Updated TILER2 dependency to 5.0.2.
