@@ -34,8 +34,8 @@ namespace ThinkInvisible.Admiral {
                 module.rng = new Xoroshiro128Plus(rngGenerator.nextUlong);
         }
 
-        private static void Language_SetCurrentLanguage(On.RoR2.Language.orig_SetCurrentLanguage orig, string newCurrentLanguageName) {
-            orig(newCurrentLanguageName);
+        private static void Language_SetCurrentLanguage(On.RoR2.Language.orig_SetCurrentLanguage orig, string newCurrentLanguageName, bool forceUnloadCurrentLanguage) {
+            orig(newCurrentLanguageName, forceUnloadCurrentLanguage);
             foreach(var module in allModules) {
                 module.RefreshPermanentLanguage();
                 if(module.enabled) {

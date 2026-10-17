@@ -94,11 +94,17 @@ namespace ThinkInvisible.Admiral {
                     }
                     ContentAddition.AddEffect(eff);
                     projPfbPfb.GetComponent<ProjectileImpactExplosion>().impactEffect = eff;
-                    var ghost = PrefabAPI.InstantiateClone(projPfbPfb.GetComponent<ProjectileController>().ghostPrefab, "CaptainSkGunProjectileGhost", false);
+                    var projCtrl = projPfbPfb.GetComponent<ProjectileController>();
+                    var origGhost = (projCtrl.ghostPrefabAddress != null && projCtrl.ghostPrefabAddress.RuntimeKeyIsValid())
+                        ? Addressables.LoadAssetAsync<GameObject>(projCtrl.ghostPrefabAddress.RuntimeKey).WaitForCompletion()
+                        : projCtrl.ghostPrefab;
+                    var ghost = PrefabAPI.InstantiateClone(origGhost, "CaptainSkGunProjectileGhost", false);
                     GameObject.Destroy(ghost.transform.Find("Mesh").GetComponent<ObjectScaleCurve>());
                     ghost.transform.Find("Mesh").localScale = Vector3.one * 2f;
                     ghost.transform.Find("Spit, World").localScale = Vector3.one * 0.5f;
-                    projPfbPfb.GetComponent<ProjectileController>().ghostPrefab = ghost;
+                    projCtrl.ghostPrefab = ghost;
+                    //ProjectileController prefers the address over the direct reference; clear it so our modified ghost is used
+                    projCtrl.ghostPrefabAddress = new AssetReferenceT<GameObject>("");
                     return projPfbPfb;
                 });
 

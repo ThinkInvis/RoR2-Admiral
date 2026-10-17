@@ -40,7 +40,7 @@ namespace ThinkInvisible.Admiral {
             }
             if(globalLanguageDirty) {
                 globalLanguageDirty = false;
-                Language.SetCurrentLanguage(Language.currentLanguageName);
+                Language.SetCurrentLanguage(Language.currentLanguageName, true);
             }
         }
 
