@@ -47,8 +47,8 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval += On_GSCalculateFinalRechargeInterval;
             On.RoR2.GenericSkill.RecalculateMaxStock += On_GSRecalculateMaxStock;
             On.RoR2.GenericSkill.AddOneStock += On_GSAddOneStock;
-            On.RoR2.GenericSkill.RunRecharge += On_GSRunRecharge;
-            On.RoR2.GenericSkill.FixedUpdate += On_GSFixedUpdate;
+            On.RoR2.GenericSkill.RunRecharge_float_bool += On_GSRunRecharge;
+            On.RoR2.GenericSkill.ManagedFixedUpdate += On_GSManagedFixedUpdate;
             EquipBeacon.instance.Install();
             HealBeacon.instance.Install();
             ShockBeacon.instance.Install();
@@ -62,8 +62,8 @@ namespace ThinkInvisible.Admiral {
             On.RoR2.GenericSkill.CalculateFinalRechargeInterval -= On_GSCalculateFinalRechargeInterval;
             On.RoR2.GenericSkill.RecalculateMaxStock -= On_GSRecalculateMaxStock;
             On.RoR2.GenericSkill.AddOneStock -= On_GSAddOneStock;
-            On.RoR2.GenericSkill.RunRecharge -= On_GSRunRecharge;
-            On.RoR2.GenericSkill.FixedUpdate -= On_GSFixedUpdate;
+            On.RoR2.GenericSkill.RunRecharge_float_bool -= On_GSRunRecharge;
+            On.RoR2.GenericSkill.ManagedFixedUpdate -= On_GSManagedFixedUpdate;
             EquipBeacon.instance.Uninstall();
             HealBeacon.instance.Uninstall();
             ShockBeacon.instance.Uninstall();
@@ -81,16 +81,16 @@ namespace ThinkInvisible.Admiral {
         }
 
         bool isNormalRechargeRunning = false;
-        private void On_GSFixedUpdate(On.RoR2.GenericSkill.orig_FixedUpdate orig, GenericSkill self) {
+        private void On_GSManagedFixedUpdate(On.RoR2.GenericSkill.orig_ManagedFixedUpdate orig, GenericSkill self, float deltaTime) {
             isNormalRechargeRunning = true;
-            orig(self);
+            orig(self, deltaTime);
             isNormalRechargeRunning = false;
         }
 
-        private void On_GSRunRecharge(On.RoR2.GenericSkill.orig_RunRecharge orig, GenericSkill self, float dt) {
+        private void On_GSRunRecharge(On.RoR2.GenericSkill.orig_RunRecharge_float_bool orig, GenericSkill self, float dt, bool continuous) {
             if(SkillIsTemporaryBeacon(self) && !isNormalRechargeRunning)
                 dt *= beaconCDRInfluence;
-            orig(self,dt);
+            orig(self, dt, continuous);
         }
 
         private void On_GSAddOneStock(On.RoR2.GenericSkill.orig_AddOneStock orig, GenericSkill self) {

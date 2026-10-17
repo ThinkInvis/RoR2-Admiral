@@ -19,15 +19,15 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="BepInEx.Core" Version="[5.4.21]" />
-    <PackageReference Include="MMHOOK.RoR2" Version="2025.12.9" NoWarn="NU1701" />
-    <PackageReference Include="R2API.ContentManagement" Version="1.0.11" />
-    <PackageReference Include="R2API.Core" Version="5.3.0" />
-    <PackageReference Include="R2API.Language" Version="1.1.0" />
-    <PackageReference Include="R2API.Networking" Version="1.0.4" />
-    <PackageReference Include="R2API.Prefab" Version="1.1.1" />
-    <PackageReference Include="RiskOfRain2.GameLibs" Version="1.4.1-r.0" />
-    <PackageReference Include="UnityEngine.Modules" Version="[2021.3.33]" />
+    <PackageReference Include="BepInEx.Core" Version="5.*" />
+    <PackageReference Include="MMHOOK.RoR2" Version="*" NoWarn="NU1701" />
+    <PackageReference Include="R2API.ContentManagement" Version="*" />
+    <PackageReference Include="R2API.Core" Version="*" />
+    <PackageReference Include="R2API.Language" Version="*" />
+    <PackageReference Include="R2API.Networking" Version="*" />
+    <PackageReference Include="R2API.Prefab" Version="*" />
+    <PackageReference Include="RiskOfRain2.GameLibs" Version="*-*" />
+    <PackageReference Include="UnityEngine.Modules" Version="2021.3.45" />
   </ItemGroup>
 
   <ItemGroup>
